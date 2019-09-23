@@ -1,22 +1,26 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
-import styles from './styles.css'
+import './styles.scss';
 
-export default class ExampleComponent extends Component {
-  static propTypes = {
-    text: PropTypes.string
-  }
+import Scrubber from './components/Scrubber';
+import { ContinuousEditor } from './components/Editors';
+import { ContinuousCalendar } from './components/Calendars';
 
-  render() {
-    const {
-      text
-    } = this.props
 
-    return (
-      <div className={styles.test}>
-        Example Component: {text}
-      </div>
-    )
-  }
+class Timeline extends Component {
+
+    render() {
+        return (
+            <div className="react-timeline">
+                <ContinuousCalendar />
+                <ContinuousEditor />
+                <Scrubber />
+            </div>
+        );
+    }
+
 }
+
+
+export default Timeline;

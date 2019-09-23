@@ -24,16 +24,16 @@ export default {
   ],
   plugins: [
     external(),
-    postcss({
-      modules: true
-    }),
+    postcss({ extract: true }),
     url(),
     svgr(),
     babel({
       exclude: 'node_modules/**',
       plugins: [ 'external-helpers' ]
     }),
-    resolve(),
+    resolve({
+        extensions: ['.js', '.jsx'],
+    }),
     commonjs()
   ]
 }

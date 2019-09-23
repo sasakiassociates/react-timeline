@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
 
-import ExampleComponent from 'react-timeline'
+import Timeline from 'react-timeline';
 
 export default class App extends Component {
   render () {
     return (
-      <div>
-        <ExampleComponent text='Modern React component module' />
+      <div className="timeline-container">
+        <Timeline />
       </div>
     )
   }
