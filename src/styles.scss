@@ -2,7 +2,7 @@
 @import 'components/Editors/editors';
 @import 'components/Scrubber/scrubber';
 
-$color_bg-light: #666666;
+$color_bg-dark: #111111;
 
 $color_font-light: #DDDDDD;
 
@@ -16,5 +16,5 @@ $color_font-light: #DDDDDD;
 
     color: $color_font-light;
 
-    background: $color_bg-light;
+    background: $color_bg-dark;
 }

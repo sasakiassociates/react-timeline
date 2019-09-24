@@ -6,8 +6,11 @@
  */
 
 import React from 'react';
+import { inject, observer } from 'mobx-react';
 
 
+@inject('store')
+@observer
 class Scrubber extends React.Component {
 
     render() {
