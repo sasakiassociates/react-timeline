@@ -1,15 +1,13 @@
 import babel from 'rollup-plugin-babel'
 import commonjs from 'rollup-plugin-commonjs'
-import external from 'rollup-plugin-peer-deps-external'
 import postcss from 'rollup-plugin-postcss'
 import resolve from 'rollup-plugin-node-resolve'
-import url from 'rollup-plugin-url'
-import svgr from '@svgr/rollup'
+import replace from 'rollup-plugin-replace'
 
 import pkg from './package.json'
 
 export default {
-  input: 'src/index.js',
+  input: 'src/index.jsx',
   output: [
     {
       file: pkg.main,
@@ -22,18 +20,18 @@ export default {
       sourcemap: true
     }
   ],
+  external: id => /^react/.test(id),
   plugins: [
-    external(),
+    replace({
+        'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+    }),
     postcss({ extract: true }),
-    url(),
-    svgr(),
     babel({
       exclude: 'node_modules/**',
-      plugins: [ 'external-helpers' ]
     }),
     resolve({
         extensions: ['.js', '.jsx'],
     }),
-    commonjs()
+    commonjs(),
   ]
 }

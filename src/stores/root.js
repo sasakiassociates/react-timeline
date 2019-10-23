@@ -15,6 +15,7 @@ export default class RootStore {
         this.blocks = new BlockStore(this);
 
         this.setZoom(props.zoom);
+        this.setPolarTime(props.polarTime);
     }
 
 
