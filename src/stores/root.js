@@ -7,12 +7,14 @@
 import { action, observable } from 'mobx';
 
 import BlockStore from './block';
+import UiStore from './ui';
 
 
 export default class RootStore {
 
     constructor(props) {
         this.blocks = new BlockStore(this);
+        this.ui = new UiStore();
 
         this.setTimeMeridian(props.timeMeridian);
         this.setZoom(props.zoom);
