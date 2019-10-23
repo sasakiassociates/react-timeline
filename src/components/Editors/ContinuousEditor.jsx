@@ -17,8 +17,10 @@ class ContinuousEditor extends React.Component {
     }
 
     renderGrid = () => {
-        const { timeUnit } = this.props.store;
-        const ctx = this.grid.getContext('2d');
+        if (this.grid) {
+            const { timeUnit } = this.props.store;
+            const ctx = this.grid.getContext('2d');
+        }
     }
 
     render() {

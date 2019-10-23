@@ -11,7 +11,7 @@ import { ContinuousCalendar } from './components/Calendars';
 
 
 
-class Timeline extends Component {
+class Timeline extends React.Component {
 
     static defaultProps = config;
 
