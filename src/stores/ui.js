@@ -1,4 +1,11 @@
+/**
+ * UiStore
+ *
+ * Stores the current state of the UI.
+ */
+
 import { action, observable } from 'mobx';
+
 
 export default class UiStore {
 

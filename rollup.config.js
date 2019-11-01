@@ -30,6 +30,7 @@ export default {
       exclude: 'node_modules/**',
     }),
     resolve({
+        preferBuiltins: true,
         extensions: ['.js', '.jsx'],
     }),
     commonjs(),
