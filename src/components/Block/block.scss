@@ -3,4 +3,13 @@
     display: block;
 
     height: 20px;
+
+    opacity: .75;
+    cursor: grab;
+    transition: opacity .15s;
+
+    &:hover {
+        opacity: 1;
+        transition: opacity .15s;
+    }
 }

@@ -27,7 +27,7 @@ class Timeline extends React.Component {
         const { ui } = this.store;
 
         return (
-            <Provider store={this.store}>
+            <Provider store={this.store} ui={this.store.ui} viewport={this.store.viewport}>
                 <div className="react-timeline" ref={el => !ui.container && ui.setContainer(el)}>
                     <ContinuousCalendar />
                     <ContinuousEditor />
