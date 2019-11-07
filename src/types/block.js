@@ -36,9 +36,7 @@ export default class Block {
     }
 
     @computed get width() {
-        console.log(this.ui.width);
-        console.log((this.end - this.start) / this.viewport.width);
-        return ((this.end - this.start) / this.viewport.width) * this.ui.width;
+        return this.ui.width * (this.end - this.start) / this.viewport.width;
     }
 
 };

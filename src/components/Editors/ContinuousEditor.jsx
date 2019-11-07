@@ -48,8 +48,6 @@ class ContinuousEditor extends React.Component {
 
         const startTime = Math.round((1 - ((width - x) / width)) * viewport.width + left);
 
-        console.log(this.unitLength);
-
         blocks.createBlock(startTime, startTime + (this.unitLength / 2), y + top);
     }
 
@@ -63,18 +61,12 @@ class ContinuousEditor extends React.Component {
         const { width } = ui;
         const { left, right, top } = viewport;
 
-        return blocks.elements.map(block => {
-            const x = (1 - (viewport.width - block.start) / viewport.width) * width;
-
-            return (
-                <Block
-                    key={block.id}
-                    width={block.width}
-                    x={x}
-                    y={block.y}
-                />
-            );
-        });
+        return blocks.elements.map(block => (
+            <Block
+                key={block.id}
+                block={block}
+            />
+        ));
     }
 
     renderGrid = () => {

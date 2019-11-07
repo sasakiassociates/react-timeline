@@ -4,7 +4,7 @@
  * Contains main component state.
  */
 
-import { action, observable } from 'mobx';
+import { action, computed, observable } from 'mobx';
 
 import BlockStore from './block';
 import UiStore from './ui';
@@ -24,9 +24,24 @@ export default class RootStore {
     }
 
 
+    @observable dragging = { item: null };
+    @action setDragging(item = null, elem = null) {
+        this.dragging = {
+            item,
+            elem,
+            container: elem ? elem.parentNode.getBoundingClientRect() : null,
+        };
+    }
+
+
     @observable timeMeridian;
     @action setTimeMeridian(meridian) {
         this.timeMeridian = meridian;
+    }
+
+
+    @computed get isDragging() {
+        return this.dragging.item !== null;
     }
 
 };

@@ -23,4 +23,8 @@ $color_font-light: #DDDDDD;
         position: relative;
         box-sizing: border-box;
     }
+
+    &--dragging * {
+        cursor: grabbing !important;
+    }
 }

@@ -18,12 +18,9 @@ export default class BlockStore {
     @observable elements = [];
 
     @action createBlock(start, end, y) {
-        this.push(new Block(start, end, y, this.parent.ui, this.parent.viewport));
+        this.elements.push(new Block(
+            start, end, y, this.parent.ui, this.parent.viewport
+        ));
     }
-
-    @action push(block) {
-        this.elements.push(block);
-    }
-
 
 }
