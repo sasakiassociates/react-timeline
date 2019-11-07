@@ -34,11 +34,12 @@ class Timeline extends React.Component {
 
     onMouseMove = ({ x, y }) => {
         const { dragging, viewport } = this.store;
-        const { item: block , container } = dragging;
+        const { item: block , container, startX, startY } = dragging;
 
-        const newStart = viewport.left + viewport.width * (x - container.left) / container.width;
-        block.setEnd(block.end + (newStart - block.start));
-        block.setStart(viewport.left + viewport.width * (x - container.left) / container.width);
+        const newStartTime = viewport.left + viewport.width * ((x - startX) - container.left) / container.width;
+        block.setEnd(block.end + (newStartTime - block.start));
+        block.setStart(newStartTime);
+        block.setY((y - startY) - container.top);
     }
 
     onMouseUp = () => {

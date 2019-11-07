@@ -12,7 +12,9 @@ class Block extends React.Component {
 
     onMouseDown = e => {
         const { store, block } = this.props;
-        store.setDragging(block, e.target);
+        const { left, top } = e.target.getBoundingClientRect();
+
+        store.setDragging(block, e.target, e.clientX - left, e.clientY - top);
     }
 
     render() {
