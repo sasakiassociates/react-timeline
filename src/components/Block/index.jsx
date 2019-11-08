@@ -11,10 +11,14 @@ import { inject, observer } from 'mobx-react';
 class Block extends React.Component {
 
     onMouseDown = e => {
-        const { store, block } = this.props;
+        const { block, store } = this.props;
         const { left, top } = e.target.getBoundingClientRect();
 
         store.setDragging(block, e.target, e.clientX - left, e.clientY - top);
+    }
+
+    onResize = (e, method) => {
+        const { block, store } = this.props;
     }
 
     render() {
@@ -25,7 +29,6 @@ class Block extends React.Component {
         return (
             <div
                 className="react-timeline__block"
-                onMouseDown={e => this.onMouseDown(e)}
                 style={{
                     left: `${x}px`,
                     top: `${y}px`,
@@ -33,6 +36,9 @@ class Block extends React.Component {
                     background: 'rgb(200,200,200)',
                 }}
             >
+                <div className="react-timeline__block-handle" onMouseDown={e => this.onResize(e, 'setStart')} />
+                <div className="react-timeline__block-content" onMouseDown={e => this.onMouseDown(e)} />
+                <div className="react-timeline__block-handle" onMouseDown={e => this.onResize(e, 'setEnd')} />
             </div>
         );
     }

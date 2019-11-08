@@ -28,4 +28,10 @@ export default class UiStore {
         this.readDimensions();
     }
 
+
+    @observable action;
+    @action setAction(action) {
+        this.action = action;
+    }
+
 };

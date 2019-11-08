@@ -1,6 +1,6 @@
 .react-timeline__block {
     position: absolute;
-    display: block;
+    display: flex;
 
     height: 20px;
 
@@ -11,5 +11,20 @@
     &:hover {
         opacity: 1;
         transition: opacity .15s;
+    }
+
+    &-content {
+        flex: 1 0 calc(100% - 10px);
+
+        height: 100%;
+    }
+
+    &-handle {
+        flex: 1 0 5px;
+
+        width: 5px;
+        height: 100%;
+
+        cursor: col-resize;
     }
 }

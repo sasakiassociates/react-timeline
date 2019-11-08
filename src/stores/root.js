@@ -31,7 +31,7 @@ export default class RootStore {
             elem,
             startX,
             startY,
-            container: elem ? elem.parentNode.getBoundingClientRect() : null,
+            container: elem ? elem.parentNode.parentNode.getBoundingClientRect() : null,
         };
     }
 
