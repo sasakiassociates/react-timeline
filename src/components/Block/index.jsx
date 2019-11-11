@@ -4,6 +4,7 @@
 
 import React from 'react';
 import { inject, observer } from 'mobx-react';
+import Action, { actions } from '../../types/action';
 
 
 @inject('store')
@@ -14,11 +15,25 @@ class Block extends React.Component {
         const { block, store } = this.props;
         const { left, top } = e.target.getBoundingClientRect();
 
-        store.setDragging(block, e.target, e.clientX - left, e.clientY - top);
+        store.ui.setAction(actions.DRAG, {
+            block,
+            container: e.target.parentNode.parentNode.getBoundingClientRect(),
+            elem: e.target,
+            startX: e.clientX - left,
+            startY: e.clientY - top,
+        });
     }
 
     onResize = (e, method) => {
-        const { block, store } = this.props;
+        const { left, top } = e.target.getBoundingClientRect();
+        const startX = e.clientX - left;
+
+        this.props.store.ui.setAction(actions.RESIZE, {
+            block: this.props.block,
+            container: e.target.parentNode.parentNode.getBoundingClientRect(),
+            method,
+            startX,
+        });
     }
 
     render() {

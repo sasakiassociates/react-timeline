@@ -11,15 +11,15 @@ import Block from '../types/block';
 
 export default class BlockStore {
 
-    constructor(props, parent, viewport) {
-        this.parent = parent;
+    constructor(root, props) {
+        this.root = root;
     }
 
     @observable elements = [];
 
     @action createBlock(start, end, y) {
         this.elements.push(new Block(
-            start, end, y, this.parent.ui, this.parent.viewport
+            start, end, y, this.root.ui, this.root.viewport
         ));
     }
 

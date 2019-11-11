@@ -10,7 +10,9 @@ import { action, computed, observable } from 'mobx';
 
 export default class ViewportStore {
 
-    constructor(props) {
+    constructor(root, props) {
+        this.root = root;
+
         this.setLeft(0);
         this.setRight(0);
         this.setTop(0);

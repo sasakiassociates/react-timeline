@@ -16,9 +16,9 @@ export default class RootStore {
     constructor(props) {
         this.config = props;
 
-        this.blocks = new BlockStore(props, this);
-        this.ui = new UiStore(props);
-        this.viewport = new ViewportStore(props, this.ui);
+        this.blocks = new BlockStore(this, props);
+        this.ui = new UiStore(this, props);
+        this.viewport = new ViewportStore(this, props);
 
         this.setTimeMeridian(props.timeMeridian);
     }
@@ -39,11 +39,6 @@ export default class RootStore {
     @observable timeMeridian;
     @action setTimeMeridian(meridian) {
         this.timeMeridian = meridian;
-    }
-
-
-    @computed get isDragging() {
-        return this.dragging.item !== null;
     }
 
 };
