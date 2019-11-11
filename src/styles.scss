@@ -27,4 +27,8 @@ $color_font-light: #DDDDDD;
     &--dragging * {
         cursor: grabbing !important;
     }
+
+    &--resizing * {
+        cursor: col-resize !important;
+    }
 }

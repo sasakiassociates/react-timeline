@@ -18,6 +18,13 @@ export default class UiStore {
         window.addEventListener('resize', () => this.readDimensions());
     }
 
+    @computed get cursor() {
+        return ({
+            [actions.DRAG]: 'react-timeline--dragging',
+            [actions.RESIZE]: 'react-timeline--resizing',
+            [actions.NOOP]: '',
+        })[this.userAction.type];
+    }
 
     @observable width;
     @observable height;
@@ -55,9 +62,6 @@ export default class UiStore {
         }
     }
 
-    @computed get isDragging() {
-        return this.userAction.type === actions.DRAG;
-    }
 
 
     /**

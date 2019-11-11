@@ -24,18 +24,6 @@ export default class RootStore {
     }
 
 
-    @observable dragging = { item: null };
-    @action setDragging(item = null, elem = null, startX, startY) {
-        this.dragging = {
-            item,
-            elem,
-            startX,
-            startY,
-            container: elem ? elem.parentNode.parentNode.getBoundingClientRect() : null,
-        };
-    }
-
-
     @observable timeMeridian;
     @action setTimeMeridian(meridian) {
         this.timeMeridian = meridian;

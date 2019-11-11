@@ -14,15 +14,14 @@
     }
 
     &-content {
-        flex: 1 0 calc(100% - 10px);
+        flex: 1 1;
 
         height: 100%;
     }
 
     &-handle {
-        flex: 1 0 5px;
+        flex: 0 0 12px;
 
-        width: 5px;
         height: 100%;
 
         cursor: col-resize;
