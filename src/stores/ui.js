@@ -86,7 +86,8 @@ export default class UiStore {
             const { viewport } = this.root;
             const { block, container, startX, startY } = this.userAction.data;
 
-            const newStartTime = viewport.left + viewport.width * ((x - startX) - container.left) / container.width;
+            const newStartTime = this._calculateTimeFromPx(startX, x, container);
+
             block.setEnd(block.end + (newStartTime - block.start));
             block.setStart(newStartTime);
             block.setY((y - startY) - container.top);
@@ -100,9 +101,13 @@ export default class UiStore {
             const { viewport } = this.root;
             const { block, container, method, startX } = this.userAction.data;
 
-            const newTime = viewport.left + viewport.width * ((x - startX) - container.left) / container.width;
-            block[method](newTime);
+            block[method](this._calculateTimeFromPx(startX, x, container));
         },
+    }
+
+    _calculateTimeFromPx(start, end, container) {
+        const { viewport } = this.root;
+        return viewport.width * ((end - start) - container.left) / container.width;
     }
 
 };

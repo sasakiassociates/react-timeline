@@ -2,7 +2,6 @@
  * Time
  */
 
-
 const SECOND = 1;
 const MINUTE = 60 * SECOND;
 const HOUR = 60 * MINUTE;

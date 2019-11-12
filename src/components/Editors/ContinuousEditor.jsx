@@ -49,7 +49,7 @@ class ContinuousEditor extends React.Component {
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
 
-        const startTime = Math.round((1 - ((width - x) / width)) * viewport.width + left);
+        const startTime = Math.round((1 - ((width - x) / width)) * viewport.width + left) - viewport.left;
 
         blocks.createBlock(startTime, startTime + (this.unitLength / 2), y + top);
     }

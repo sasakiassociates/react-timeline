@@ -13,7 +13,7 @@ export default class ViewportStore {
     constructor(root, props) {
         this.root = root;
 
-        this.setLeft(0);
+        this.setLeft(-51020);
         this.setRight(0);
         this.setTop(0);
     }
