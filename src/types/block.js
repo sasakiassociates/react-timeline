@@ -25,6 +25,11 @@ export default class Block {
         this.end = end;
     }
 
+    @observable selected = false;
+    @action setSelected(selected = true) {
+        this.selected = selected;
+    }
+
     @observable start
     @action setStart(start) {
         this.start = start;

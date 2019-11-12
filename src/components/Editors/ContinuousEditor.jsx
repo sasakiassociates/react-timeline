@@ -30,6 +30,9 @@ class ContinuousEditor extends React.Component {
 
     componentDidUpdate() {
         const { config, ui, viewport } = this.props.store;
+
+        // If the viewport is still the initial value, define a reasonable viewport
+        // width from the right to the left (initial value is meridian) using config defaults.
         if (viewport.right === 0) {
             viewport.setRight((ui.width / config.baseWidth) * config.baseTime);
         }
@@ -52,8 +55,12 @@ class ContinuousEditor extends React.Component {
     }
 
     onScroll = ({ deltaY }) => {
-        const { store } = this.props;
-        //store.setZoom(store.zoom * (1 + ((deltaY / Math.abs(deltaY)) / 3)));
+        const { viewport } = this.props.store;
+
+        const delta = (viewport.width * (1 + (deltaY / Math.abs(deltaY)) / 3) - viewport.width) / 2;
+
+        viewport.setLeft(viewport.left - delta);
+        viewport.setRight(viewport.right + delta);
     }
 
     renderBlocks = () => {
@@ -61,7 +68,7 @@ class ContinuousEditor extends React.Component {
         const { width } = ui;
         const { left, right, top } = viewport;
 
-        return blocks.elements.map(block => (
+        return blocks.visible.map(block => (
             <Block
                 key={block.id}
                 block={block}
@@ -108,7 +115,7 @@ class ContinuousEditor extends React.Component {
     }
 
     render() {
-        const { ui, zoom } = this.props.store;
+        const { height, width } = this.props.store.ui;
 
         return (
             <div
@@ -116,8 +123,8 @@ class ContinuousEditor extends React.Component {
                 onDoubleClick={e => this.createBlock(e)}
             >
                 <canvas
-                    width={`${ui.width}px`}
-                    height={`${ui.height * .75}px`}
+                    width={`${width}px`}
+                    height={`${height * .75}px`}
                     ref={el => this.grid = el}
                     onWheel={e => this.onScroll(e)}
                 />
