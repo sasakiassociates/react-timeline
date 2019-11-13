@@ -39,7 +39,7 @@ class Block extends React.Component {
     render() {
         const { viewport, ui } = this.props.store;
         const { start, width, y } = this.props.block;
-        const x = (1 - (viewport.width - start) / viewport.width) * ui.width;
+        const x = (1 - ((viewport.width - start) / viewport.width)) * (ui.width / (1 - viewport.meridianRatio));
 
         return (
             <div

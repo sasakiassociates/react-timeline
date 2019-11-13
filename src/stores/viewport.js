@@ -37,4 +37,8 @@ export default class ViewportStore {
         return Math.abs(this.right - this.left);
     }
 
+    @computed get meridianRatio() {
+        return 1 - this.right / this.width;
+    }
+
 }

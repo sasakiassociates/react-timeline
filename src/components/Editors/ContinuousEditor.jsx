@@ -65,9 +65,7 @@ class ContinuousEditor extends React.Component {
     }
 
     renderBlocks = () => {
-        const { blocks, viewport, ui } = this.props.store;
-        const { width } = ui;
-        const { left, right, top } = viewport;
+        const { blocks } = this.props.store;
 
         return blocks.visible.map(block => (
             <Block
@@ -81,7 +79,6 @@ class ContinuousEditor extends React.Component {
         if (this.grid) {
             const { config, ui, viewport } = this.props.store;
             const { width, height } = ui;
-            const { left, right, top, bottom } = viewport;
 
             const ctx = this.grid.getContext('2d');
             ctx.clearRect(0, 0, width, height);

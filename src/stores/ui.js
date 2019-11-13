@@ -108,7 +108,8 @@ export default class UiStore {
 
     _calculateTimeFromPx(start, end, container) {
         const { viewport } = this.root;
-        return viewport.width * ((end - start) - container.left) / container.width;
+
+        return (1 - viewport.meridianRatio) * (viewport.width * (((end - start) - container.left) / container.width));
     }
 
 };
