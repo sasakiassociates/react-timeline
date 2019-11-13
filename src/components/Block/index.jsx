@@ -25,11 +25,13 @@ class Block extends React.Component {
     }
 
     onResize = (e, method) => {
-        const { left, top } = e.target.getBoundingClientRect();
+        const { block } = this.props;
+        const { left } = e.target.parentNode.parentNode.getBoundingClientRect();
         const startX = e.clientX - left;
 
         this.props.store.ui.setAction(actions.RESIZE, {
-            block: this.props.block,
+            block,
+            blockStart: block.start,
             container: e.target.parentNode.parentNode.getBoundingClientRect(),
             method,
             startX,

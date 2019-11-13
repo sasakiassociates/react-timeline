@@ -100,9 +100,13 @@ export default class UiStore {
 
         onResize({ x }) {
             const { viewport } = this.root;
-            const { block, container, method, startX } = this.userAction.data;
+            const { block, blockStart, container, method, startX } = this.userAction.data;
 
-            block[method](this._calculateTimeFromPx(startX, x, container));
+            if (method === 'setStart') {
+                block[method](blockStart + viewport.width * (((x - container.left) - startX) / container.width));
+            }
+
+            //block[method](this._calculateTimeFromPx(startX, x, container));
         },
     }
 
