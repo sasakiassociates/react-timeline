@@ -1,5 +1,6 @@
 .react-timeline__editor {
     flex: 1 0 75%;
+    overflow: hidden;
 
     &-layer--blocks {
         position: absolute;

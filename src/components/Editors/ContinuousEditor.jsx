@@ -55,10 +55,10 @@ class ContinuousEditor extends React.Component {
     }
 
     onScroll = ({ deltaY }) => {
-        const { viewport } = this.props.store;
+        const { config, viewport } = this.props.store;
 
-        console.log((deltaY / Math.abs(deltaY)) / 3);
-        const delta = ((viewport.width * (1 + (deltaY / Math.abs(deltaY)) / 3)) - viewport.width) / 2;
+        const growthMod = deltaY > 0 ? config.zoomSpeed : 1 / config.zoomSpeed;
+        const delta = ((viewport.width * growthMod) - viewport.width) / 2;
 
         viewport.setLeft(viewport.left - delta);
         viewport.setRight(viewport.right + delta);
