@@ -9,6 +9,7 @@ import { inject, observer } from 'mobx-react';
 
 import Block from '../Block';
 import time from '../../time';
+import Action, { actions } from '../../types/action';
 
 
 const TIMES = [time.SECOND, time.MINUTE, time.HOUR, time.DAY, time.WEEK, time.YEAR];
@@ -55,9 +56,14 @@ class ContinuousEditor extends React.Component {
     }
 
     onMouseDown = e => {
-        const { ui } = this.props.store;
+        const { ui, viewport } = this.props.store;
+        const container = e.target.getBoundingClientRect();
 
-        ui.setAction();
+        ui.setAction(new Action(actions.PAN, {
+            container,
+            startLeft: viewport.left,
+            startX: e.clientX - container.left,
+        }));
     }
 
     onScroll = ({ deltaY }) => {

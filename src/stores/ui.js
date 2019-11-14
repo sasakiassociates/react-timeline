@@ -109,14 +109,23 @@ export default class UiStore {
             this.setAction(null);
         },
 
-        onPan() {
+        onPan({ x }) {
+            const { viewport } = this.root;
+            const { container, startLeft, startX } = this.userAction.data;
 
+            const newLeftTime = this._calculateTimeFromPx(startX, x, container);
+            viewport.setRight(startLeft - newLeftTime + (viewport.right - viewport.left));
+            viewport.setLeft(startLeft - newLeftTime);
+
+            //const newLeftTime = this._calculateTimeFromPx(startX, x, container);
+
+            //viewport.setRight(viewport.right + (newLeftTime - viewport.left));
+            //viewport.setLeft(newLeftTime);
         },
 
         onResize({ x }) {
             const { block, container, method, startTime, startX } = this.userAction.data;
 
-            block[method](startTime + this._calculateTimeFromPx(startX, x, container));
             block[method](startTime + this._calculateTimeFromPx(startX, x, container));
         },
     }
