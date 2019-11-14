@@ -9,18 +9,19 @@
 const actions = {
     DRAG: 'action_drag',
     NOOP: 'action_noop',
+    PAN: 'action_pan',
     RESIZE: 'action_resize',
 };
 
 
 class Action {
 
-    constructor(action = actions.NOOP, data = null) {
-        if (Object.values(actions).indexOf(action) === -1) {
+    constructor(type = actions.NOOP, data = null) {
+        if (Object.values(actions).indexOf(type) === -1) {
             throw Error('Invalid action');
         }
 
-        this.action = action;
+        this.type = type;
         this.data = data;
     }
 

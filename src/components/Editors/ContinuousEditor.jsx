@@ -54,6 +54,12 @@ class ContinuousEditor extends React.Component {
         blocks.createBlock(startTime, startTime + (this.unitLength / 2), y + top);
     }
 
+    onMouseDown = e => {
+        const { ui } = this.props.store;
+
+        ui.setAction();
+    }
+
     onScroll = ({ deltaY }) => {
         const { config, viewport } = this.props.store;
 
@@ -125,6 +131,7 @@ class ContinuousEditor extends React.Component {
                     height={`${height * .75}px`}
                     ref={el => this.grid = el}
                     onWheel={e => this.onScroll(e)}
+                    onMouseDown={e => this.onMouseDown(e)}
                 />
                 <div className="react-timeline__editor-layer--blocks">
                     {this.renderBlocks()}

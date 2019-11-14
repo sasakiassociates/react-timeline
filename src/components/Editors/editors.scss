@@ -2,6 +2,8 @@
     flex: 1 0 75%;
     overflow: hidden;
 
+    cursor: crosshair;
+
     &-layer--blocks {
         position: absolute;
         top: 0;

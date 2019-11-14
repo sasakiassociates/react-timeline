@@ -6,7 +6,7 @@
 
 import { action, computed, observable } from 'mobx';
 
-import { actions } from '../types/action';
+import Action, { actions } from '../types/action';
 
 
 export default class UiStore {
@@ -35,23 +35,33 @@ export default class UiStore {
 
 
     @observable userAction;
-    @action setAction(type = null, data) {
-        if (type === null) {
-            type = actions.NOOP;
+    @action setAction(action = null) {
+        if (action === null) {
+            action = new Action();
         }
 
-        this.userAction = { type, data };
+        this.userAction = action;
 
-        if (type === actions.RESIZE) {
-            this._addEvent('mousemove', this._listeners.onResize.bind(this))
-            this._addEvent('mouseup', this._listeners.onMouseUp.bind(this));
-        }
-        else if (type === actions.DRAG) {
-            this._addEvent('mousemove', this._listeners.onDrag.bind(this))
-            this._addEvent('mouseup', this._listeners.onMouseUp.bind(this));
-        }
-        else {
-            this._clearEvents();
+        switch(action.type) {
+
+            case actions.DRAG:
+                this._addEvent('mousemove', this._listeners.onDrag.bind(this))
+                this._addEvent('mouseup', this._listeners.onMouseUp.bind(this));
+                break;
+
+            case actions.PAN:
+                this._addEvent('mousemove', this._listeners.onPan.bind(this))
+                this._addEvent('mouseup', this._listeners.onMouseUp.bind(this));
+                break;
+
+            case actions.RESIZE:
+                this._addEvent('mousemove', this._listeners.onResize.bind(this))
+                this._addEvent('mouseup', this._listeners.onMouseUp.bind(this));
+                break;
+
+            default:
+                this._clearEvents();
+
         }
     }
 
@@ -59,6 +69,7 @@ export default class UiStore {
     @computed get cursor() {
         return ({
             [actions.DRAG]: 'react-timeline--dragging',
+            [actions.PAN]: 'react-timeline--dragging',
             [actions.RESIZE]: 'react-timeline--resizing',
             [actions.NOOP]: '',
         })[this.userAction.type];
@@ -96,6 +107,10 @@ export default class UiStore {
 
         onMouseUp() {
             this.setAction(null);
+        },
+
+        onPan() {
+
         },
 
         onResize({ x }) {

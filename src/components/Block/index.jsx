@@ -15,27 +15,27 @@ class Block extends React.Component {
         const { block, store } = this.props;
         const { left, top } = e.target.getBoundingClientRect();
 
-        store.ui.setAction(actions.DRAG, {
+        store.ui.setAction(new Action(actions.DRAG, {
             block,
             container: e.target.parentNode.parentNode.getBoundingClientRect(),
             elem: e.target,
             startX: e.clientX - left,
             startY: e.clientY - top,
-        });
+        }));
     }
 
     onResize = (e, method) => {
-        const { block } = this.props;
+        const { block, store } = this.props;
         const { left } = e.target.parentNode.parentNode.getBoundingClientRect();
         const startX = e.clientX - left;
 
-        this.props.store.ui.setAction(actions.RESIZE, {
+        store.ui.setAction(new Action(actions.RESIZE, {
             block,
             container: e.target.parentNode.parentNode.getBoundingClientRect(),
             method,
             startTime: method === 'setStart' ? block.start : block.end,
             startX,
-        });
+        }));
     }
 
     render() {
