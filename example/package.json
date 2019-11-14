@@ -1,9 +1,10 @@
 {
   "name": "react-timeline-example",
   "homepage": "https://sasaki_dev.github.io/react-timeline",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "license": "MIT",
   "private": true,
+  "homepage": "/poc/react-timeline/v0.1",
   "dependencies": {
     "prop-types": "^15.6.2",
     "react": "^15.0.0",

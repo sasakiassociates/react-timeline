@@ -11,7 +11,7 @@ import Block from '../Block';
 import time from '../../time';
 
 
-const TIMES = [time.SECOND, time.MINUTE, time.HOUR, time.DAY, time.MONTH, time.YEAR];
+const TIMES = [time.SECOND, time.MINUTE, time.HOUR, time.DAY, time.WEEK, time.YEAR];
 
 
 @inject('store')

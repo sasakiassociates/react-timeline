@@ -37,6 +37,9 @@ export default class BlockStore {
             ) || (
                 block.end >= viewport.left
                 && block.end <= viewport.right
+            ) || (
+                block.start <= viewport.left
+                && block.end >= viewport.right
             )
         ));
     }

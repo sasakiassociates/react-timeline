@@ -31,9 +31,9 @@ class Block extends React.Component {
 
         this.props.store.ui.setAction(actions.RESIZE, {
             block,
-            blockStart: block.start,
             container: e.target.parentNode.parentNode.getBoundingClientRect(),
             method,
+            startTime: method === 'setStart' ? block.start : block.end,
             startX,
         });
     }

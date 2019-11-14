@@ -99,21 +99,17 @@ export default class UiStore {
         },
 
         onResize({ x }) {
-            const { viewport } = this.root;
-            const { block, blockStart, container, method, startX } = this.userAction.data;
+            const { block, container, method, startTime, startX } = this.userAction.data;
 
-            if (method === 'setStart') {
-                block[method](blockStart + viewport.width * (((x - container.left) - startX) / container.width));
-            }
-
-            //block[method](this._calculateTimeFromPx(startX, x, container));
+            block[method](startTime + this._calculateTimeFromPx(startX, x, container));
+            block[method](startTime + this._calculateTimeFromPx(startX, x, container));
         },
     }
 
     _calculateTimeFromPx(start, end, container) {
         const { viewport } = this.root;
 
-        return (1 - viewport.meridianRatio) * (viewport.width * (((end - start) - container.left) / container.width));
+        return (1 - viewport.meridianRatio) * (viewport.width * (((end - container.left) - start) / container.width));
     }
 
 };
