@@ -114,7 +114,8 @@ export default class UiStore {
             const { container, startLeft, startX } = this.userAction.data;
 
             const newLeftTime = this._calculateTimeFromPx(startX, x, container);
-            viewport.setRight(startLeft - newLeftTime + (viewport.right - viewport.left));
+
+            viewport.setRight((startLeft - newLeftTime) + viewport.width);
             viewport.setLeft(startLeft - newLeftTime);
 
             //const newLeftTime = this._calculateTimeFromPx(startX, x, container);
