@@ -21,6 +21,22 @@ class TimeStore {
         this.timeMeridian = meridian;
     }
 
+
+    pxToTime(px) {
+        const { ui, viewport } = this.root;
+        const { container } = ui;
+
+        return viewport.left + (viewport.width * (px - container.left) / container.width);
+    }
+
+
+    timeToPx(time) {
+        const { ui, viewport } = this.root;
+        const { container } = ui;
+
+        return (container.width * (time - viewport.left) / viewport.width);
+    }
+
 }
 
 

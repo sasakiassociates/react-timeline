@@ -9,12 +9,12 @@ import { action, computed, observable } from 'mobx';
 import Action, { actions } from '../types/action';
 
 
-export default class UiStore {
+export default class UIStore {
 
     constructor(root) {
         this.root = root;
 
-        this.setAction(actions.NOOP);
+        this.setAction(new Action(actions.NOOP));
         window.addEventListener('resize', () => this.readDimensions());
     }
 
@@ -22,14 +22,14 @@ export default class UiStore {
     @observable width;
     @observable height;
     @action readDimensions() {
-        this.width = this.container.clientWidth;
-        this.height = this.container.clientHeight;
+        this.width = this.container.width;
+        this.height = this.container.height;
     }
 
 
     @observable container;
     @action setContainer(container) {
-        this.container = container;
+        this.container = container.getBoundingClientRect();
         this.readDimensions();
     }
 
@@ -95,14 +95,14 @@ export default class UiStore {
 
     _listeners = {
         onDrag({ x, y }) {
-            const { viewport } = this.root;
-            const { block, container, startX, startY } = this.userAction.data;
+            const { time, ui, vewiport } = this.root;
+            const { block, editorTop, startX, startY } = this.userAction.data;
 
-            const newStartTime = this._calculateTimeFromPx(startX, x, container);
+            const newStartTime = time.pxToTime(x - startX);
 
             block.setEnd(block.end + (newStartTime - block.start));
             block.setStart(newStartTime);
-            block.setY((y - startY) - container.top);
+            block.setY((y - startY) - editorTop);
         },
 
         onMouseUp() {
@@ -117,11 +117,6 @@ export default class UiStore {
 
             viewport.setRight((startLeft - newLeftTime) + viewport.width);
             viewport.setLeft(startLeft - newLeftTime);
-
-            //const newLeftTime = this._calculateTimeFromPx(startX, x, container);
-
-            //viewport.setRight(viewport.right + (newLeftTime - viewport.left));
-            //viewport.setLeft(newLeftTime);
         },
 
         onResize({ x }) {

@@ -17,8 +17,7 @@ class Block extends React.Component {
 
         store.ui.setAction(new Action(actions.DRAG, {
             block,
-            container: e.target.parentNode.parentNode.getBoundingClientRect(),
-            elem: e.target,
+            editorTop: e.target.parentNode.parentNode.getBoundingClientRect().top,
             startX: e.clientX - left,
             startY: e.clientY - top,
         }));
@@ -39,9 +38,9 @@ class Block extends React.Component {
     }
 
     render() {
-        const { viewport, ui } = this.props.store;
+        const { time, viewport, ui } = this.props.store;
         const { start, width, y } = this.props.block;
-        const x = (1 - ((viewport.width - start) / viewport.width)) * (ui.width / (1 - viewport.meridianRatio));
+        const x = time.timeToPx(start);
 
         return (
             <div

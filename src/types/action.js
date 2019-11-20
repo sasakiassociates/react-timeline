@@ -1,8 +1,8 @@
 /**
  * Action
  *
- * Actions effect which event listeners are active and
- * what they should do.
+ * Actions alter which event listeners are active and
+ * what the listeners should do.
  */
 
 
