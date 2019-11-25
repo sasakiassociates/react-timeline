@@ -40,7 +40,7 @@ class Block extends React.Component {
                 style={{
                     left: `${x}px`,
                     top: `${y}px`,
-                    width: `${width}px`,
+                    width: `${width.px}px`,
                     background: 'rgb(200,200,200)',
                 }}
             >

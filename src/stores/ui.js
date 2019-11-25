@@ -127,10 +127,4 @@ export default class UIStore {
         },
     }
 
-    _calculateTimeFromPx(start, end, container) {
-        const { viewport } = this.root;
-
-        return (1 - viewport.meridianRatio) * (viewport.width * (((end - container.left) - start) / container.width));
-    }
-
 };

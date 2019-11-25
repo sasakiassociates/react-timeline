@@ -41,7 +41,12 @@ export default class Block {
     }
 
     @computed get width() {
-        return (this.ui.width * ((this.end - this.start) / this.viewport.width)) / (1 - this.viewport.meridianRatio);
+        const time = (this.end - this.start) / this.viewport.width;
+
+        return {
+            px: time * this.ui.width,
+            time,
+        };
     }
 
 };
