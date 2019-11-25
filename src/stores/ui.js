@@ -110,19 +110,20 @@ export default class UIStore {
         },
 
         onPan({ x }) {
-            const { viewport } = this.root;
+            const { time, viewport } = this.root;
             const { container, startLeft, startX } = this.userAction.data;
 
-            const newLeftTime = this._calculateTimeFromPx(startX, x, container);
+            const newLeftTime = time.pxToTime(x - startX);
 
             viewport.setRight((startLeft - newLeftTime) + viewport.width);
             viewport.setLeft(startLeft - newLeftTime);
         },
 
         onResize({ x }) {
-            const { block, container, method, startTime, startX } = this.userAction.data;
+            const { time } = this.root;
+            const { block, method } = this.userAction.data;
 
-            block[method](startTime + this._calculateTimeFromPx(startX, x, container));
+            block[method](time.pxToTime(x));
         },
     }
 

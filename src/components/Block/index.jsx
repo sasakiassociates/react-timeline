@@ -23,18 +23,10 @@ class Block extends React.Component {
         }));
     }
 
-    onResize = (e, method) => {
+    onResize = method => {
         const { block, store } = this.props;
-        const { left } = e.target.parentNode.parentNode.getBoundingClientRect();
-        const startX = e.clientX - left;
 
-        store.ui.setAction(new Action(actions.RESIZE, {
-            block,
-            container: e.target.parentNode.parentNode.getBoundingClientRect(),
-            method,
-            startTime: method === 'setStart' ? block.start : block.end,
-            startX,
-        }));
+        store.ui.setAction(new Action(actions.RESIZE, { block, method }));
     }
 
     render() {
@@ -52,9 +44,9 @@ class Block extends React.Component {
                     background: 'rgb(200,200,200)',
                 }}
             >
-                <div className="react-timeline__block-handle" onMouseDown={e => this.onResize(e, 'setStart')} />
+                <div className="react-timeline__block-handle" onMouseDown={e => this.onResize('setStart')} />
                 <div className="react-timeline__block-content" onMouseDown={e => this.onMouseDown(e)} />
-                <div className="react-timeline__block-handle" onMouseDown={e => this.onResize(e, 'setEnd')} />
+                <div className="react-timeline__block-handle" onMouseDown={e => this.onResize('setEnd')} />
             </div>
         );
     }
