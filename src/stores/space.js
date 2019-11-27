@@ -1,5 +1,5 @@
 /**
- * Time Store
+ * Space Store
  *
  * Responsible for projecting between time, unit, and pixel spaces.
  */
@@ -7,7 +7,7 @@
 import { action, observable } from 'mobx';
 
 
-class TimeStore {
+class SpaceStore {
 
     constructor(root, props) {
         this.root = root;
@@ -19,6 +19,13 @@ class TimeStore {
     @observable timeMeridian;
     @action setTimeMeridian(meridian) {
         this.timeMeridian = meridian;
+    }
+
+
+    pxDelta(start, end, withContainer = true) {
+        const { container } = this.root.ui;
+
+        return ((end - (withContainer ? container.left : 0)) - start) / container.width;
     }
 
 
@@ -40,4 +47,4 @@ class TimeStore {
 }
 
 
-export default TimeStore;
+export default SpaceStore;

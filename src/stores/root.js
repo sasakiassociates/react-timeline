@@ -7,7 +7,7 @@
 import { action, computed, observable } from 'mobx';
 
 import BlockStore from './block';
-import TimeStore from './time';
+import SpaceStore from './space';
 import UIStore from './ui';
 import ViewportStore from './viewport';
 
@@ -18,7 +18,7 @@ export default class RootStore {
         this.config = props;
 
         this.blocks = new BlockStore(this, props);
-        this.time = new TimeStore(this, props);
+        this.spaces = new SpaceStore(this, props);
         this.ui = new UIStore(this, props);
         this.viewport = new ViewportStore(this, props);
     }

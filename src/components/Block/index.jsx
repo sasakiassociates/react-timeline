@@ -14,12 +14,13 @@ class Block extends React.Component {
     onMouseDown = e => {
         const { block, store } = this.props;
         const { left, top } = e.target.getBoundingClientRect();
+        const editor = e.target.parentNode.parentNode.getBoundingClientRect();
 
         store.ui.setAction(new Action(actions.DRAG, {
             block,
-            editorTop: e.target.parentNode.parentNode.getBoundingClientRect().top,
             startX: e.clientX - left,
             startY: e.clientY - top,
+            top: editor.top,
         }));
     }
 
@@ -30,9 +31,9 @@ class Block extends React.Component {
     }
 
     render() {
-        const { time, viewport, ui } = this.props.store;
+        const { spaces, viewport, ui } = this.props.store;
         const { start, width, y } = this.props.block;
-        const x = time.timeToPx(start);
+        const x = spaces.timeToPx(start);
 
         return (
             <div

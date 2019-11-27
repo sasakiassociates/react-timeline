@@ -60,8 +60,8 @@ class ContinuousEditor extends React.Component {
         const container = e.target.getBoundingClientRect();
 
         ui.setAction(new Action(actions.PAN, {
-            container,
             startLeft: viewport.left,
+            startRight: viewport.right,
             startX: e.clientX - container.left,
         }));
     }

@@ -95,14 +95,14 @@ export default class UIStore {
 
     _listeners = {
         onDrag({ x, y }) {
-            const { time, ui, vewiport } = this.root;
-            const { block, editorTop, startX, startY } = this.userAction.data;
+            const { spaces } = this.root;
+            const { block, startX, startY, top } = this.userAction.data;
 
-            const newStartTime = time.pxToTime(x - startX);
+            const newStartTime = spaces.pxToTime(x - startX);
 
             block.setEnd(block.end + (newStartTime - block.start));
             block.setStart(newStartTime);
-            block.setY((y - startY) - editorTop);
+            block.setY((y - startY) - top);
         },
 
         onMouseUp() {
@@ -110,20 +110,20 @@ export default class UIStore {
         },
 
         onPan({ x }) {
-            const { time, viewport } = this.root;
-            const { container, startLeft, startX } = this.userAction.data;
+            const { spaces, viewport } = this.root;
+            const { startLeft, startRight, startX } = this.userAction.data;
 
-            const newLeftTime = time.pxToTime(x - startX);
+            const delta = spaces.pxDelta(startX, x) * Math.abs(startLeft - startRight);
 
-            viewport.setRight((startLeft - newLeftTime) + viewport.width);
-            viewport.setLeft(startLeft - newLeftTime);
+            viewport.setRight(startRight - delta);
+            viewport.setLeft(startLeft - delta);
         },
 
         onResize({ x }) {
-            const { time } = this.root;
+            const { spaces } = this.root;
             const { block, method } = this.userAction.data;
 
-            block[method](time.pxToTime(x));
+            block[method](spaces.pxToTime(x));
         },
     }
 
