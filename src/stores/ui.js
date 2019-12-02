@@ -16,6 +16,17 @@ export default class UIStore {
 
         this.setAction(new Action(actions.NOOP));
         window.addEventListener('resize', () => this.readDimensions());
+
+        /*
+        this.container = {
+            left: 0,
+            right: 0,
+            top: 0,
+            bottom: 0,
+            width: 0,
+            height: 0,
+        }
+        */
     }
 
 

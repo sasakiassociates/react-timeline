@@ -42,15 +42,12 @@ class ContinuousEditor extends React.Component {
     }
 
     createBlock = e => {
-        const { blocks, ui, viewport } = this.props.store;
+        const { blocks, spaces, ui, viewport } = this.props.store;
         const { width, height } = ui;
         const { left, right, top } = viewport;
 
-        const rect = e.target.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-
-        const startTime = Math.round((1 - ((width - x) / width)) * viewport.width + left) - viewport.left;
+        const y = e.clientY - e.target.getBoundingClientRect().top;
+        const startTime = spaces.pxToTime(e.clientX);
 
         blocks.createBlock(startTime, startTime + (this.unitLength / 2), y + top);
     }
@@ -89,28 +86,35 @@ class ContinuousEditor extends React.Component {
 
     renderGrid = () => {
         if (this.grid) {
-            const { config, ui, viewport } = this.props.store;
+            const { config, spaces, ui, viewport } = this.props.store;
             const { width, height } = ui;
 
             const ctx = this.grid.getContext('2d');
             ctx.clearRect(0, 0, width, height);
 
-            let units;
-            TIMES.some(timeUnit => {
-                if (viewport.width / timeUnit < 10) {
-                    return !!(units = Math.round(viewport.width / timeUnit));
+            let time;
+            TIMES.some((unit, i) => {
+                if (viewport.width / unit < 16) {
+                    time = i;
+                    return true;
                 }
             });
 
-            const unitWidth = width / units;
+            const units = Math.round(viewport.width / TIMES[time]);
+            const unitWidth = (width / units);
+            const offset = unitWidth * (1 - (TIMES[time] - (viewport.left % TIMES[time])) / TIMES[time]);
             this.unitLength = viewport.width / units;
+
             for (let i = 0; i < units; i++) {
+                const x = ((i + (offset > 0 ? 1 : 0)) * unitWidth) - offset;
+
                 ctx.strokeStyle = config.colors.primaryLine;
                 ctx.beginPath();
-                ctx.moveTo(i * unitWidth, 0);
-                ctx.lineTo(i * unitWidth, height);
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, height);
                 ctx.stroke();
 
+                /*
                 for (var j = 1; j <= 3; j++) {
                     var lineStart = i * unitWidth + (unitWidth * (j/4));
 
@@ -120,6 +124,7 @@ class ContinuousEditor extends React.Component {
                     ctx.lineTo(lineStart, height);
                     ctx.stroke();
                 }
+            */
             }
         }
     }
