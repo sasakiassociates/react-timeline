@@ -95,17 +95,17 @@ class ContinuousEditor extends React.Component {
             let time;
             TIMES.some((unit, i) => {
                 if (viewport.width / unit < 16) {
-                    time = i;
-                    return true;
+                    return !!(time = i);
                 }
             });
 
-            const units = Math.round(viewport.width / TIMES[time]);
+            const units = viewport.width / TIMES[time];
             const unitWidth = (width / units);
             const offset = unitWidth * (1 - (TIMES[time] - (viewport.left % TIMES[time])) / TIMES[time]);
+
             this.unitLength = viewport.width / units;
 
-            for (let i = 0; i < units; i++) {
+            for (let i = 0; i < Math.ceil(units); i++) {
                 const x = ((i + (offset > 0 ? 1 : 0)) * unitWidth) - offset;
 
                 ctx.strokeStyle = config.colors.primaryLine;
