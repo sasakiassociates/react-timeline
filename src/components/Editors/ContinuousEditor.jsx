@@ -130,7 +130,9 @@ class ContinuousEditor extends React.Component {
     }
 
     render() {
-        const { height, width } = this.props.store.ui;
+        const { store } = this.props;
+        const { height, width } = store.ui;
+        const { left } = store.viewport;
 
         return (
             <div
