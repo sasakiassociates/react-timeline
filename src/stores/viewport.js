@@ -18,6 +18,7 @@ export default class ViewportStore {
         this.setTop(0);
     }
 
+
     @observable left;
     @action setLeft(left) {
         this.left = left;
@@ -33,12 +34,12 @@ export default class ViewportStore {
         this.top = top;
     }
 
-    @computed get width() {
-        return Math.abs(this.right - this.left);
+    @computed get bottom() {
+        return this.top + (this.root.ui.height * .75) || this.top;
     }
 
-    @computed get meridianRatio() {
-        return 1 - this.right / this.width;
+    @computed get width() {
+        return Math.abs(this.right - this.left);
     }
 
 }

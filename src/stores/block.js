@@ -29,17 +29,23 @@ export default class BlockStore {
 
     @computed get visible() {
         const { viewport } = this.root;
+        const blockHeight = 20;
 
         return this.elements.filter(block => (
             (
-                block.start >= viewport.left
-                && block.start <= viewport.right
-            ) || (
-                block.end >= viewport.left
-                && block.end <= viewport.right
-            ) || (
-                block.start <= viewport.left
-                && block.end >= viewport.right
+                (
+                    block.start >= viewport.left
+                    && block.start <= viewport.right
+                ) || (
+                    block.end >= viewport.left
+                    && block.end <= viewport.right
+                ) || (
+                    block.start <= viewport.left
+                    && block.end >= viewport.right
+                )
+            ) && (
+                block.y >= viewport.top - blockHeight
+                && block.y <= viewport.bottom + blockHeight
             )
         ));
     }

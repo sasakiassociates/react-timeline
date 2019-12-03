@@ -93,14 +93,14 @@ export default class UIStore {
 
     _listeners = {
         onDrag({ x, y }) {
-            const { spaces } = this.root;
+            const { spaces, viewport } = this.root;
             const { block, startX, startY, top } = this.userAction.data;
 
             const newStartTime = spaces.pxToTime(x - startX);
 
             block.setEnd(block.end + (newStartTime - block.start));
             block.setStart(newStartTime);
-            block.setY((y - startY) - top);
+            block.setY(((y - top) - startY) + viewport.top);
         },
 
         onMouseUp() {
