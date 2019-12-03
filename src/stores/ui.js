@@ -107,14 +107,15 @@ export default class UIStore {
             this.setAction(null);
         },
 
-        onPan({ x }) {
+        onPan({ x, y }) {
             const { spaces, viewport } = this.root;
-            const { startLeft, startRight, startX } = this.userAction.data;
+            const { startLeft, startRight, startTop, startX, startY, top } = this.userAction.data;
 
-            const delta = spaces.pxDelta(startX, x) * Math.abs(startLeft - startRight);
+            const deltaX = spaces.pxDelta(startX, x) * Math.abs(startLeft - startRight);
 
-            viewport.setRight(startRight - delta);
-            viewport.setLeft(startLeft - delta);
+            viewport.setTop(startTop - ((y - top) - startY));
+            viewport.setRight(startRight - deltaX);
+            viewport.setLeft(startLeft - deltaX);
         },
 
         onResize({ x }) {

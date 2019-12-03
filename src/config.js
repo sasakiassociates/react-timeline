@@ -7,11 +7,11 @@ export default {
     baseTime: time.DAY,
 
     colors: {
-        primaryLine: '#888888',
-        secondaryLine: '#444444',
+        primaryLine: '#cc0000',
+        secondaryLine: '#0000cc',
     },
 
-    minLineWidth: 16,
+    minLineWidth: 24,
 
     timeMeridian: Math.round(Date.now() / 1000),
 

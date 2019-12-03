@@ -40,7 +40,7 @@ class Block extends React.Component {
                 className="react-timeline__block"
                 style={{
                     left: `${x}px`,
-                    top: `${y}px`,
+                    top: `${y - viewport.top}px`,
                     width: `${width.px}px`,
                     background: 'rgb(200,200,200)',
                 }}

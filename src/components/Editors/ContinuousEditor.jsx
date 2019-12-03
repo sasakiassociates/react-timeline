@@ -55,11 +55,15 @@ class ContinuousEditor extends React.Component {
     onMouseDown = e => {
         const { ui, viewport } = this.props.store;
         const container = e.target.getBoundingClientRect();
+        const editor = e.target.parentNode.parentNode.getBoundingClientRect();
 
         ui.setAction(new Action(actions.PAN, {
             startLeft: viewport.left,
             startRight: viewport.right,
+            startTop: viewport.top,
             startX: e.clientX - container.left,
+            startY: e.clientY - container.top,
+            top: container.top,
         }));
     }
 
@@ -117,16 +121,8 @@ class ContinuousEditor extends React.Component {
             for (let i = -1; i < Math.ceil(units); i++) {
                 const x = ((i + (offset > 0 ? 1 : 0)) * unitWidth) - offset;
 
-                ctx.strokeStyle = config.colors.primaryLine;
-                ctx.beginPath();
-                ctx.moveTo(x, 0);
-                ctx.lineTo(x, height);
-                ctx.stroke();
-
-                ctx.strokeStyle = config.colors.secondaryLine;
-
                 // Secondary Lines
-                for (let j = 0; j < subUnits; j++) {
+                for (let j = 0; j < Math.round(subUnits); j++) {
                     const xs = x + (j * subUnitWidth);
 
                     ctx.beginPath();
@@ -134,6 +130,14 @@ class ContinuousEditor extends React.Component {
                     ctx.lineTo(xs, height);
                     ctx.stroke();
                 }
+
+                ctx.strokeStyle = config.colors.primaryLine;
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, height);
+                ctx.stroke();
+
+                ctx.strokeStyle = config.colors.secondaryLine;
             }
         }
     }
