@@ -43,7 +43,6 @@ export default class UIStore {
         this.userAction = action;
 
         switch(action.type) {
-
             case actions.DRAG:
                 this._addEvent('mousemove', this._listeners.onDrag.bind(this))
                 this._addEvent('mouseup', this._listeners.onMouseUp.bind(this));
@@ -61,7 +60,6 @@ export default class UIStore {
 
             default:
                 this._clearEvents();
-
         }
     }
 

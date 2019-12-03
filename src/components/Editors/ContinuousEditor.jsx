@@ -94,18 +94,27 @@ class ContinuousEditor extends React.Component {
 
             let time;
             TIMES.some((unit, i) => {
-                if (viewport.width / unit < 16) {
+                if (viewport.width / unit < config.minLineWidth) {
                     return !!(time = i);
                 }
             });
 
             const units = viewport.width / TIMES[time];
-            const unitWidth = (width / units);
+            const unitWidth = width / units;
             const offset = unitWidth * (1 - (TIMES[time] - (viewport.left % TIMES[time])) / TIMES[time]);
+
+            const { subUnits, subUnitWidth } = (function grid(subUnits) {
+                if (width / subUnits < config.minLineWidth) {
+                    return grid(subUnits / 2);
+                }
+
+                return { subUnits, subUnitWidth: width / subUnits };
+            })(Math.round(viewport.width / TIMES[time - 1]));
 
             this.unitLength = viewport.width / units;
 
-            for (let i = 0; i < Math.ceil(units); i++) {
+            // Primary lines
+            for (let i = -1; i < Math.ceil(units); i++) {
                 const x = ((i + (offset > 0 ? 1 : 0)) * unitWidth) - offset;
 
                 ctx.strokeStyle = config.colors.primaryLine;
@@ -114,17 +123,17 @@ class ContinuousEditor extends React.Component {
                 ctx.lineTo(x, height);
                 ctx.stroke();
 
-                /*
-                for (var j = 1; j <= 3; j++) {
-                    var lineStart = i * unitWidth + (unitWidth * (j/4));
+                ctx.strokeStyle = config.colors.secondaryLine;
 
-                    ctx.strokeStyle = config.colors.secondaryLine;
+                // Secondary Lines
+                for (let j = 0; j < subUnits; j++) {
+                    const xs = x + (j * subUnitWidth);
+
                     ctx.beginPath();
-                    ctx.moveTo(lineStart, 0);
-                    ctx.lineTo(lineStart, height);
+                    ctx.moveTo(xs, 0);
+                    ctx.lineTo(xs, height);
                     ctx.stroke();
                 }
-            */
             }
         }
     }
