@@ -91,16 +91,58 @@ export default class UIStore {
         }) ;
     }
 
+    _intervals = {
+        horizontalPush: null,
+        verticalPush: null,
+    }
+
     _listeners = {
         onDrag({ x, y }) {
-            const { spaces, viewport } = this.root;
+            const { config, spaces, ui, viewport } = this.root;
             const { block, startX, startY, top } = this.userAction.data;
+
+            const xPos = x - ui.container.left;
+            const yPos = y - top;
+
+            const pushWidth = viewport.width * config.pushSpeed;
+            const pushHeight = viewport.height * config.pushSpeed;
+
+            if (xPos < config.pushBuffer) {
+                this._intervals.horizontalPush = setInterval(() => {
+                    viewport.setLeft(viewport.left - pushWidth);
+                    viewport.setRight(viewport.right - pushWidth);
+                }, 100);
+            }
+            else if (xPos > ui.width - config.pushBuffer) {
+                this._intervals.horizontalPush = setInterval(() => {
+                    viewport.setLeft(viewport.left + pushWidth);
+                    viewport.setRight(viewport.right + pushWidth);
+                }, 100);
+            }
+            else {
+                clearInterval(this._intervals.horizontalPush);
+            }
+
+            if (yPos < config.pushBuffer) {
+                this._intervals.verticalPush = setInterval(() => {
+                    viewport.setTop(viewport.top - pushHeight);
+                }, 100);
+            }
+            else if (yPos > (ui.height * .75) - config.pushBuffer) {
+                this._intervals.verticalPush = setInterval(() => {
+                    viewport.setTop(viewport.top + pushHeight);
+                }, 100);
+            }
+            else {
+                clearInterval(this._intervals.verticalPush);
+            }
+
 
             const newStartTime = spaces.pxToTime(x - startX);
 
             block.setEnd(block.end + (newStartTime - block.start));
             block.setStart(newStartTime);
-            block.setY(((y - top) - startY) + viewport.top);
+            block.setY((yPos - startY) + viewport.top);
         },
 
         onMouseUp() {
