@@ -112,17 +112,18 @@ class ContinuousEditor extends React.Component {
                     return grid(subUnits / 2);
                 }
 
-                return { subUnits, subUnitWidth: width / subUnits };
+                return { subUnits, subUnitWidth: unitWidth / (subUnits / units) };
             })(Math.round(viewport.width / TIMES[time - 1]));
 
             this.unitLength = viewport.width / units;
 
-            // Primary lines
             for (let i = -1; i < Math.ceil(units); i++) {
                 const x = ((i + (offset > 0 ? 1 : 0)) * unitWidth) - offset;
 
                 // Secondary Lines
-                for (let j = 0; j < Math.round(subUnits); j++) {
+                ctx.strokeStyle = config.colors.secondaryLine;
+
+                for (let j = 0; j < Math.round(subUnits / units); j++) {
                     const xs = x + (j * subUnitWidth);
 
                     ctx.beginPath();
@@ -131,13 +132,13 @@ class ContinuousEditor extends React.Component {
                     ctx.stroke();
                 }
 
+                // Primary line
                 ctx.strokeStyle = config.colors.primaryLine;
                 ctx.beginPath();
                 ctx.moveTo(x, 0);
                 ctx.lineTo(x, height);
                 ctx.stroke();
 
-                ctx.strokeStyle = config.colors.secondaryLine;
             }
         }
     }
