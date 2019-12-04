@@ -19,12 +19,6 @@ const TIMES = [time.SECOND, time.MINUTE, time.HOUR, time.DAY, time.WEEK, time.YE
 @observer
 class ContinuousEditor extends React.Component {
 
-    constructor(props) {
-        super();
-
-        this.unitLength = props.store.config.baseTime;
-    }
-
     componentDidMount() {
         this.renderGrid();
     }
@@ -48,8 +42,9 @@ class ContinuousEditor extends React.Component {
 
         const y = e.clientY - e.target.getBoundingClientRect().top;
         const startTime = spaces.pxToTime(e.clientX);
+        const endTime = spaces.pxToTime(e.clientX + (width * .1));
 
-        blocks.createBlock(startTime, startTime + (this.unitLength / 2), y + top);
+        blocks.createBlock(startTime, endTime, y + top);
     }
 
     onMouseDown = e => {
@@ -115,8 +110,6 @@ class ContinuousEditor extends React.Component {
                 return { subUnits, subUnitWidth: unitWidth / (subUnits / units) };
             })(Math.round(viewport.width / TIMES[time - 1]));
 
-            this.unitLength = viewport.width / units;
-
             for (let i = -1; i < Math.ceil(units); i++) {
                 const x = ((i + (offset > 0 ? 1 : 0)) * unitWidth) - offset;
 
@@ -138,7 +131,6 @@ class ContinuousEditor extends React.Component {
                 ctx.moveTo(x, 0);
                 ctx.lineTo(x, height);
                 ctx.stroke();
-
             }
         }
     }
