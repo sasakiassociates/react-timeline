@@ -13,8 +13,8 @@ export default {
 
     minLineWidth: 24, // px
 
-    pushBuffer: 25,   // px
-    pushSpeed: .01, // %
+    pushBuffer: 30,   // px
+    pushSpeed: .01,   // %
 
     timeMeridian: Math.round(Date.now() / 1000),
 

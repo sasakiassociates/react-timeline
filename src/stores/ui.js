@@ -106,12 +106,21 @@ export default class UIStore {
             const xPos = x - ui.container.left;
             const yPos = y - top;
 
+            const newStartTime = spaces.pxToTime(x - startX);
+
+            block.setEnd(block.end + (newStartTime - block.start));
+            block.setStart(newStartTime);
+            block.setY((yPos - startY) + viewport.top);
+
+            // Push Panning
             const pushWidth = viewport.width * config.pushSpeed;
             if (xPos < config.pushBuffer) {
                 if (this._intervals.horizontalPush === null) {
                     this._intervals.horizontalPush = setInterval(() => {
                         viewport.setLeft(viewport.left - pushWidth);
                         viewport.setRight(viewport.right - pushWidth);
+                        block.setEnd(block.end - pushWidth);
+                        block.setStart(block.start - pushWidth);
                     }, 1000 / FPS);
                 }
             }
@@ -120,6 +129,8 @@ export default class UIStore {
                     this._intervals.horizontalPush = setInterval(() => {
                         viewport.setLeft(viewport.left + pushWidth);
                         viewport.setRight(viewport.right + pushWidth);
+                        block.setEnd(block.end + pushWidth);
+                        block.setStart(block.start + pushWidth);
                     }, 1000 / FPS);
                 }
             }
@@ -133,6 +144,7 @@ export default class UIStore {
                 if (this._intervals.verticalPush === null) {
                     this._intervals.verticalPush = setInterval(() => {
                         viewport.setTop(viewport.top - pushHeight);
+                        block.setY(block.y - pushHeight);
                     }, 1000 / FPS);
                 }
             }
@@ -140,6 +152,7 @@ export default class UIStore {
                 if (this._intervals.verticalPush === null) {
                     this._intervals.verticalPush = setInterval(() => {
                         viewport.setTop(viewport.top + pushHeight);
+                        block.setY(block.y + pushHeight);
                     }, 1000 / FPS);
                 }
             }
@@ -147,12 +160,6 @@ export default class UIStore {
                 clearInterval(this._intervals.verticalPush);
                 this._intervals.verticalPush = null;
             }
-
-            const newStartTime = spaces.pxToTime(x - startX);
-
-            block.setEnd(block.end + (newStartTime - block.start));
-            block.setStart(newStartTime);
-            block.setY((yPos - startY) + viewport.top);
         },
 
         onMouseUp() {
@@ -164,6 +171,7 @@ export default class UIStore {
             }
         },
 
+        // Pull Panning
         onPan({ x, y }) {
             const { spaces, viewport } = this.root;
             const { startLeft, startRight, startTop, startX, startY, top } = this.userAction.data;
