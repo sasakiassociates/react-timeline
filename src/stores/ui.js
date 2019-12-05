@@ -98,6 +98,8 @@ export default class UIStore {
 
     _listeners = {
         onDrag({ x, y }) {
+            const FPS = 50;
+
             const { config, spaces, ui, viewport } = this.root;
             const { block, startX, startY, top } = this.userAction.data;
 
@@ -105,38 +107,46 @@ export default class UIStore {
             const yPos = y - top;
 
             const pushWidth = viewport.width * config.pushSpeed;
-            const pushHeight = viewport.height * config.pushSpeed;
-
             if (xPos < config.pushBuffer) {
-                this._intervals.horizontalPush = setInterval(() => {
-                    viewport.setLeft(viewport.left - pushWidth);
-                    viewport.setRight(viewport.right - pushWidth);
-                }, 100);
+                if (this._intervals.horizontalPush === null) {
+                    this._intervals.horizontalPush = setInterval(() => {
+                        viewport.setLeft(viewport.left - pushWidth);
+                        viewport.setRight(viewport.right - pushWidth);
+                    }, 1000 / FPS);
+                }
             }
             else if (xPos > ui.width - config.pushBuffer) {
-                this._intervals.horizontalPush = setInterval(() => {
-                    viewport.setLeft(viewport.left + pushWidth);
-                    viewport.setRight(viewport.right + pushWidth);
-                }, 100);
+                if (this._intervals.horizontalPush === null) {
+                    this._intervals.horizontalPush = setInterval(() => {
+                        viewport.setLeft(viewport.left + pushWidth);
+                        viewport.setRight(viewport.right + pushWidth);
+                    }, 1000 / FPS);
+                }
             }
             else {
                 clearInterval(this._intervals.horizontalPush);
+                this._intervals.horizontalPush = null;
             }
 
+            const pushHeight = (viewport.bottom - viewport.top) * (config.pushSpeed * 2);
             if (yPos < config.pushBuffer) {
-                this._intervals.verticalPush = setInterval(() => {
-                    viewport.setTop(viewport.top - pushHeight);
-                }, 100);
+                if (this._intervals.verticalPush === null) {
+                    this._intervals.verticalPush = setInterval(() => {
+                        viewport.setTop(viewport.top - pushHeight);
+                    }, 1000 / FPS);
+                }
             }
             else if (yPos > (ui.height * .75) - config.pushBuffer) {
-                this._intervals.verticalPush = setInterval(() => {
-                    viewport.setTop(viewport.top + pushHeight);
-                }, 100);
+                if (this._intervals.verticalPush === null) {
+                    this._intervals.verticalPush = setInterval(() => {
+                        viewport.setTop(viewport.top + pushHeight);
+                    }, 1000 / FPS);
+                }
             }
             else {
                 clearInterval(this._intervals.verticalPush);
+                this._intervals.verticalPush = null;
             }
-
 
             const newStartTime = spaces.pxToTime(x - startX);
 
@@ -147,6 +157,11 @@ export default class UIStore {
 
         onMouseUp() {
             this.setAction(null);
+
+            for (let interval in this._intervals) {
+                clearInterval(this._intervals[interval]);
+                this._intervals[interval] = null;
+            }
         },
 
         onPan({ x, y }) {
