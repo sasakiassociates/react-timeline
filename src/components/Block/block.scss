@@ -4,14 +4,21 @@
 
     height: 20px;
 
-    opacity: .75;
+    border: 2px solid rgba($color_highlight, 0);
     cursor: grab;
-    transition: opacity .15s;
+    opacity: .75;
     pointer-events: all;
+    transition: border-color .15s, opacity .15s;
 
     &:hover {
         opacity: 1;
-        transition: opacity .15s;
+        transition: border-color .15s, opacity .15s;
+    }
+
+    &--selected {
+        border-color: rgba($color_highlight, 1);
+        box-shadow: 0 0 3px 5px rgba($color_bg-light, .3);
+        transition: border-color .15s, opacity .15s;
     }
 
     &-content {

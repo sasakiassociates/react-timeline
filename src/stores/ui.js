@@ -100,7 +100,7 @@ export default class UIStore {
         onDrag({ x, y }) {
             const FPS = 50;
 
-            const { config, spaces, ui, viewport } = this.root;
+            const { blocks, config, spaces, ui, viewport } = this.root;
             const { block, startX, startY, top } = this.userAction.data;
             const { pushSpeed, pushBuffer } = config;
 
@@ -108,10 +108,13 @@ export default class UIStore {
             const yPos = y - top;
 
             const newStartTime = spaces.pxToTime(x - startX);
+            const blockDelta = newStartTime - block.start;
 
-            block.setEnd(block.end + (newStartTime - block.start));
-            block.setStart(newStartTime);
-            block.setY((yPos - startY) + viewport.top);
+            blocks.selected.forEach(block => {
+                block.setEnd(block.end + (blockDelta - block.start));
+                block.setStart(block.start + blockDelta);
+                block.setY((yPos - startY) + viewport.top);
+            });
 
             // Push Panning
             const pushWidth = viewport.width * pushSpeed;

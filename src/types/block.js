@@ -20,9 +20,15 @@ export default class Block {
         this.setY(y);
     }
 
+
     @observable end
     @action setEnd(end) {
         this.end = end;
+    }
+
+    @observable mouseDownTime;
+    @action setMouseDownTime(time) {
+        this.mouseDownTime = time;
     }
 
     @observable selected = false;

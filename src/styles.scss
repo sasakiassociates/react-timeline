@@ -1,12 +1,32 @@
+/**
+* Styles Entrypoint
+*/
+
+/**
+ * Variables
+ */
+
+$color_bg-dark: #111111;
+$color_bg-light: #DDDDDD;
+
+$color_font-light: #DDDDDD;
+
+$color_highlight: #3EC1C1;
+
+
+/**
+ * Imports
+ */
+
 @import 'components/Block/block';
 @import 'components/Calendars/calendars';
 @import 'components/Editors/editors';
 @import 'components/Scrubber/scrubber';
 
-$color_bg-dark: #111111;
 
-$color_font-light: #DDDDDD;
-
+/**
+ * Globals
+ */
 
 .react-timeline {
     display: flex;

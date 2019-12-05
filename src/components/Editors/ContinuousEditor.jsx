@@ -52,6 +52,8 @@ class ContinuousEditor extends React.Component {
         const container = e.target.getBoundingClientRect();
         const editor = e.target.parentNode.parentNode.getBoundingClientRect();
 
+        this.mouseDownTime = Date.now();
+
         ui.setAction(new Action(actions.PAN, {
             startLeft: viewport.left,
             startRight: viewport.right,
@@ -60,6 +62,12 @@ class ContinuousEditor extends React.Component {
             startY: e.clientY - container.top,
             top: container.top,
         }));
+    }
+
+    onMouseUp = () => {
+        if (Date.now() - this.mouseDownTime < 200) {
+            this.props.store.blocks.select();
+        }
     }
 
     onScroll = ({ clientX, deltaY, target }) => {
@@ -154,6 +162,7 @@ class ContinuousEditor extends React.Component {
                     ref={el => this.grid = el}
                     onWheel={e => this.onScroll(e)}
                     onMouseDown={e => this.onMouseDown(e)}
+                    onMouseUp={() => this.onMouseUp()}
                 />
                 <div className="react-timeline__editor-layer--blocks">
                     {this.renderBlocks()}

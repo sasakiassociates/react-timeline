@@ -23,6 +23,16 @@ export default class BlockStore {
         ));
     }
 
+    @action select(block = null) {
+        this.elements.forEach(block => {
+            block.setSelected(false);
+        });
+
+        if (block !== null) {
+            block.setSelected();
+        }
+    }
+
     @computed get selected() {
         return this.elements.filter(block => block.selected);
     }
