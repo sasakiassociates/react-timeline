@@ -102,6 +102,7 @@ export default class UIStore {
 
             const { config, spaces, ui, viewport } = this.root;
             const { block, startX, startY, top } = this.userAction.data;
+            const { pushSpeed, pushBuffer } = config;
 
             const xPos = x - ui.container.left;
             const yPos = y - top;
@@ -113,24 +114,15 @@ export default class UIStore {
             block.setY((yPos - startY) + viewport.top);
 
             // Push Panning
-            const pushWidth = viewport.width * config.pushSpeed;
-            if (xPos < config.pushBuffer) {
+            const pushWidth = viewport.width * pushSpeed;
+            const xDirection = xPos < pushBuffer ? -1 : xPos > ui.width - pushBuffer ? 1 : null;
+            if (xDirection !== null) {
                 if (this._intervals.horizontalPush === null) {
                     this._intervals.horizontalPush = setInterval(() => {
-                        viewport.setLeft(viewport.left - pushWidth);
-                        viewport.setRight(viewport.right - pushWidth);
-                        block.setEnd(block.end - pushWidth);
-                        block.setStart(block.start - pushWidth);
-                    }, 1000 / FPS);
-                }
-            }
-            else if (xPos > ui.width - config.pushBuffer) {
-                if (this._intervals.horizontalPush === null) {
-                    this._intervals.horizontalPush = setInterval(() => {
-                        viewport.setLeft(viewport.left + pushWidth);
-                        viewport.setRight(viewport.right + pushWidth);
-                        block.setEnd(block.end + pushWidth);
-                        block.setStart(block.start + pushWidth);
+                        viewport.setLeft(viewport.left + (xDirection * pushWidth));
+                        viewport.setRight(viewport.right + (xDirection * pushWidth));
+                        block.setEnd(block.end + (xDirection * pushWidth));
+                        block.setStart(block.start + (xDirection * pushWidth));
                     }, 1000 / FPS);
                 }
             }
@@ -139,20 +131,13 @@ export default class UIStore {
                 this._intervals.horizontalPush = null;
             }
 
-            const pushHeight = (viewport.bottom - viewport.top) * (config.pushSpeed * 2);
-            if (yPos < config.pushBuffer) {
+            const pushHeight = (viewport.bottom - viewport.top) * (pushSpeed * 2);
+            const yDirection = yPos < pushBuffer ? -1 : yPos > (ui.height * .75) - pushBuffer ? 1 : null;
+            if (yDirection !== null) {
                 if (this._intervals.verticalPush === null) {
                     this._intervals.verticalPush = setInterval(() => {
-                        viewport.setTop(viewport.top - pushHeight);
-                        block.setY(block.y - pushHeight);
-                    }, 1000 / FPS);
-                }
-            }
-            else if (yPos > (ui.height * .75) - config.pushBuffer) {
-                if (this._intervals.verticalPush === null) {
-                    this._intervals.verticalPush = setInterval(() => {
-                        viewport.setTop(viewport.top + pushHeight);
-                        block.setY(block.y + pushHeight);
+                        viewport.setTop(viewport.top + (yDirection * pushHeight));
+                        block.setY(block.y + (yDirection * pushHeight));
                     }, 1000 / FPS);
                 }
             }
