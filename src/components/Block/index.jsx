@@ -17,7 +17,7 @@ class Block extends React.Component {
         const { left, top } = e.target.getBoundingClientRect();
         const editor = e.target.parentNode.parentNode.getBoundingClientRect();
 
-        block.setMouseDownTime(Date.now());
+        this.mouseDownTime = Date.now();
         block.setSelected();
 
         store.ui.setAction(new Action(actions.DRAG, {
@@ -32,7 +32,7 @@ class Block extends React.Component {
         const { block, store } = this.props;
         const { blocks } = store;
 
-        if (!ctrlKey && Date.now() - block.mouseDownTime < 100) {
+        if (!ctrlKey && Date.now() - this.mouseDownTime < 200) {
             blocks.select(block);
         }
     }
@@ -47,7 +47,6 @@ class Block extends React.Component {
         const { spaces, viewport, ui } = this.props.store;
         const { selected, start, width, y } = this.props.block;
         const x = spaces.timeToPx(start);
-        console.log(selected);
 
         return (
             <div

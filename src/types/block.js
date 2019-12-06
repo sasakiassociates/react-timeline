@@ -23,12 +23,11 @@ export default class Block {
 
     @observable end
     @action setEnd(end) {
-        this.end = end;
-    }
+        if (end - this.start < 1) {
+            end = this.start + 1;
+        }
 
-    @observable mouseDownTime;
-    @action setMouseDownTime(time) {
-        this.mouseDownTime = time;
+        this.end = Math.round(end);
     }
 
     @observable selected = false;
@@ -38,7 +37,11 @@ export default class Block {
 
     @observable start
     @action setStart(start) {
-        this.start = start;
+        if (this.end - this.start < 1) {
+            start = this.end - 1;
+        }
+
+        this.start = Math.round(start);
     }
 
     @observable y
