@@ -23,7 +23,6 @@ class Block extends React.Component {
         store.ui.setAction(new Action(actions.DRAG, {
             block,
             startX: e.clientX - left,
-            startY: e.clientY - top,
             top: editor.top,
         }));
     }

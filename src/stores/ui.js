@@ -40,8 +40,6 @@ export default class UIStore {
             action = new Action();
         }
 
-        console.log(action.type);
-
         this.userAction = action;
 
         switch(action.type) {
@@ -103,7 +101,7 @@ export default class UIStore {
             const FPS = 50;
 
             const { blocks, config, spaces, ui, viewport } = this.root;
-            const { block, startX, startY, top } = this.userAction.data;
+            const { block, startX, top } = this.userAction.data;
             const { pushSpeed, pushBuffer } = config;
 
             const xPos = x - ui.container.left;
@@ -111,19 +109,12 @@ export default class UIStore {
 
             const newStartTime = spaces.pxToTime(x - startX);
             const deltaX = newStartTime - block.start;
-            const deltaY = yPos - block.y;
-
-            /*
-             block.setEnd(block.end + (newStartTime - block.start));
-             block.setStart(newStartTime);
-             block.setY((yPos - startY) + viewport.top);
-             */
+            const deltaY = (yPos - block.y) + viewport.top;
 
             blocks.selected.forEach(_block => {
-                console.log(block.y - _block.y);
-                _block.setEnd(_block.end + deltaX);
                 _block.setStart(_block.start + deltaX);
-                _block.setY(((yPos - startY) - (block.y - _block.y)) + viewport.top);
+                _block.setEnd(_block.end + deltaX);
+                _block.setY(_block.y + deltaY);
             });
 
             // Push Panning
