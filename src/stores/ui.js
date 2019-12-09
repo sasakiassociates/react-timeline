@@ -101,13 +101,13 @@ export default class UIStore {
             const FPS = 50;
 
             const { blocks, config, spaces, ui, viewport } = this.root;
-            const { block, startX, top } = this.userAction.data;
+            const { block, startX, startY, top } = this.userAction.data;
             const { pushSpeed, pushBuffer } = config;
 
-            const xPos = x - ui.container.left;
-            const yPos = y - top;
+            const xPos = (x - ui.container.left) + startX;
+            const yPos = (y - startY) - top;
 
-            const newStartTime = spaces.pxToTime(x - startX);
+            const newStartTime = spaces.pxToTime(xPos);
             const deltaX = newStartTime - block.start;
             const deltaY = (yPos - block.y) + viewport.top;
 

@@ -17,22 +17,36 @@ class Block extends React.Component {
         const { left, top } = e.target.getBoundingClientRect();
         const editor = e.target.parentNode.parentNode.getBoundingClientRect();
 
-        this.mouseDownTime = Date.now();
-        block.setSelected();
+        if (!block.selected) {
+            if (!e.ctrlKey) {
+                blocks.select(block);
+            }
+            else {
+                block.setSelected();
+            }
+        }
+
 
         store.ui.setAction(new Action(actions.DRAG, {
             block,
-            startX: e.clientX - left,
+            clientX: e.clientX,
+            startX: ((e.clientX - left) + (e.target.clientWidth * .25) - 2),
+            startY: e.clientY - top,
             top: editor.top,
         }));
     }
 
-    onMouseUp = ({ ctrlKey }) => {
-        const { block, store } = this.props;
-        const { blocks } = store;
+    onMouseUp = e => {
+        const { blocks, ui } = this.props.store;
 
-        if (!ctrlKey && Date.now() - this.mouseDownTime < 200) {
-            blocks.select(block);
+        if (ui.userAction.data !== null) {
+            const { block } = this.props;
+
+            const delta = Math.abs(ui.userAction.data.clientX - e.clientX);
+
+            if (!e.ctrlKey && delta < 15) {
+                blocks.select(block);
+            }
         }
     }
 
