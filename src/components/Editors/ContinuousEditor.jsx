@@ -59,17 +59,31 @@ class ContinuousEditor extends React.Component {
 
         this.mouseDownTime = Date.now();
 
-        ui.setAction(new Action(actions.PAN, {
-            startLeft: viewport.left,
-            startRight: viewport.right,
-            startTop: viewport.top,
-            startX: e.clientX - container.left,
-            startY: e.clientY - container.top,
-            top: container.top,
-        }));
+        if (e.ctrlKey) {
+            var action = new Action(actions.SELECT, {
+                startX: e.clientX - container.left,
+                startY: e.clientY - container.top,
+                top: container.top,
+            });
+        }
+        else {
+            var action = new Action(actions.PAN, {
+                startLeft: viewport.left,
+                startRight: viewport.right,
+                startTop: viewport.top,
+                startX: e.clientX - container.left,
+                startY: e.clientY - container.top,
+                top: container.top,
+            });
+        }
+
+        ui.setAction(action);
     }
 
     onMouseUp = () => {
+        // Simulate a click by checking for time passed since mousedown.
+        // We simulate the click instead of using the click event to have
+        // better control over the mousedown event.
         if (Date.now() - this.mouseDownTime < 200) {
             this.props.store.blocks.select();
         }

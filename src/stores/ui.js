@@ -45,16 +45,23 @@ export default class UIStore {
         switch(action.type) {
             case actions.DRAG:
                 this._addEvent('mousemove', this._listeners.onDrag.bind(this))
+                this._addEvent('mousemove', this._listeners.onPushPan.bind(this));
                 this._addEvent('mouseup', this._listeners.onMouseUp.bind(this));
                 break;
 
             case actions.PAN:
-                this._addEvent('mousemove', this._listeners.onPan.bind(this))
+                this._addEvent('mousemove', this._listeners.onPan.bind(this));
                 this._addEvent('mouseup', this._listeners.onMouseUp.bind(this));
                 break;
 
             case actions.RESIZE:
                 this._addEvent('mousemove', this._listeners.onResize.bind(this))
+                this._addEvent('mouseup', this._listeners.onMouseUp.bind(this));
+                break;
+
+            case actions.SELECT:
+                this._addEvent('mousemove', this._listeners.onSelect.bind(this));
+                //this._addEvent('mousemove', this._listeners.onPushPan.bind(this));
                 this._addEvent('mouseup', this._listeners.onMouseUp.bind(this));
                 break;
 
@@ -98,17 +105,13 @@ export default class UIStore {
 
     _listeners = {
         onDrag({ x, y }) {
-            const FPS = 50;
-
-            const { blocks, config, spaces, ui, viewport } = this.root;
+            const { blocks, spaces, ui, viewport } = this.root;
             const { block, startX, startY, top } = this.userAction.data;
-            const { pushSpeed, pushBuffer } = config;
 
             const xPos = (x - ui.container.left) + startX;
             const yPos = (y - startY) - top;
 
-            const newStartTime = spaces.pxToTime(xPos);
-            const deltaX = newStartTime - block.start;
+            const deltaX = spaces.pxToTime(xPos) - block.start;
             const deltaY = (yPos - block.y) + viewport.top;
 
             blocks.selected.forEach(_block => {
@@ -116,9 +119,40 @@ export default class UIStore {
                 _block.setEnd(_block.end + deltaX);
                 _block.setY(_block.y + deltaY);
             });
+        },
 
-            // Push Panning
+        onMouseUp() {
+            this.setAction(null);
+
+            for (let interval in this._intervals) {
+                clearInterval(this._intervals[interval]);
+                this._intervals[interval] = null;
+            }
+        },
+
+        // Pull Panning
+        onPan({ x, y }) {
+            const { spaces, viewport } = this.root;
+            const { startLeft, startRight, startTop, startX, startY, top } = this.userAction.data;
+
+            const deltaX = spaces.pxDelta(startX, x) * Math.abs(startLeft - startRight);
+
+            viewport.setTop(startTop - ((y - top) - startY));
+            viewport.setRight(startRight - deltaX);
+            viewport.setLeft(startLeft - deltaX);
+        },
+
+        onPushPan({ x, y }) {
+            const { blocks, config, spaces, ui, viewport } = this.root;
+            const { startX, startY, top } = this.userAction.data;
+            const { pushSpeed, pushBuffer } = config;
+
+            const FPS = 50;
+
             const pushWidth = viewport.width * pushSpeed;
+            const xPos = (x - ui.container.left) + startX;
+            const yPos = (y - startY) - top;
+
             const xDirection = xPos < pushBuffer ? -1 : xPos > ui.width - pushBuffer ? 1 : null;
             if (xDirection !== null) {
                 if (this._intervals.horizontalPush === null) {
@@ -153,32 +187,15 @@ export default class UIStore {
             }
         },
 
-        onMouseUp() {
-            this.setAction(null);
-
-            for (let interval in this._intervals) {
-                clearInterval(this._intervals[interval]);
-                this._intervals[interval] = null;
-            }
-        },
-
-        // Pull Panning
-        onPan({ x, y }) {
-            const { spaces, viewport } = this.root;
-            const { startLeft, startRight, startTop, startX, startY, top } = this.userAction.data;
-
-            const deltaX = spaces.pxDelta(startX, x) * Math.abs(startLeft - startRight);
-
-            viewport.setTop(startTop - ((y - top) - startY));
-            viewport.setRight(startRight - deltaX);
-            viewport.setLeft(startLeft - deltaX);
-        },
-
         onResize({ x }) {
             const { spaces } = this.root;
             const { block, method } = this.userAction.data;
 
             block[method](spaces.pxToTime(x));
+        },
+
+        onSelect({ x, y }) {
+
         },
     }
 

@@ -11,6 +11,7 @@ const actions = {
     NOOP: 'action_noop',
     PAN: 'action_pan',
     RESIZE: 'action_resize',
+    SELECT: 'action_select',
 };
 
 
