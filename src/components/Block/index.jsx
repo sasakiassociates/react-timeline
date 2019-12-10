@@ -26,7 +26,6 @@ class Block extends React.Component {
             }
         }
 
-
         store.ui.setAction(new Action(actions.DRAG, {
             block,
             clientX: e.clientX,
@@ -50,10 +49,10 @@ class Block extends React.Component {
         }
     }
 
-    onResize = method => {
+    onResize = bound => {
         const { block, store } = this.props;
 
-        store.ui.setAction(new Action(actions.RESIZE, { block, method }));
+        store.ui.setAction(new Action(actions.RESIZE, { block, bound }));
     }
 
     render() {
@@ -72,9 +71,9 @@ class Block extends React.Component {
                 }}
                 onMouseUp={e => this.onMouseUp(e)}
             >
-                <div className="react-timeline__block-handle" onMouseDown={e => this.onResize('setStart')} />
+                <div className="react-timeline__block-handle" onMouseDown={e => this.onResize('start')} />
                 <div className="react-timeline__block-content" onMouseDown={e => this.onMouseDown(e)} />
-                <div className="react-timeline__block-handle" onMouseDown={e => this.onResize('setEnd')} />
+                <div className="react-timeline__block-handle" onMouseDown={e => this.onResize('end')} />
             </div>
         );
     }

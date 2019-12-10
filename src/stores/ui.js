@@ -67,7 +67,6 @@ export default class UIStore {
 
             case actions.SELECT:
                 this._addEvent('mousemove', this._listeners.onSelect.bind(this));
-                //this._addEvent('mousemove', this._listeners.onPushPan.bind(this));
                 this._addEvent('mouseup', this._listeners.onMouseUp.bind(this));
                 break;
 
@@ -138,7 +137,7 @@ export default class UIStore {
             }
         },
 
-        // Pull Panning
+        // Pull Pan
         onPan({ x, y }) {
             const { spaces, viewport } = this.root;
             const { startLeft, startRight, startTop, startX, startY, top } = this.userAction.data;
@@ -196,10 +195,15 @@ export default class UIStore {
         },
 
         onResize({ x }) {
-            const { spaces } = this.root;
-            const { block, method } = this.userAction.data;
+            const { blocks, spaces } = this.root;
+            const { block, bound } = this.userAction.data;
 
-            block[method](spaces.pxToTime(x));
+            const delta = spaces.pxToTime(x) - block[bound];
+            const method = `set${bound[0].toUpperCase()}${bound.substr(1,bound.length-1)}`;
+
+            blocks.selected.forEach(block => {
+                block[method](block[bound] + delta);
+            });
         },
 
         onSelect({ x, y }) {

@@ -23,10 +23,6 @@ export default class Block {
 
     @observable end
     @action setEnd(end) {
-        if (end - this.start < 1) {
-            end = this.start + 1;
-        }
-
         this.end = Math.round(end);
     }
 
@@ -37,10 +33,6 @@ export default class Block {
 
     @observable start
     @action setStart(start) {
-        if (this.end - this.start < 1) {
-            start = this.end - 1;
-        }
-
         this.start = Math.round(start);
     }
 
@@ -50,7 +42,10 @@ export default class Block {
     }
 
     @computed get width() {
-        const time = (this.end - this.start) / this.viewport.width;
+        let time = (this.end - this.start) / this.viewport.width;
+        if (time < 0) {
+            time = 0;
+        }
 
         return {
             px: time * this.ui.width,

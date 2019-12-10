@@ -9,6 +9,7 @@ import { inject, observer } from 'mobx-react';
 
 import Block from '../Block';
 import time from '../../time';
+import SelectBox from './SelectBox';
 import Action, { actions } from '../../types/action';
 
 
@@ -81,9 +82,9 @@ class ContinuousEditor extends React.Component {
     }
 
     onMouseUp = () => {
-        // Simulate a click by checking for time passed since mousedown.
-        // We simulate the click instead of using the click event to have
-        // better control over the mousedown event.
+        // Simulate a click event by checking for time passed since mousedown.
+        // We simulate the click instead of using the click event to have better
+        // control over the behavior of the mousedown portion of the event.
         if (Date.now() - this.mouseDownTime < 200) {
             this.props.store.blocks.select();
         }
@@ -166,32 +167,9 @@ class ContinuousEditor extends React.Component {
     }
 
     render() {
-        const { spaces, viewport, ui } = this.props.store;
+        const { viewport, ui } = this.props.store;
         const { height, selectBox, userAction, width } = ui;
-        const { left, top, bottom } = viewport;
-
-        const isSelecting = userAction.type === actions.SELECT;
-
-        if (isSelecting && selectBox) {
-            var selectBoxStyles = {
-                width: `${Math.abs(selectBox.width)}px`,
-                height: `${Math.abs(selectBox.height)}px`,
-            };
-
-            if (selectBox.height < 0) {
-                selectBoxStyles.bottom = `${(height * .75) - (selectBox.y - top)}px`;
-            }
-            else {
-                selectBoxStyles.top = `${selectBox.y - top}px`;
-            }
-
-            if (selectBox.width < 0) {
-                selectBoxStyles.right = `${width - spaces.timeToPx(selectBox.x)}px`;
-            }
-            else {
-                selectBoxStyles.left = `${spaces.timeToPx(selectBox.x)}px`;
-            }
-        }
+        const { left } = viewport;
 
         return (
             <div
@@ -211,11 +189,8 @@ class ContinuousEditor extends React.Component {
                     {this.renderBlocks()}
                 </div>
 
-                {isSelecting && (
-                    <div
-                        className="react-timeline__editor-layer--select-box"
-                        style={selectBoxStyles}
-                    />
+                {userAction.type === actions.SELECT && selectBox && (
+                    <SelectBox />
                 )}
             </div>
         );
