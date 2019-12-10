@@ -61,8 +61,8 @@ class ContinuousEditor extends React.Component {
 
         if (e.ctrlKey) {
             var action = new Action(actions.SELECT, {
-                startX: e.clientX - container.left,
-                startY: e.clientY - container.top,
+                startX: e.clientX,
+                startY: (e.clientY - container.top) + viewport.top,
                 top: container.top,
             });
         }

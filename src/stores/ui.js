@@ -203,13 +203,36 @@ export default class UIStore {
         },
 
         onSelect({ x, y }) {
-            const { spaces, ui } = this.root;
+            const { blocks, spaces, ui, viewport } = this.root;
             const { startX, startY, top } = this.userAction.data;
 
+            const blockHeight = 20;
+            const height = (y - (startY - viewport.top)) - top;
+
+            const x1 = spaces.pxToTime(startX);
+            const x2 = spaces.pxToTime(x);
+
+            // I don't know what this 8 is derived from, but it's necessary for the
+            // ranges to calculate properly.
+            const y1 = height >= 0 ? startY - 1 : ((startY + height) - blockHeight) - 8;
+            const y2 = height >= 0 ? startY + height + 1 : startY + 1;
+
+            blocks.elements.forEach(block => {
+                block.setSelected(
+                    (
+                        (block.start >= x1 && block.start <= x2)
+                        || (block.end >= x1 && block.end <= x2)
+                        || (block.start <= x1 && block.end >= x2)
+                    ) && (
+                        block.y >= y1 && block.y <= y2
+                    )
+                );
+            });
+
             this.setSelectBox({
-                height: (y - startY) - top,
-                width: x - (startX + ui.container.left),
-                x: spaces.pxToTime(startX + ui.container.left),
+                height,
+                width: x - startX,
+                x: x1,
                 y: startY,
             });
         },
