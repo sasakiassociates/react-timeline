@@ -166,9 +166,32 @@ class ContinuousEditor extends React.Component {
     }
 
     render() {
-        const { store } = this.props;
-        const { height, width } = store.ui;
-        const { left } = store.viewport;
+        const { spaces, viewport, ui } = this.props.store;
+        const { height, selectBox, userAction, width } = ui;
+        const { left, top, bottom } = viewport;
+
+        const isSelecting = userAction.type === actions.SELECT;
+
+        if (isSelecting && selectBox) {
+            var selectBoxStyles = {
+                width: `${Math.abs(selectBox.width)}px`,
+                height: `${Math.abs(selectBox.height)}px`,
+            };
+
+            if (selectBox.height < 0) {
+                selectBoxStyles.bottom = `${(height * .75) - (selectBox.y - top)}px`;
+            }
+            else {
+                selectBoxStyles.top = `${selectBox.y - top}px`;
+            }
+
+            if (selectBox.width < 0) {
+                selectBoxStyles.right = `${width - spaces.timeToPx(selectBox.x)}px`;
+            }
+            else {
+                selectBoxStyles.left = `${spaces.timeToPx(selectBox.x)}px`;
+            }
+        }
 
         return (
             <div
@@ -183,9 +206,17 @@ class ContinuousEditor extends React.Component {
                     onMouseDown={e => this.onMouseDown(e)}
                     onMouseUp={() => this.onMouseUp()}
                 />
+
                 <div className="react-timeline__editor-layer--blocks">
                     {this.renderBlocks()}
                 </div>
+
+                {isSelecting && (
+                    <div
+                        className="react-timeline__editor-layer--select-box"
+                        style={selectBoxStyles}
+                    />
+                )}
             </div>
         );
     }

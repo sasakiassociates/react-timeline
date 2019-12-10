@@ -51,4 +51,8 @@ $color_highlight: #3EC1C1;
     &--resizing * {
         cursor: col-resize !important;
     }
+
+    &--selecting * {
+        cursor: nwse-resize !important;
+    }
 }

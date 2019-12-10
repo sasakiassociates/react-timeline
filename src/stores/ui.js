@@ -15,6 +15,7 @@ export default class UIStore {
         this.root = root;
 
         this.setAction(new Action(actions.NOOP));
+
         window.addEventListener('resize', () => this.readDimensions());
     }
 
@@ -31,6 +32,11 @@ export default class UIStore {
     @action setContainer(container) {
         this.container = container.getBoundingClientRect();
         this.readDimensions();
+    }
+
+    @observable selectBox;
+    @action setSelectBox(box = null) {
+        this.selectBox = box;
     }
 
 
@@ -76,6 +82,7 @@ export default class UIStore {
             [actions.DRAG]: 'react-timeline--dragging',
             [actions.PAN]: 'react-timeline--dragging',
             [actions.RESIZE]: 'react-timeline--resizing',
+            [actions.SELECT]: 'react-timeline--selecting',
             [actions.NOOP]: '',
         })[this.userAction.type];
     }
@@ -123,6 +130,7 @@ export default class UIStore {
 
         onMouseUp() {
             this.setAction(null);
+            this.setSelectBox(null);
 
             for (let interval in this._intervals) {
                 clearInterval(this._intervals[interval]);
@@ -195,7 +203,15 @@ export default class UIStore {
         },
 
         onSelect({ x, y }) {
+            const { spaces, ui } = this.root;
+            const { startX, startY, top } = this.userAction.data;
 
+            this.setSelectBox({
+                height: (y - startY) - top,
+                width: x - (startX + ui.container.left),
+                x: spaces.pxToTime(startX + ui.container.left),
+                y: startY,
+            });
         },
     }
 
