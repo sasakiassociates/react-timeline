@@ -17,14 +17,7 @@ class Block extends React.Component {
         const { left, top } = e.target.getBoundingClientRect();
         const editor = e.target.parentNode.parentNode.getBoundingClientRect();
 
-        if (!block.selected) {
-            if (!e.ctrlKey) {
-                blocks.select(block);
-            }
-            else {
-                block.setSelected();
-            }
-        }
+        this.selectBlock(e);
 
         store.ui.setAction(new Action(actions.DRAG, {
             block,
@@ -49,10 +42,26 @@ class Block extends React.Component {
         }
     }
 
-    onResize = bound => {
+    onResize = (e, bound) => {
         const { block, store } = this.props;
 
-        store.ui.setAction(new Action(actions.RESIZE, { block, bound }));
+        this.selectBlock(e);
+
+        store.ui.setAction(new Action(actions.RESIZE, { block, bound, clientX: e.clientX }));
+    }
+
+    selectBlock(e) {
+        const { block, store } = this.props;
+        const { blocks } = store;
+
+        if (!block.selected) {
+            if (!e.ctrlKey) {
+                blocks.select(block);
+            }
+            else {
+                block.setSelected();
+            }
+        }
     }
 
     render() {
@@ -75,9 +84,9 @@ class Block extends React.Component {
                 }}
                 onMouseUp={e => this.onMouseUp(e)}
             >
-                <div className="react-timeline__block-handle" onMouseDown={e => this.onResize('start')} style={handleWidth} />
+                <div className="react-timeline__block-handle" onMouseDown={e => this.onResize(e, 'start')} style={handleWidth} />
                 <div className="react-timeline__block-content" onMouseDown={e => this.onMouseDown(e)} />
-                <div className="react-timeline__block-handle" onMouseDown={e => this.onResize('end')} style={handleWidth} />
+                <div className="react-timeline__block-handle" onMouseDown={e => this.onResize(e, 'end')} style={handleWidth} />
             </div>
         );
     }
