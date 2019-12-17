@@ -56,9 +56,13 @@ class Block extends React.Component {
     }
 
     render() {
-        const { spaces, viewport, ui } = this.props.store;
+        const { config, spaces, viewport, ui } = this.props.store;
         const { selected, start, width, y } = this.props.block;
         const x = spaces.timeToPx(start);
+
+        const handleWidth = {
+            flex: `0 0 ${config.resizeHandleWidth}px`,
+        };
 
         return (
             <div
@@ -71,9 +75,9 @@ class Block extends React.Component {
                 }}
                 onMouseUp={e => this.onMouseUp(e)}
             >
-                <div className="react-timeline__block-handle" onMouseDown={e => this.onResize('start')} />
+                <div className="react-timeline__block-handle" onMouseDown={e => this.onResize('start')} style={handleWidth} />
                 <div className="react-timeline__block-content" onMouseDown={e => this.onMouseDown(e)} />
-                <div className="react-timeline__block-handle" onMouseDown={e => this.onResize('end')} />
+                <div className="react-timeline__block-handle" onMouseDown={e => this.onResize('end')} style={handleWidth} />
             </div>
         );
     }

@@ -16,6 +16,8 @@ export default {
     pushBuffer: 30,   // px
     pushSpeed: .01,   // %
 
+    resizeHandleWidth: 15,
+
     timeMeridian: Math.round(Date.now() / 1000),
 
     zoomSpeed: 1.3,

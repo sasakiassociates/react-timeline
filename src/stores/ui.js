@@ -111,10 +111,10 @@ export default class UIStore {
 
     _listeners = {
         onDrag({ x, y }) {
-            const { blocks, spaces, ui, viewport } = this.root;
+            const { blocks, config, spaces, ui, viewport } = this.root;
             const { block, startX, startY, top } = this.userAction.data;
 
-            const xPos = (x - startX) - 20; // Position minus the width of the resize handle
+            const xPos = (x - startX) - config.resizeHandleWidth; // Position minus the width of the resize handle
             const yPos = (y - startY) - top;
 
             const deltaX = spaces.pxToTime(xPos) - block.start;
