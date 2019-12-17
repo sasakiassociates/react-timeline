@@ -29,7 +29,7 @@ class Block extends React.Component {
         store.ui.setAction(new Action(actions.DRAG, {
             block,
             clientX: e.clientX,
-            startX: ((e.clientX - left) + (e.target.clientWidth * .25) - 2),
+            startX: e.clientX - left,
             startY: e.clientY - top,
             top: editor.top,
         }));

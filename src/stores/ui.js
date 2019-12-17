@@ -114,11 +114,13 @@ export default class UIStore {
             const { blocks, spaces, ui, viewport } = this.root;
             const { block, startX, startY, top } = this.userAction.data;
 
-            const xPos = (x - ui.container.left) + startX;
+            const xPos = (x - startX) - 20; // Position minus the width of the resize handle
             const yPos = (y - startY) - top;
 
             const deltaX = spaces.pxToTime(xPos) - block.start;
             const deltaY = (yPos - block.y) + viewport.top;
+
+            console.log(x - ui.container.left, startX, xPos);
 
             blocks.selected.forEach(_block => {
                 _block.setStart(_block.start + deltaX);
