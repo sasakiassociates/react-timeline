@@ -8,6 +8,10 @@ import { action, computed, observable } from 'mobx';
 
 import Action, { actions } from '../types/action';
 
+const keys = {
+    BACKSPACE: 8,
+};
+
 
 export default class UIStore {
 
@@ -17,6 +21,7 @@ export default class UIStore {
         this.setAction(new Action(actions.NOOP));
 
         window.addEventListener('resize', () => this.readDimensions());
+        window.addEventListener('keydown', e => this._listeners.onKeyDown.bind(this)(e));
     }
 
 
@@ -127,6 +132,17 @@ export default class UIStore {
                 _block.setEnd(_block.end + deltaX);
                 _block.setY(_block.y + deltaY);
             });
+        },
+
+        onKeyDown(e) {
+            e.preventDefault();
+
+            if (e.keyCode === keys.BACKSPACE) {
+                e.stopPropagation();
+                this.root.blocks.selected.forEach(block => {
+                    this.root.blocks.remove(block);
+                });
+            }
         },
 
         onMouseUp() {

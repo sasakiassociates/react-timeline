@@ -23,6 +23,10 @@ export default class BlockStore {
         ));
     }
 
+    @action remove(block) {
+        this.elements.splice(this.elements.indexOf(block), 1);
+    }
+
     @action select(block = null) {
         this.elements.forEach(block => {
             block.setSelected(false);
