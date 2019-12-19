@@ -39,6 +39,7 @@ export default class UIStore {
         this.readDimensions();
     }
 
+
     @observable selectBox;
     @action setSelectBox(box = null) {
         this.selectBox = box;
@@ -124,8 +125,6 @@ export default class UIStore {
 
             const deltaX = spaces.pxToTime(xPos) - block.start;
             const deltaY = (yPos - block.y) + viewport.top;
-
-            console.log(x - ui.container.left, startX, xPos);
 
             blocks.selected.forEach(_block => {
                 _block.setStart(_block.start + deltaX);
