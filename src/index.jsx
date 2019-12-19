@@ -7,8 +7,8 @@ import config from './config';
 import RootStore from './stores/root';
 import { actions } from './types/action';
 import Scrubber from './components/Scrubber';
-import { ContinuousEditor } from './components/Editors';
 import { ContinuousCalendar } from './components/Calendars';
+import { ContinuousRowEditor } from './components/Editors';
 
 
 @observer
@@ -32,7 +32,7 @@ class Timeline extends React.Component {
                     ref={el => !ui.container && ui.setContainer(el)}
                 >
                     <ContinuousCalendar />
-                    <ContinuousEditor />
+                    <ContinuousRowEditor />
                     <Scrubber />
                 </div>
             </Provider>

@@ -7,6 +7,7 @@
 
 
 import ContinuousEditor from './ContinuousEditor';
+import ContinuousRowEditor from './ContinuousRowEditor';
 
-export { ContinuousEditor };
-export default { ContinuousEditor };
+export { ContinuousEditor, ContinuousRowEditor };
+export default { ContinuousEditor, ContinuousRowEditor };

@@ -5,6 +5,7 @@ export default {
 
     baseWidth: 150,
     baseTime: time.DAY,
+    blockHeight: 20, // px
 
     colors: {
         primaryLine: '#cc0000',

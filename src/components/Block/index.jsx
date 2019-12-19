@@ -66,7 +66,8 @@ class Block extends React.Component {
 
     render() {
         const { config, spaces, viewport, ui } = this.props.store;
-        const { selected, start, width, y } = this.props.block;
+        const { selected, start, width } = this.props.block;
+        const { y } = this.props;
         const x = spaces.timeToPx(start);
 
         const handleWidth = {
@@ -80,6 +81,7 @@ class Block extends React.Component {
                     left: `${x}px`,
                     top: `${y - viewport.top}px`,
                     width: `${width.px}px`,
+                    height: `${config.blockHeight}px`,
                     background: 'rgb(200,200,200)',
                 }}
                 onMouseUp={e => this.onMouseUp(e)}
