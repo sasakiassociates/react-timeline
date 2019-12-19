@@ -21,7 +21,7 @@ export default class UIStore {
         this.setAction(new Action(actions.NOOP));
 
         window.addEventListener('resize', () => this.readDimensions());
-        window.addEventListener('keydown', e => this._listeners.onKeyDown.bind(this)(e));
+        window.addEventListener('keydown', e => this.listeners.onKeyDown.bind(this)(e));
     }
 
 
@@ -39,83 +39,13 @@ export default class UIStore {
         this.readDimensions();
     }
 
-
-    @observable selectBox;
-    @action setSelectBox(box = null) {
-        this.selectBox = box;
-    }
-
-
-    @observable userAction;
-    @action setAction(action = null) {
-        if (action === null) {
-            action = new Action();
-        }
-
-        this.userAction = action;
-
-        switch(action.type) {
-            case actions.DRAG:
-                this._addEvent('mousemove', this._listeners.onDrag.bind(this))
-                this._addEvent('mousemove', this._listeners.onPushPan.bind(this));
-                this._addEvent('mouseup', this._listeners.onMouseUp.bind(this));
-                break;
-
-            case actions.PAN:
-                this._addEvent('mousemove', this._listeners.onPan.bind(this));
-                this._addEvent('mouseup', this._listeners.onMouseUp.bind(this));
-                break;
-
-            case actions.RESIZE:
-                this._addEvent('mousemove', this._listeners.onResize.bind(this))
-                this._addEvent('mouseup', this._listeners.onMouseUp.bind(this));
-                break;
-
-            case actions.SELECT:
-                this._addEvent('mousemove', this._listeners.onSelect.bind(this));
-                this._addEvent('mouseup', this._listeners.onMouseUp.bind(this));
-                break;
-
-            default:
-                this._clearEvents();
-        }
-    }
-
-
-    @computed get cursor() {
-        return ({
-            [actions.DRAG]: 'react-timeline--dragging',
-            [actions.PAN]: 'react-timeline--dragging',
-            [actions.RESIZE]: 'react-timeline--resizing',
-            [actions.SELECT]: 'react-timeline--selecting',
-            [actions.NOOP]: '',
-        })[this.userAction.type];
-    }
-
-
-    /**
-     * Private
+    /*
+     * The default listeners are suited for the ContinuousEditor. All other editors
+     * will likely need to override a few of these listeners by using setListeners().
      */
 
-    _events = [];
-
-    _addEvent(name, listener, target = window) {
-        target.addEventListener(name, listener);
-        this._events.push({ name, listener, target });
-    }
-
-    _clearEvents() {
-        this._events.forEach(({ name, listener, target }) => {
-            target.removeEventListener(name, listener);
-        }) ;
-    }
-
-    _intervals = {
-        horizontalPush: null,
-        verticalPush: null,
-    }
-
-    _listeners = {
+    @observable
+    listeners = {
         onDrag({ x, y }) {
             const { blocks, config, spaces, ui, viewport } = this.root;
             const { block, startX, startY, top } = this.userAction.data;
@@ -258,5 +188,87 @@ export default class UIStore {
             });
         },
     }
+    @action setListeners(listeners = {}) {
+        for (let listener in listeners) {
+            this.listeners[listener] = listeners[listener];
+        }
+    }
+
+    @observable selectBox;
+    @action setSelectBox(box = null) {
+        this.selectBox = box;
+    }
+
+
+    @observable userAction;
+    @action setAction(action = null) {
+        if (action === null) {
+            action = new Action();
+        }
+
+        this.userAction = action;
+
+        switch(action.type) {
+            case actions.DRAG:
+                this._addEvent('mousemove', this.listeners.onDrag.bind(this))
+                this._addEvent('mousemove', this.listeners.onPushPan.bind(this));
+                this._addEvent('mouseup', this.listeners.onMouseUp.bind(this));
+                break;
+
+            case actions.PAN:
+                this._addEvent('mousemove', this.listeners.onPan.bind(this));
+                this._addEvent('mouseup', this.listeners.onMouseUp.bind(this));
+                break;
+
+            case actions.RESIZE:
+                this._addEvent('mousemove', this.listeners.onResize.bind(this))
+                this._addEvent('mouseup', this.listeners.onMouseUp.bind(this));
+                break;
+
+            case actions.SELECT:
+                this._addEvent('mousemove', this.listeners.onSelect.bind(this));
+                this._addEvent('mouseup', this.listeners.onMouseUp.bind(this));
+                break;
+
+            default:
+                this.clearEvents();
+        }
+    }
+
+
+    @computed get cursor() {
+        return ({
+            [actions.DRAG]: 'react-timeline--dragging',
+            [actions.PAN]: 'react-timeline--dragging',
+            [actions.RESIZE]: 'react-timeline--resizing',
+            [actions.SELECT]: 'react-timeline--selecting',
+            [actions.NOOP]: '',
+        })[this.userAction.type];
+    }
+
+
+    clearEvents() {
+        this._events.forEach(({ name, listener, target }) => {
+            target.removeEventListener(name, listener);
+        }) ;
+    }
+
+
+    /**
+     * Private
+     */
+
+    _events = [];
+
+    _addEvent(name, listener, target = window) {
+        target.addEventListener(name, listener);
+        this._events.push({ name, listener, target });
+    }
+
+    _intervals = {
+        horizontalPush: null,
+        verticalPush: null,
+    }
+
 
 };

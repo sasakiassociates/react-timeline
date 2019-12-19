@@ -8,7 +8,7 @@ import RootStore from './stores/root';
 import { actions } from './types/action';
 import Scrubber from './components/Scrubber';
 import { ContinuousCalendar } from './components/Calendars';
-import { ContinuousRowEditor } from './components/Editors';
+import { ContinuousEditor, ContinuousRowEditor } from './components/Editors';
 
 
 @observer
@@ -22,11 +22,15 @@ class Timeline extends React.Component {
         this.store = new RootStore(props);
     }
 
+    componentDidUnmount() {
+        this.store.ui.clearEvents();
+    }
+
     render() {
         const { ui } = this.store;
 
         return (
-            <Provider store={this.store} ui={this.store.ui} viewport={this.store.viewport}>
+            <Provider store={this.store}>
                 <div
                     className={`react-timeline ${ui.cursor}`}
                     ref={el => !ui.container && ui.setContainer(el)}
