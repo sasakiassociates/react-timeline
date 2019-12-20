@@ -14,7 +14,7 @@ import AbstractEditor from './AbstractEditor';
 @observer
 class ContinuousRowEditor extends AbstractEditor {
 
-    createBlock = e => {
+    createBlock(e) {
         // Events propogate but we only want this behavior for the grid. It's easier
         // to check for a single correct target than having to remember to prevent
         // propogation of doubleClick events for every incorrect child element.

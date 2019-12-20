@@ -1,8 +1,7 @@
 /**
- * Editors - Continuous Row
+ * Editors - Abstract
  *
- * This editor variation allows continuity in time's representation, while the y-value
- * remains snapped to a discrete track of rows.
+ * This is the base class for editor functionality.
  */
 
 import React from 'react';
@@ -17,9 +16,7 @@ import Action, { actions } from '../../types/action';
 const TIMES = [time.SECOND, time.MINUTE, time.HOUR, time.DAY, time.WEEK, time.YEAR];
 
 
-@inject('store')
-@observer
-class ContinuousRowEditor extends React.Component {
+class AbstractEditor extends React.Component {
 
     componentDidMount() {
         this.renderGrid();
@@ -37,21 +34,8 @@ class ContinuousRowEditor extends React.Component {
         this.renderGrid();
     }
 
-    createBlock = e => {
-        // Events propogate but we only want this behavior for the grid. It's easier
-        // to check for a single correct target than having to remember to prevent
-        // propogation of doubleClick events for every incorrect child element.
-        if (e.target === this.grid) {
-            const { blocks, config, spaces, ui, viewport } = this.props.store;
-            const { width, height } = ui;
-            const { left, right, top } = viewport;
-
-            const y = Math.floor(((e.clientY - e.target.getBoundingClientRect().top) + top) / config.blockHeight);
-            const startTime = spaces.pxToTime(e.clientX);
-            const endTime = spaces.pxToTime(e.clientX + (width * .1));
-
-            blocks.createBlock(startTime, endTime, y * config.blockHeight);
-        }
+    createBlock() {
+        throw new Error(`${this.constructor.name} must define a 'createBlock' method`);
     }
 
     onMouseDown = e => {
@@ -172,10 +156,12 @@ class ContinuousRowEditor extends React.Component {
         const { height, selectBox, userAction, width } = ui;
         const { left } = viewport;
 
+        const dblClick = e => this.createBlock(e);
+
         return (
             <div
                 className="react-timeline__editor react-timeline__editor-continuous-row"
-                onDoubleClick={e => this.createBlock(e)}
+                onDoubleClick={dblClick}
             >
                 <canvas
                     width={`${width}px`}
@@ -200,4 +186,4 @@ class ContinuousRowEditor extends React.Component {
 }
 
 
-export default ContinuousRowEditor;
+export default AbstractEditor;
