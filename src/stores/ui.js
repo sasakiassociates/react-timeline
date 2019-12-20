@@ -19,6 +19,7 @@ export default class UIStore {
         this.root = root;
 
         this.setAction(new Action(actions.NOOP));
+        this.setListeners();
 
         window.addEventListener('resize', () => this.readDimensions());
         window.addEventListener('keydown', e => this.listeners.onKeyDown.bind(this)(e));
@@ -44,8 +45,7 @@ export default class UIStore {
      * will likely need to override a few of these listeners by using setListeners().
      */
 
-    @observable
-    listeners = {
+    defaultListeners = {
         onDrag({ x, y }) {
             const { blocks, config, spaces, ui, viewport } = this.root;
             const { block, startX, startY, top } = this.userAction.data;
@@ -188,10 +188,10 @@ export default class UIStore {
             });
         },
     }
+
+    @observable listeners;
     @action setListeners(listeners = {}) {
-        for (let listener in listeners) {
-            this.listeners[listener] = listeners[listener];
-        }
+        this.listeners = { ...this.defaultListeners, ...listeners };
     }
 
     @observable selectBox;

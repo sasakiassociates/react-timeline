@@ -31,6 +31,26 @@ class ContinuousRowEditor extends AbstractEditor {
         }
     }
 
+    listeners = {
+        onDrag({ x, y }) {
+            const { blocks, config, spaces, ui, viewport } = this.root;
+            const { block, startX, startY, top } = this.userAction.data;
+
+            const xPos = (x - startX) - config.resizeHandleWidth; // Position minus the width of the resize handle
+            const yPos = (y - startY) - top;
+
+            const deltaX = spaces.pxToTime(xPos) - block.start;
+            const deltaY = ((config.blockHeight * Math.floor(yPos / config.blockHeight)) - block.y) + viewport.top;
+
+            blocks.selected.forEach(_block => {
+                _block.setStart(_block.start + deltaX);
+                _block.setEnd(_block.end + deltaX);
+                _block.setY(_block.y + deltaY);
+            });
+
+        },
+    }
+
 }
 
 

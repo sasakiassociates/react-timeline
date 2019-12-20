@@ -20,6 +20,14 @@ class AbstractEditor extends React.Component {
 
     componentDidMount() {
         this.renderGrid();
+
+        if (this.listeners) {
+            this.props.store.ui.setListeners(this.listeners);
+        }
+    }
+
+    componentDidUnmount() {
+        this.props.store.ui.setListeners({});
     }
 
     componentDidUpdate() {
