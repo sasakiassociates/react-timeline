@@ -37,7 +37,7 @@ class ContinuousRowEditor extends AbstractEditor {
             const { block, startX, startY, top } = this.userAction.data;
 
             const xPos = (x - startX) - config.resizeHandleWidth; // Position minus the width of the resize handle
-            const yPos = (y - startY) - top;
+            const yPos = y - top;
 
             const deltaX = spaces.pxToTime(xPos) - block.start;
             const deltaY = ((config.blockHeight * Math.floor(yPos / config.blockHeight)) - block.y) + viewport.top;
