@@ -22,7 +22,7 @@ class Timeline extends React.Component {
         this.store = new RootStore(props);
     }
 
-    componentDidUnmount() {
+    componentWillUnmount() {
         this.store.ui.clearEvents();
     }
 

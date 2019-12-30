@@ -40,7 +40,10 @@ class ContinuousRowEditor extends AbstractEditor {
             const yPos = y - top;
 
             const deltaX = spaces.pxToTime(xPos) - block.start;
-            const deltaY = ((config.blockHeight * Math.floor(yPos / config.blockHeight)) - block.y) + viewport.top;
+            //const deltaY = ((config.blockHeight * Math.floor(yPos / config.blockHeight)) - block.y) + viewport.top;
+
+            //console.log(config.blockHeight * Math.floor(((yPos - block.y) + viewport.top) / config.blockHeight));
+            const deltaY = config.blockHeight * Math.floor(((yPos - block.y) + viewport.top) / config.blockHeight);
 
             blocks.selected.forEach(_block => {
                 _block.setStart(_block.start + deltaX);

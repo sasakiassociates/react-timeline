@@ -26,7 +26,7 @@ class AbstractEditor extends React.Component {
         }
     }
 
-    componentDidUnmount() {
+    componentWillUnmount() {
         this.props.store.ui.setListeners({});
     }
 
