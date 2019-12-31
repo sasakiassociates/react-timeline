@@ -22,6 +22,10 @@ class BlockVisualizer extends React.Component {
     render() {
         const { blocks, viewport } = this.props.store;
 
+        blocks.elements.forEach(block => {
+            //console.log();
+        });
+
         return (
             <div className="react-timeline__scrubber-visualizer react-timeline__visualizer--block">
                 {blocks.elements.map(block => (
@@ -29,7 +33,8 @@ class BlockVisualizer extends React.Component {
                         key={block.id}
                         className="react-timeline__visualizer-block"
                         style={{
-                            left: `${100 * (block.start - blocks.extent.left) / blocks.extent.width}%`
+                            left: `${100 * (block.start - blocks.extent.left) / blocks.extent.width}%`,
+                            width: `${100 * (viewport.width * block.width.time) / blocks.extent.width}%`,
                         }}
                     />
                 ))}
