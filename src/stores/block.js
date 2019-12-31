@@ -47,7 +47,7 @@ export default class BlockStore {
             if (block.end > right) right = block.end;
         });
 
-        return { left, right };
+        return { left, right, width: Math.abs(left - right) };
     }
 
     @computed get selected() {
