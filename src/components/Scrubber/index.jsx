@@ -17,12 +17,14 @@ class Scrubber extends React.Component {
 
     render() {
         const { blocks, viewport } = this.props.store;
+        const { extent } = blocks;
 
-        const offset = viewport.right >= blocks.extent.right ? 'right' : 'left';
+        const offset = viewport.right >= extent.right ? 'right' : 'left';
         const scrubber = {
-            width: `${100 * viewport.width / blocks.extent.width}%`,
-            height: `${100}%`,
-            [offset]: `${100 * (viewport[offset] - blocks.extent[offset]) / blocks.extent.width}%`,
+            width: `${100 * viewport.width / extent.width}%`,
+            height: `${100 * viewport.height / extent.height}%`,
+            top: `${100 * (viewport.top - extent.top) / extent.height}%`,
+            [offset]: `${100 * (viewport[offset] - extent[offset]) / extent.width}%`,
         };
 
         return (

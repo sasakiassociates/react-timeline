@@ -17,7 +17,7 @@ class BlockVisualizer extends React.Component {
         const { blocks, config, viewport } = this.props.store;
 
         let height = 100 * config.blockHeight / blocks.extent.height;
-        height = height < 5 ? '1px' : `${height}%`;
+        height = height < 4 ? '1px' : `${height}%`;
 
         return (
             <div className="react-timeline__scrubber-visualizer react-timeline__visualizer--block">
