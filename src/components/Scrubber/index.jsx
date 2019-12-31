@@ -8,6 +8,8 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
 
+import BlockVisualizer from './BlockVisualizer';
+
 
 @inject('store')
 @observer
@@ -29,6 +31,8 @@ class Scrubber extends React.Component {
                     className="react-timeline__scrubber-viewport"
                     style={scrubber}
                 />
+
+                <BlockVisualizer />
             </div>
         );
     }
