@@ -42,4 +42,8 @@ export default class ViewportStore {
         return Math.abs(this.right - this.left);
     }
 
+    @computed get height() {
+        return Math.abs(this.top - this.bottom);
+    }
+
 }

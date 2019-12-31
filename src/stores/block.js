@@ -38,16 +38,23 @@ export default class BlockStore {
     }
 
     @computed get extent() {
-        const { viewport } = this.root;
-        let left = viewport.left;
-        let right = viewport.right;
+        let { left, right, bottom, top } = this.root.viewport;
 
         this.elements.forEach(block => {
             if (block.start < left) left = block.start;
             if (block.end > right) right = block.end;
+            if (block.y > bottom) bottom = block.y;
+            if (block.y < top) top = block.y;
         });
 
-        return { left, right, width: Math.abs(left - right) };
+        return {
+            left,
+            right,
+            top,
+            bottom,
+            width: Math.abs(left - right),
+            height: Math.abs(top - bottom),
+        };
     }
 
     @computed get selected() {
