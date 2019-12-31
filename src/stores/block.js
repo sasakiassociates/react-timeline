@@ -37,6 +37,19 @@ export default class BlockStore {
         }
     }
 
+    @computed get extent() {
+        const { viewport } = this.root;
+        let left = viewport.left;
+        let right = viewport.right;
+
+        this.elements.forEach(block => {
+            if (block.start < left) left = block.start;
+            if (block.end > right) right = block.end;
+        });
+
+        return { left, right };
+    }
+
     @computed get selected() {
         return this.elements.filter(block => block.selected);
     }
