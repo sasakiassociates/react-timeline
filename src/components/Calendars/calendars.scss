@@ -2,7 +2,14 @@
     flex: 1 0 10%;
     min-height: 0;
 
+    overflow: hidden;
+
     canvas {
         opacity: .4;
+    }
+
+    &-date {
+        position: absolute;
+        bottom: 5px;
     }
 }

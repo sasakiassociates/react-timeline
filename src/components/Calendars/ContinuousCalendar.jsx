@@ -20,6 +20,20 @@ class ContinuousCalendar extends React.Component {
         this.renderGrid();
     }
 
+    renderDates() {
+        return this.props.store.spaces.grid.primary.map((x, i) => {
+            return (
+                <div
+                    className="react-timeline__calendar-date"
+                    style={{ left: `${x}px` }}
+                    key={i}
+                >
+                    {i}
+                </div>
+            );
+        });
+    }
+
     renderGrid() {
         if (this.grid) {
             const { config, spaces, ui, viewport } = this.props.store;
@@ -31,15 +45,6 @@ class ContinuousCalendar extends React.Component {
             // Primary Lines
             ctx.strokeStyle = config.colors.primaryLine;
             spaces.grid.primary.forEach(x => {
-                ctx.beginPath();
-                ctx.moveTo(x, 0);
-                ctx.lineTo(x, height);
-                ctx.stroke();
-            });
-
-            // Secondary Lines
-            ctx.strokeStyle = config.colors.secondaryLine;
-            spaces.grid.secondary.forEach(x => {
                 ctx.beginPath();
                 ctx.moveTo(x, 0);
                 ctx.lineTo(x, height);
@@ -60,6 +65,7 @@ class ContinuousCalendar extends React.Component {
                     ref={el => this.grid = el}
                 />
 
+                {this.renderDates()}
             </div>
         );
     }
