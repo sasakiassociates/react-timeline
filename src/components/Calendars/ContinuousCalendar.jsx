@@ -61,7 +61,7 @@ class ContinuousCalendar extends React.Component {
             <div className="react-timeline__calendar react-timeline__calendar-continuous">
                 <canvas
                     width={`${width}px`}
-                    height={`${height * .1}px`}
+                    height={`${height * .05}px`}
                     ref={el => this.grid = el}
                 />
 

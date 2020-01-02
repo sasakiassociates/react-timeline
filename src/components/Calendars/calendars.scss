@@ -1,5 +1,5 @@
 .react-timeline__calendar {
-    flex: 1 0 10%;
+    flex: 1 0 5%;
     min-height: 0;
 
     overflow: hidden;
@@ -11,5 +11,9 @@
     &-date {
         position: absolute;
         bottom: 5px;
+
+        margin-left: 4px;
+
+        font-size: 11px;
     }
 }

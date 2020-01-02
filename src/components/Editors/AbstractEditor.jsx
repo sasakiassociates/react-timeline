@@ -144,7 +144,7 @@ class AbstractEditor extends React.Component {
             >
                 <canvas
                     width={`${width}px`}
-                    height={`${height * .8}px`}
+                    height={`${height * .85}px`}
                     ref={el => this.grid = el}
                     onWheel={e => this.onScroll(e)}
                     onMouseDown={e => this.onMouseDown(e)}

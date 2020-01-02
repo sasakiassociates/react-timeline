@@ -23,7 +23,7 @@ class SelectBox extends React.Component {
         };
 
         if (selectBox.height < 0) {
-            selectBoxStyles.bottom = `${(height * .8) - (selectBox.y - top)}px`;
+            selectBoxStyles.bottom = `${(height * .85) - (selectBox.y - top)}px`;
         }
         else {
             selectBoxStyles.top = `${selectBox.y - top}px`;
