@@ -13,9 +13,6 @@ import SelectBox from './SelectBox';
 import Action, { actions } from '../../types/action';
 
 
-const TIMES = [time.SECOND, time.MINUTE, time.HOUR, time.DAY, time.WEEK, time.YEAR];
-
-
 class AbstractEditor extends React.Component {
 
     componentDidMount() {
@@ -113,49 +110,24 @@ class AbstractEditor extends React.Component {
             const ctx = this.grid.getContext('2d');
             ctx.clearRect(0, 0, width, height);
 
-            let time;
-            TIMES.some((unit, i) => {
-                if (viewport.width / unit < config.minLineWidth) {
-                    return !!(time = i);
-                }
-            });
-
-            const units = viewport.width / TIMES[time];
-            const unitWidth = width / units;
-            const offset = unitWidth * (1 - (TIMES[time] - (viewport.left % TIMES[time])) / TIMES[time]);
-
-            const { subUnits, subUnitWidth } = (function grid(subUnits) {
-                const subUnitWidth = unitWidth / Math.round(subUnits / units);
-                if (subUnitWidth < config.minLineWidth) {
-                    return grid(subUnits / 2);
-                }
-
-                return { subUnits, subUnitWidth };
-            })(Math.round(viewport.width / TIMES[time - 1]));
-
             // Primary Lines
-            for (let i = -1; i < Math.ceil(units); i++) {
-                const x = ((i + (offset > 0 ? 1 : 0)) * unitWidth) - offset;
-
-                // Primary line
-                ctx.strokeStyle = config.colors.primaryLine;
+            ctx.strokeStyle = config.colors.primaryLine;
+            spaces.grid.primary.forEach(x => {
                 ctx.beginPath();
                 ctx.moveTo(x, 0);
                 ctx.lineTo(x, height);
                 ctx.stroke();
+            });
 
-                // Secondary Lines
-                ctx.strokeStyle = config.colors.secondaryLine;
+            // Secondary Lines
+            ctx.strokeStyle = config.colors.secondaryLine;
+            spaces.grid.secondary.forEach(x => {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, height);
+                ctx.stroke();
+            });
 
-                for (let j = 1; j < Math.round(subUnits / units); j++) {
-                    const xs = x + (j * subUnitWidth);
-
-                    ctx.beginPath();
-                    ctx.moveTo(xs, 0);
-                    ctx.lineTo(xs, height);
-                    ctx.stroke();
-                }
-            }
         }
     }
 

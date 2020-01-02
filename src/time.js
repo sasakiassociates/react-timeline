@@ -16,4 +16,5 @@ export default {
     DAY,
     WEEK,
     YEAR,
+    ordered: [SECOND, MINUTE, HOUR, DAY, WEEK, YEAR],
 };
