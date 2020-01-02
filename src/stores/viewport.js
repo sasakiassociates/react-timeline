@@ -35,7 +35,7 @@ export default class ViewportStore {
     }
 
     @computed get bottom() {
-        return this.top + (this.root.ui.height * .75) || this.top;
+        return this.top + (this.root.ui.height * .8) || this.top;
     }
 
     @computed get width() {

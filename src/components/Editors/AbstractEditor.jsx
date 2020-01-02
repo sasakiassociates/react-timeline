@@ -127,7 +127,6 @@ class AbstractEditor extends React.Component {
                 ctx.lineTo(x, height);
                 ctx.stroke();
             });
-
         }
     }
 
@@ -145,7 +144,7 @@ class AbstractEditor extends React.Component {
             >
                 <canvas
                     width={`${width}px`}
-                    height={`${height * .75}px`}
+                    height={`${height * .8}px`}
                     ref={el => this.grid = el}
                     onWheel={e => this.onScroll(e)}
                     onMouseDown={e => this.onMouseDown(e)}

@@ -1,13 +1,11 @@
 .react-timeline__visualizer {
-    $root: &;
 
-    &--block {
-        #{$root}-block {
-            position: absolute;
+    &-block {
+        position: absolute;
 
-            height: 10px;
-            width: 20px;
-            background: $color_bg-light;
-        }
+        height: 10px;
+        width: 20px;
+        background: $color_bg-light;
     }
+
 }

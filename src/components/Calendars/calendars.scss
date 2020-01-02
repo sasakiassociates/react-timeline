@@ -1,3 +1,8 @@
 .react-timeline__calendar {
-    flex: 1 0 12.5%;
+    flex: 1 0 10%;
+    min-height: 0;
+
+    canvas {
+        opacity: .4;
+    }
 }

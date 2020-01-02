@@ -14,16 +14,6 @@ $color_font-light: #DDDDDD;
 $color_highlight: #3EC1C1;
 
 
-/**
- * Imports
- */
-
-@import 'components/Block/block';
-@import 'components/Calendars/calendars';
-@import 'components/Editors/editors';
-@import 'components/Scrubber/scrubber';
-@import 'components/Scrubber/visualizer';
-
 
 /**
  * Globals
@@ -40,7 +30,7 @@ $color_highlight: #3EC1C1;
 
     background: $color_bg-dark;
 
-    & > * {
+    & * {
         position: relative;
         box-sizing: border-box;
     }
@@ -56,4 +46,14 @@ $color_highlight: #3EC1C1;
     &--selecting * {
         cursor: nwse-resize !important;
     }
+
+/**
+ * Imports
+ */
+
+    @import 'components/Block/block';
+    @import 'components/Calendars/calendars';
+    @import 'components/Editors/editors';
+    @import 'components/Scrubber/scrubber';
+    @import 'components/Scrubber/visualizer';
 }

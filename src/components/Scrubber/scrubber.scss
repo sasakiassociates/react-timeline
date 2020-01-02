@@ -1,11 +1,11 @@
 .react-timeline__scrubber {
-    flex: 1 0 12.5%;
+    flex: 1 0 10%;
 
     &-viewport {
         position: absolute;
         z-index: 1;
 
-        border: 1px solid $color_bg-light;
+        border: 1px solid rgba($color_bg-light, .6);
     }
 
     &-visualizer {
