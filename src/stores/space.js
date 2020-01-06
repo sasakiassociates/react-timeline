@@ -34,7 +34,7 @@ class SpaceStore {
         const { ui, viewport } = this.root;
         const { container } = ui;
 
-        return viewport.left + (viewport.width * (px - container.left) / container.width);
+        return container ? viewport.left + (viewport.width * (px - container.left) / container.width) : 0;
     }
 
 

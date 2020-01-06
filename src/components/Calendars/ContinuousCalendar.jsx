@@ -7,6 +7,8 @@
 import React from 'react';
 import { inject, observer } from 'mobx-react';
 
+import time  from '../../time';
+
 
 @inject('store')
 @observer
@@ -21,14 +23,19 @@ class ContinuousCalendar extends React.Component {
     }
 
     renderDates() {
+        const { spaces } = this.props.store;
+
         return this.props.store.spaces.grid.primary.map((x, i) => {
+            let date = new Date(Math.floor(1000 * (spaces.timeMeridian + spaces.pxToTime(x))));
+            date = time.format.DAY(date);
+
             return (
                 <div
                     className="react-timeline__calendar-date"
                     style={{ left: `${x}px` }}
                     key={i}
                 >
-                    {i}
+                    {date}
                 </div>
             );
         });
