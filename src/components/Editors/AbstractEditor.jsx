@@ -76,10 +76,10 @@ class AbstractEditor extends React.Component {
         const {config, ui, viewport} = this.props.store;
 
         const xRatio = (clientX - target.getBoundingClientRect().left) / ui.width;
-        const growthMod = deltaY > 0 ? config.zoomSpeed : 1 / config.zoomSpeed;
+        let growthMod = deltaY > 0 ? config.zoomSpeed : 1 / config.zoomSpeed;
 
-        if (viewport.width * growthMod > config.viewportLimit.max.width) return;
-        if (viewport.width * growthMod < config.viewportLimit.min.width) return;
+        growthMod = Math.min(growthMod, config.viewportLimit.max.width/viewport.width);
+        growthMod = Math.max(growthMod, config.viewportLimit.min.width/viewport.width);
 
         const delta = ((viewport.width * growthMod) - viewport.width);
 

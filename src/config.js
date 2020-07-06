@@ -21,10 +21,12 @@ export default {
 
     zoomSpeed: 1.3,
 
-    defaultViewportWidth: time.YEAR,
+    startYear: 2020,
+    defaultViewportWidth: time.YEAR * 3,
+    defaultBlockWidth: time.YEAR / 2,
     viewportLimit: {
         max: {width: time.DECADE * 10},
-        min: {width: time.WEEK}
+        min: {width: time.YEAR}
     }
 
 };

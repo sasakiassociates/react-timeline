@@ -26,7 +26,7 @@ class ContinuousRowEditor extends AbstractEditor {
 
             const y = Math.floor(((e.clientY - e.target.getBoundingClientRect().top) + top) / config.blockHeight);
             const startTime = spaces.pxToTime(e.clientX);
-            const endTime = startTime + time.YEAR;
+            const endTime = startTime + config.defaultBlockWidth;
 
             if (Math.random() < 0.3) {
                 blocks.createBlock(startTime, endTime, y * config.blockHeight);

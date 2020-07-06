@@ -12,17 +12,7 @@ const QUARTER = 3 * MONTH;
 const YEAR = 4 * QUARTER;
 const DECADE = 10 * YEAR;
 
-class DateFormatter {
-
-    SECONDS(d) {
-        return `${d.getSeconds()}`;
-    }
-
-    DAY(d) {
-        return `${d.getMonth() + 1}/${d.getDate()}`
-    }
-
-}
+const month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 export default {
     SECOND,
@@ -35,7 +25,28 @@ export default {
     YEAR,
     DECADE,
     ordered: [SECOND, MINUTE, HOUR, DAY, WEEK, MONTH, QUARTER, YEAR, DECADE],
-    format: new DateFormatter(),
+    displayTimeUnits: (startYear, value, unit) => {
+        switch (unit) {
+            case SECOND:
+                return value + ' second';
+            case MINUTE:
+                return value + ' minute';
+            case HOUR:
+                return value + ' hour';
+            case DAY:
+                return value + ' day';
+            case WEEK:
+                return value + ' week';
+            case MONTH:
+                return month[value % 12] + ' ' + (startYear + Math.floor(value / 12));
+            case QUARTER:
+                return startYear + Math.floor(value / 4) + ': Q' + (1 + value % 4);
+            case YEAR:
+                return startYear + value;
+            case DECADE:
+                return Math.floor(startYear / 10) * 10 + value * 10;
+        }
+    },
     displayText: (unit) => {
         switch (unit) {
             case SECOND:

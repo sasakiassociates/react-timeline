@@ -13,6 +13,7 @@ class SpaceStore {
     constructor(root, props) {
         this.root = root;
 
+        this.config = props;
         this.setTimeMeridian(props.timeMeridian);
     }
 
@@ -103,7 +104,7 @@ class SpaceStore {
     }
 
     displayPrimary(seconds) {
-        return Math.round(seconds / this.primaryTimeUnit) + time.displayText(this.primaryTimeUnit);
+        return time.displayTimeUnits(this.config.startYear, Math.round(seconds / this.primaryTimeUnit), this.primaryTimeUnit);
     }
 
     @computed get secondaryTimeUnit() {
