@@ -91,7 +91,8 @@ class SpaceStore {
     @computed get primaryTimeUnit() {
         return time.ordered[this.time];
     }
-    @computed displayPrimary(seconds) {
+
+    displayPrimary(seconds) {
         return Math.floor(seconds / this.primaryTimeUnit) + time.displayText(this.primaryTimeUnit);
     }
 
