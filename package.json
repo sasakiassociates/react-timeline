@@ -13,8 +13,8 @@
     "npm": ">=5"
   },
   "scripts": {
-    "build": "NODE_ENV=production npx rollup -c",
-    "start": "NODE_ENV=dev npx rollup -c -w"
+    "build": "set NODE_ENV=production && npx rollup -c",
+    "start": "set NODE_ENV=dev && npx rollup -c -w"
   },
   "files": [
     "dist"

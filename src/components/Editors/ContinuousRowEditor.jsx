@@ -27,7 +27,17 @@ class ContinuousRowEditor extends AbstractEditor {
             const startTime = spaces.pxToTime(e.clientX);
             const endTime = spaces.pxToTime(e.clientX + (width * .1));
 
-            blocks.createBlock(startTime, endTime, y * config.blockHeight);
+            if (Math.random() < 0.3) {
+                blocks.createBlock(startTime, endTime, y * config.blockHeight);
+            } else {
+                const block1 = blocks.createBlock(startTime-30000, startTime, y * config.blockHeight);
+                block1.color = '#c8fff0';
+                const block2 = blocks.createBlock(startTime, endTime, y * config.blockHeight);
+
+                block1.setBlockRight(block2);
+                block2.setBlockLeft(block1);
+            }
+
         }
     }
 
@@ -45,10 +55,9 @@ class ContinuousRowEditor extends AbstractEditor {
             const deltaY = (config.blockHeight * rowLevel);
 
             blocks.selected.forEach(_block => {
-                _block.setStart(_block.start + deltaX);
-                _block.setEnd(_block.end + deltaX);
-                _block.setY(_block.y + deltaY - (_block.y % config.blockHeight));
+                _block.moveBy(deltaX, deltaY - (_block.y % config.blockHeight));
             });
+            console.log('onDrag');
 
         },
     }

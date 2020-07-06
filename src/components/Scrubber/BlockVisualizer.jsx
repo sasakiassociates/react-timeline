@@ -33,6 +33,7 @@ class BlockVisualizer extends React.Component {
                                 top: `${100 * (block.y - blocks.extent.top) / blocks.extent.height}%`,
                                 left: `${100 * (block.start - blocks.extent.left) / blocks.extent.width}%`,
                                 width,
+                                backgroundColor: block.color,
                                 height,
                             }}
                         />

@@ -18,9 +18,11 @@ export default class BlockStore {
     @observable elements = [];
 
     @action createBlock(start, end, y) {
-        this.elements.push(new Block(
+        let block = new Block(
             start, end, y, this.root.ui, this.root.viewport
-        ));
+        );
+        this.elements.push(block);
+        return block;
     }
 
     @action remove(block) {

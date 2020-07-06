@@ -8,8 +8,8 @@ export default {
     blockHeight: 20, // px
 
     colors: {
-        primaryLine: '#cc0000',
-        secondaryLine: '#0000cc',
+        primaryLine: '#5d5d65',
+        secondaryLine: '#2a2b30',
     },
 
     minLineWidth: 24, // px

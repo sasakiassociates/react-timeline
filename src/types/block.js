@@ -5,7 +5,7 @@
  */
 
 import uuidv4 from 'uuid/v4';
-import { action, computed, observable } from 'mobx';
+import {action, computed, observable} from 'mobx';
 
 
 export default class Block {
@@ -18,27 +18,100 @@ export default class Block {
         this.setEnd(end);
         this.setStart(start);
         this.setY(y);
+        console.log(y);
+        let hackColor = '#e8ca15';
+        if (y > 100) {
+            hackColor = '#dd373a';
+        }
+        if (y > 400) {
+            hackColor = '#ce3edd';
+        }
+        if (y > 700) {
+            hackColor = '#73eeed';
+        }
+        if (y > 1000) {
+            hackColor = '#ade859';
+        }
+        this.setColor(hackColor);
     }
 
+    @observable blockLeft;
 
-    @observable end
-    @action setEnd(end) {
+    @action setBlockLeft(blockLeft) {
+        this.blockLeft = blockLeft;
+    }
+
+    @observable blockRight;
+
+    @action setBlockRight(blockRight) {
+        this.blockRight = blockRight;
+    }
+
+    @observable color;
+
+    @action setColor(color) {
+        this.color = color;
+    }
+
+    @observable end;
+
+    @action setEnd(end, updateNeighbor = true) {
         this.end = Math.round(end);
+        if (updateNeighbor && this.blockRight) {
+            this.blockRight.setStart(this.end, false);
+        }
+    }
+
+    @observable start;
+
+    @action setStart(start, updateNeighbor = true) {
+        this.start = Math.round(start);
+        if (updateNeighbor && this.blockLeft) {
+            this.blockLeft.setEnd(this.start, false);
+        }
     }
 
     @observable selected = false;
-    @action setSelected(selected = true) {
+
+    @action setSelected(selected = true, updateNeighbor = false) {
         this.selected = selected;
+        if (updateNeighbor) {
+            if (this.blockLeft) {
+                this.blockLeft.setSelected(this.selected, false);
+            }
+            if (this.blockRight) {
+                this.blockRight.setSelected(this.selected, false);
+            }
+        }
     }
 
-    @observable start
-    @action setStart(start) {
-        this.start = Math.round(start);
-    }
+    @observable y;
 
-    @observable y
-    @action setY(y) {
+    @action setY(y, updateNeighbor = true) {
         this.y = y;
+        if (updateNeighbor) {
+            if (this.blockLeft) {
+                this.blockLeft.setY(this.y, false);
+            }
+            if (this.blockRight) {
+                this.blockRight.setY(this.y, false);
+            }
+        }
+    }
+
+    @action
+    moveBy(deltaX, deltaY, updateNeighbor = true) {
+        this.setStart(this.start + deltaX, false);
+        this.setEnd(this.end + deltaX, false);
+        this.setY(this.y + deltaY, false);
+        if (updateNeighbor) {
+            if (this.blockLeft) {
+                this.blockLeft.moveBy(deltaX, deltaY, false);
+            }
+            if (this.blockRight) {
+                this.blockRight.moveBy(deltaX, deltaY, false);
+            }
+        }
     }
 
     @computed get width() {
