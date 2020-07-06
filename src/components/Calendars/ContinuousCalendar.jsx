@@ -26,8 +26,9 @@ class ContinuousCalendar extends React.Component {
         const { spaces } = this.props.store;
 
         return this.props.store.spaces.grid.primary.map((x, i) => {
-            let date = new Date(Math.floor(1000 * (spaces.timeMeridian + spaces.pxToTime(x))));
-            date = time.format.DAY(date);
+            let time = Math.floor(1000 * (spaces.timeMeridian + spaces.pxToTime(x)));
+
+            const displayPrimary = spaces.displayPrimary(time);
 
             return (
                 <div
@@ -35,7 +36,7 @@ class ContinuousCalendar extends React.Component {
                     style={{ left: `${x}px` }}
                     key={i}
                 >
-                    {date}
+                    {displayPrimary}
                 </div>
             );
         });
