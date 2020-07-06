@@ -40,7 +40,7 @@ export default {
             case MONTH:
                 return month[value % 12] + ' ' + (startYear + Math.floor(value / 12));
             case QUARTER:
-                return startYear + Math.floor(value / 4) + ': Q' + (1 + value % 4);
+                return `${value % 4 === 0 ? (`${startYear + Math.floor(value / 4)}: `) : ''}Q${1 + value % 4}`;
             case YEAR:
                 return startYear + value;
             case DECADE:
