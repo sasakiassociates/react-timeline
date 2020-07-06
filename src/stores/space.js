@@ -88,6 +88,17 @@ class SpaceStore {
         return { count, width };
     }
 
+    @computed get primaryTimeUnit() {
+        return time.ordered[this.time];
+    }
+    @computed displayPrimary(seconds) {
+        return Math.floor(seconds / this.primaryTimeUnit) + time.displayText(this.primaryTimeUnit);
+    }
+
+    @computed get secondaryTimeUnit() {
+        return time.ordered[this.time - 1];
+    }
+
 
     @computed get secondaryUnits() {
         const { config, viewport } = this.root;
