@@ -3,8 +3,6 @@ import time from './time';
 
 export default {
 
-    baseWidth: 150,
-    baseTime: time.DAY,
     blockHeight: 20, // px
 
     colors: {
@@ -22,5 +20,11 @@ export default {
     timeMeridian: Math.round(Date.now() / 1000),
 
     zoomSpeed: 1.3,
+
+    defaultViewportWidth: time.YEAR,
+    viewportLimit: {
+        max: {width: time.DECADE * 10},
+        min: {width: time.WEEK}
+    }
 
 };

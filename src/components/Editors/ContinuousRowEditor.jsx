@@ -5,9 +5,10 @@
  * remains snapped to a discrete track of rows.
  */
 
-import { inject, observer } from 'mobx-react';
+import {inject, observer} from 'mobx-react';
 
 import AbstractEditor from './AbstractEditor';
+import time from "../../time";
 
 
 @inject('store')
@@ -19,18 +20,18 @@ class ContinuousRowEditor extends AbstractEditor {
         // to check for a single correct target than having to remember to prevent
         // propogation of doubleClick events for every incorrect child element.
         if (e.target === this.grid) {
-            const { blocks, config, spaces, ui, viewport } = this.props.store;
-            const { width, height } = ui;
-            const { left, right, top } = viewport;
+            const {blocks, config, spaces, ui, viewport} = this.props.store;
+            const {width, height} = ui;
+            const {left, right, top} = viewport;
 
             const y = Math.floor(((e.clientY - e.target.getBoundingClientRect().top) + top) / config.blockHeight);
             const startTime = spaces.pxToTime(e.clientX);
-            const endTime = spaces.pxToTime(e.clientX + (width * .1));
+            const endTime = startTime + time.YEAR;
 
             if (Math.random() < 0.3) {
                 blocks.createBlock(startTime, endTime, y * config.blockHeight);
             } else {
-                const block1 = blocks.createBlock(startTime-30000, startTime, y * config.blockHeight);
+                const block1 = blocks.createBlock(startTime - time.MONTH * 3, startTime, y * config.blockHeight);
                 block1.color = '#c8fff0';
                 const block2 = blocks.createBlock(startTime, endTime, y * config.blockHeight);
 
@@ -42,9 +43,9 @@ class ContinuousRowEditor extends AbstractEditor {
     }
 
     listeners = {
-        onDrag({ x, y }) {
-            const { blocks, config, spaces, ui, viewport } = this.root;
-            const { block, startX, startY, top } = this.userAction.data;
+        onDrag({x, y}) {
+            const {blocks, config, spaces, ui, viewport} = this.root;
+            const {block, startX, startY, top} = this.userAction.data;
 
             const xPos = (x - startX) - config.resizeHandleWidth; // Position minus the width of the resize handle
             const yPos = y - top;
@@ -57,7 +58,7 @@ class ContinuousRowEditor extends AbstractEditor {
             blocks.selected.forEach(_block => {
                 _block.moveBy(deltaX, deltaY - (_block.y % config.blockHeight));
             });
-            console.log('onDrag');
+            // console.log('onDrag');
 
         },
     }

@@ -28,14 +28,6 @@ class AbstractEditor extends React.Component {
     }
 
     componentDidUpdate() {
-        const { config, ui, viewport } = this.props.store;
-
-        // If the viewport is still the initial value, define a reasonable viewport
-        // width from the right to the left (initial value is meridian) using config defaults.
-        if (viewport.right === 0) {
-            viewport.setRight((ui.width / config.baseWidth) * config.baseTime);
-        }
-
         this.renderGrid();
     }
 
@@ -78,21 +70,25 @@ class AbstractEditor extends React.Component {
         if (Date.now() - this.mouseDownTime < 200) {
             this.props.store.blocks.select();
         }
-    }
+    };
 
-    onScroll = ({ clientX, deltaY, target }) => {
-        const { config, ui, viewport } = this.props.store;
+    onScroll = ({clientX, deltaY, target}) => {
+        const {config, ui, viewport} = this.props.store;
 
         const xRatio = (clientX - target.getBoundingClientRect().left) / ui.width;
         const growthMod = deltaY > 0 ? config.zoomSpeed : 1 / config.zoomSpeed;
+
+        if (viewport.width * growthMod > config.viewportLimit.max.width) return;
+        if (viewport.width * growthMod < config.viewportLimit.min.width) return;
+
         const delta = ((viewport.width * growthMod) - viewport.width);
 
         viewport.setLeft(viewport.left - (delta * xRatio));
         viewport.setRight(viewport.right + (delta * (1 - xRatio)));
-    }
+    };
 
     renderBlocks = () => {
-        const { blocks, config } = this.props.store;
+        const {blocks, config} = this.props.store;
 
         return blocks.visible.map(block => (
             <Block
@@ -100,7 +96,7 @@ class AbstractEditor extends React.Component {
                 block={block}
             />
         ));
-    }
+    };
 
     renderGrid = () => {
         if (this.grid) {

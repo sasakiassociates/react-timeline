@@ -23,10 +23,10 @@ class ContinuousCalendar extends React.Component {
     }
 
     renderDates() {
-        const { spaces } = this.props.store;
+        const { spaces, ui } = this.props.store;
 
         return this.props.store.spaces.grid.primary.map((x, i) => {
-            let time = Math.floor(1000 * (spaces.timeMeridian + spaces.pxToTime(x)));
+            let time = Math.round(spaces.internalPxToTime(x));
 
             const displayPrimary = spaces.displayPrimary(time);
 

@@ -10,6 +10,7 @@ const WEEK = 7 * DAY;
 const MONTH = 4 * WEEK;
 const QUARTER = 3 * MONTH;
 const YEAR = 4 * QUARTER;
+const DECADE = 10 * YEAR;
 
 class DateFormatter {
 
@@ -32,7 +33,8 @@ export default {
     MONTH,
     QUARTER,
     YEAR,
-    ordered: [SECOND, MINUTE, HOUR, DAY, WEEK, MONTH, QUARTER, YEAR],
+    DECADE,
+    ordered: [SECOND, MINUTE, HOUR, DAY, WEEK, MONTH, QUARTER, YEAR, DECADE],
     format: new DateFormatter(),
     displayText: (unit) => {
         switch (unit) {
@@ -52,6 +54,8 @@ export default {
                 return 'quarter';
             case YEAR:
                 return 'year';
+            case DECADE:
+                return 'decade';
         }
     }
 };

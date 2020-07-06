@@ -4,7 +4,7 @@
  * Responsible for projecting between time, unit, and pixel spaces.
  */
 
-import { action, computed, observable } from 'mobx';
+import {action, computed, observable} from 'mobx';
 import time from '../time';
 
 
@@ -18,38 +18,48 @@ class SpaceStore {
 
 
     @observable timeMeridian;
+
     @action setTimeMeridian(meridian) {
         this.timeMeridian = meridian;
     }
 
 
     pxDelta(start, end, withContainer = true) {
-        const { container } = this.root.ui;
+        const {container} = this.root.ui;
 
         return ((end - (withContainer ? container.left : 0)) - start) / container.width;
     }
 
+    internalPxToTime(px) {
+        const {ui, viewport} = this.root;
+        const {container} = ui;
+        if (!container) {
+            return this.pxToTime(px);
+        }
+        return this.pxToTime(px + container.left);
+    }
+
 
     pxToTime(px) {
-        const { ui, viewport } = this.root;
-        const { container } = ui;
+        const {ui, viewport} = this.root;
+        const {container} = ui;
 
         return container ? viewport.left + (viewport.width * (px - container.left) / container.width) : 0;
     }
 
 
     timeToPx(time) {
-        const { ui, viewport } = this.root;
-        const { container } = ui;
+        const {ui, viewport} = this.root;
+        const {container} = ui;
 
         return (container.width * (time - viewport.left) / viewport.width);
     }
 
 
     @computed get grid() {
-        const { config, viewport } = this.root;
+        const {config, viewport} = this.root;
 
-        const offset = this.primaryUnits.width * (1 - (time.ordered[this.time] - (viewport.left % time.ordered[this.time])) / time.ordered[this.time]);
+        const offset = this.primaryUnits.width * (1 - (this.primaryTimeUnit - (viewport.left % this.primaryTimeUnit)) / this.primaryTimeUnit);
 
         const primary = [];
         const secondary = [];
@@ -63,12 +73,12 @@ class SpaceStore {
             }
         }
 
-        return { primary, secondary };
+        return {primary, secondary};
     }
 
 
     @computed get time() {
-        const { config, viewport } = this.root;
+        const {config, viewport} = this.root;
 
         let _time;
         time.ordered.some((unit, i) => {
@@ -82,10 +92,10 @@ class SpaceStore {
 
 
     @computed get primaryUnits() {
-        const count = this.root.viewport.width / time.ordered[this.time];
+        const count = this.root.viewport.width / this.primaryTimeUnit;
         const width = this.root.ui.width / count;
 
-        return { count, width };
+        return {count, width};
     }
 
     @computed get primaryTimeUnit() {
@@ -93,7 +103,7 @@ class SpaceStore {
     }
 
     displayPrimary(seconds) {
-        return Math.floor(seconds / this.primaryTimeUnit) + time.displayText(this.primaryTimeUnit);
+        return Math.round(seconds / this.primaryTimeUnit) + time.displayText(this.primaryTimeUnit);
     }
 
     @computed get secondaryTimeUnit() {
@@ -102,7 +112,7 @@ class SpaceStore {
 
 
     @computed get secondaryUnits() {
-        const { config, viewport } = this.root;
+        const {config, viewport} = this.root;
         const primary = this.primaryUnits;
 
         return (function grid(count) {
@@ -111,8 +121,8 @@ class SpaceStore {
                 return grid(count / 2);
             }
 
-            return { count, width };
-        })(Math.round(viewport.width / time.ordered[this.time - 1]));
+            return {count, width};
+        })(Math.round(viewport.width / this.secondaryTimeUnit));
     }
 
 }
