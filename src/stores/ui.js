@@ -4,7 +4,7 @@
  * Stores the current state of the UI.
  */
 
-import { action, autorun, computed, observable } from 'mobx';
+import { action, computed, observable } from 'mobx';
 
 import Action, { actions } from '../types/action';
 
@@ -23,10 +23,6 @@ export default class UIStore {
 
         window.addEventListener('resize', () => this.setContainer.bind(this)());
         window.addEventListener('keydown', e => this.listeners.onKeyDown.bind(this)(e));
-
-        autorun(() => {
-            console.log(this.container);
-        });
     }
 
 
