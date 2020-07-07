@@ -63,8 +63,7 @@ export default class BlockStore {
     }
 
     @computed get visible() {
-        const { viewport } = this.root;
-        const blockHeight = 20;
+        const { config, viewport } = this.root;
 
         return this.elements.filter(block => (
             (
@@ -79,8 +78,8 @@ export default class BlockStore {
                     && block.end >= viewport.right
                 )
             ) && (
-                block.y >= viewport.top - blockHeight
-                && block.y <= viewport.bottom + blockHeight
+                block.y >= viewport.top - config.blockHeight
+                && block.y <= viewport.bottom + config.blockHeight
             )
         ));
     }
