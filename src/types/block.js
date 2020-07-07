@@ -35,6 +35,12 @@ export default class Block {
         this.setColor(hackColor);
     }
 
+    @observable name;
+
+    @action setName(name) {
+        this.name = name;
+    }
+
     @observable blockLeft;
 
     @action setBlockLeft(blockLeft) {

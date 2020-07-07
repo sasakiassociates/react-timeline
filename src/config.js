@@ -19,7 +19,7 @@ export default {
 
     timeMeridian: Math.round(Date.now() / 1000),
 
-    zoomSpeed: 1.3,
+    zoomSpeed: 1.15,
 
     startYear: 2020,
     defaultViewportWidth: time.YEAR * 3,

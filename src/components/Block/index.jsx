@@ -66,13 +66,14 @@ class Block extends React.Component {
 
     render() {
         const { config, spaces, viewport, ui } = this.props.store;
-        const { selected, start, width, y, color } = this.props.block;
+        const { selected, start, width, y, color, blockRight, name } = this.props.block;
         const x = spaces.timeToPx(start);
 
         const handleWidth = {
             flex: `0 0 ${config.resizeHandleWidth}px`,
         };
 
+        const showResizeHandleWidth = config.resizeHandleWidth * 3;
         return (
             <div
                 className={`react-timeline__block ${selected ? 'react-timeline__block--selected':''}`}
@@ -85,9 +86,14 @@ class Block extends React.Component {
                 }}
                 onMouseUp={e => this.onMouseUp(e)}
             >
-                <div className="react-timeline__block-handle" onMouseDown={e => this.onResize(e, 'start')} style={handleWidth} />
+                {width.px > showResizeHandleWidth &&  <div className="react-timeline__block-handle" onMouseDown={e => this.onResize(e, 'start')} style={handleWidth} />}
                 <div className="react-timeline__block-content" onMouseDown={e => this.onMouseDown(e)} />
-                <div className="react-timeline__block-handle" onMouseDown={e => this.onResize(e, 'end')} style={handleWidth} />
+                {width.px > showResizeHandleWidth &&  <div className="react-timeline__block-handle" onMouseDown={e => this.onResize(e, 'end')} style={handleWidth} />}
+                {name && !blockRight &&
+                <div className="react-timeline__block-label" style={{
+                    left: `${width.px}px`,
+                }}>{name}</div>
+                }
             </div>
         );
     }

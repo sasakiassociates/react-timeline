@@ -37,6 +37,8 @@ class ContinuousRowEditor extends AbstractEditor {
 
                 block1.setBlockRight(block2);
                 block2.setBlockLeft(block1);
+
+                block2.name = 'Project A';
             }
 
         }

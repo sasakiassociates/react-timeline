@@ -10,7 +10,8 @@ const WEEK = 7 * DAY;
 const MONTH = 4 * WEEK;
 const QUARTER = 3 * MONTH;
 const YEAR = 4 * QUARTER;
-const DECADE = 10 * YEAR;
+const QUIN = 5 * YEAR;
+const DECADE = 2 * QUIN;
 
 const month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
@@ -23,8 +24,9 @@ export default {
     MONTH,
     QUARTER,
     YEAR,
+    QUIN,
     DECADE,
-    ordered: [SECOND, MINUTE, HOUR, DAY, WEEK, MONTH, QUARTER, YEAR, DECADE],
+    ordered: [SECOND, MINUTE, HOUR, DAY, WEEK, MONTH, QUARTER, YEAR, QUIN, DECADE],
     displayTimeUnits: (startYear, value, unit) => {
         switch (unit) {
             case SECOND:
@@ -43,6 +45,8 @@ export default {
                 return `${value % 4 === 0 ? (`${startYear + Math.floor(value / 4)}: `) : ''}Q${1 + value % 4}`;
             case YEAR:
                 return startYear + value;
+            case QUIN:
+                return Math.floor(startYear / 5) * 5 + value * 5;
             case DECADE:
                 return Math.floor(startYear / 10) * 10 + value * 10;
         }
@@ -65,6 +69,8 @@ export default {
                 return 'quarter';
             case YEAR:
                 return 'year';
+            case QUIN:
+                return 'quinquennial';
             case DECADE:
                 return 'decade';
         }
