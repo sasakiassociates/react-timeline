@@ -1,5 +1,5 @@
 import React from 'react';
-import { observer, Provider } from 'mobx-react';
+import { Provider } from 'mobx-react';
 
 import './styles.scss';
 
@@ -11,7 +11,6 @@ import { ContinuousCalendar } from './components/Calendars';
 import { ContinuousEditor, ContinuousRowEditor } from './components/Editors';
 
 
-@observer
 class Timeline extends React.Component {
 
     static defaultProps = config;

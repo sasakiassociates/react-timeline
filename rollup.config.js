@@ -25,7 +25,7 @@ export default {
     replace({
         'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
     }),
-    postcss({ extract: true }),
+    postcss(),
     babel({
       exclude: 'node_modules/**',
     }),
