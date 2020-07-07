@@ -13,9 +13,8 @@ export default class BlockStore {
 
     constructor(root, props) {
         this.root = root;
+        this.elements = props.blocks || observable([]);
     }
-
-    @observable elements = [];
 
     @action createBlock(start, end, y) {
         let block = new Block(
