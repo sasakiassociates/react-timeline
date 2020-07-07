@@ -13,7 +13,7 @@ export default class BlockStore {
 
     constructor(root, props) {
         this.root = root;
-        this.elements = props.blocks || observable([]);
+        this.elements = props.blocks;
     }
 
     @action createBlock(start, end, y) {

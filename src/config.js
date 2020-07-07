@@ -1,8 +1,18 @@
+/**
+ * Config
+ *
+ * Any property that is in the config object is assignable
+ * through the Timeline component's props.
+ */
+
+import { observable } from 'mobx';
+
 import time from './time';
 
 
 export default {
 
+    blocks: observable([]),
     blockHeight: 20, // px
 
     colors: {
