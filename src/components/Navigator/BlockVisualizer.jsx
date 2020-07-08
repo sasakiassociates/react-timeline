@@ -1,8 +1,8 @@
 /**
- * Scrubber - Block Visualizer
+ * Navigator - Block Visualizer
  *
  * This visualizer renders the blocks as shown in the editor
- * but drawn to the scope of the scrubber.
+ * but drawn to the scope of the navigator.
  */
 
 import React from 'react';
@@ -20,7 +20,7 @@ class BlockVisualizer extends React.Component {
         height = height < 4 ? '1px' : `${height}%`;
 
         return (
-            <div className="react-timeline__scrubber-visualizer react-timeline__visualizer--block">
+            <div className="react-timeline__navigator-visualizer react-timeline__visualizer--block">
                 {blocks.elements.map(block => {
                     if (!block.width) return null;
                     let width = 100 * (viewport.width * block.width.time) / blocks.extent.width;

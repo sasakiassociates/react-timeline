@@ -6,7 +6,7 @@ import './styles.scss';
 import config from './config';
 import RootStore from './stores/root';
 import { actions } from './types/action';
-import Scrubber from './components/Scrubber';
+import Navigator from './components/Navigator';
 import { ContinuousCalendar } from './components/Calendars';
 import { ContinuousEditor, ContinuousRowEditor } from './components/Editors';
 import {autorun} from "mobx";
@@ -45,7 +45,7 @@ class Timeline extends React.Component {
                 >
                     <ContinuousCalendar />
                     <ContinuousRowEditor />
-                    <Scrubber />
+                    <Navigator />
                 </div>
             </Provider>
         );
