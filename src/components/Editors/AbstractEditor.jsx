@@ -9,6 +9,7 @@ import { inject, observer } from 'mobx-react';
 
 import Block from '../Block';
 import time from '../../time';
+import Scrubber from './Scrubber';
 import SelectBox from './SelectBox';
 import Action, { actions } from '../../types/action';
 
@@ -127,7 +128,7 @@ class AbstractEditor extends React.Component {
     }
 
     render() {
-        const { viewport, ui } = this.props.store;
+        const { config, viewport, ui } = this.props.store;
         const { height, selectBox, userAction, width } = ui;
         const { left } = viewport;
 
@@ -150,6 +151,8 @@ class AbstractEditor extends React.Component {
                 <div className="react-timeline__editor-layer--blocks">
                     {this.renderBlocks()}
                 </div>
+
+                {config.scrubber && <Scrubber />}
 
                 {userAction.type === actions.SELECT && selectBox && (
                     <SelectBox />
