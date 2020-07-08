@@ -9,7 +9,7 @@ import { actions } from './types/action';
 import Scrubber from './components/Scrubber';
 import { ContinuousCalendar } from './components/Calendars';
 import { ContinuousEditor, ContinuousRowEditor } from './components/Editors';
-
+import {autorun} from "mobx";
 
 class Timeline extends React.Component {
 
@@ -19,6 +19,15 @@ class Timeline extends React.Component {
         super(...arguments);
 
         this.store = new RootStore(props);
+
+        const {ui, viewport} = this.store;
+
+        autorun(() => {
+            if (!this.store.blocks.elements) return;
+            this.store.blocks.elements.forEach((block, i) => {
+                block.setViewport(ui, viewport);
+            });
+        });
     }
 
     componentWillUnmount() {
@@ -44,5 +53,6 @@ class Timeline extends React.Component {
 
 }
 
-
+export { default as timeScale } from "./time";
+export { default as Block } from "./types/block";
 export default Timeline;

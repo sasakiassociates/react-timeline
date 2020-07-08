@@ -22,6 +22,7 @@ class BlockVisualizer extends React.Component {
         return (
             <div className="react-timeline__scrubber-visualizer react-timeline__visualizer--block">
                 {blocks.elements.map(block => {
+                    if (!block.width) return null;
                     let width = 100 * (viewport.width * block.width.time) / blocks.extent.width;
                     width = width < 1 ? '1px' : `${width}%`;
 

@@ -4,7 +4,7 @@
  * Contains state for all Block components.
  */
 
-import { action, computed, observable } from 'mobx';
+import {action, autorun, computed, observable} from 'mobx';
 
 import Block from '../types/block';
 
@@ -16,10 +16,8 @@ export default class BlockStore {
         this.elements = props.blocks;
     }
 
-    @action createBlock(start, end, y) {
-        let block = new Block(
-            start, end, y, this.root.ui, this.root.viewport
-        );
+    @action createBlock(blockId, start, end, y) {
+        let block = new Block(blockId, start, end, y);
         this.elements.push(block);
         return block;
     }
@@ -39,7 +37,7 @@ export default class BlockStore {
     }
 
     @computed get extent() {
-        let { left, right, bottom, top } = this.root.viewport;
+        let {left, right, bottom, top} = this.root.viewport;
 
         this.elements.forEach(block => {
             if (block.start < left) left = block.start;
@@ -63,7 +61,7 @@ export default class BlockStore {
     }
 
     @computed get visible() {
-        const { config, viewport } = this.root;
+        const {config, viewport} = this.root;
 
         return this.elements.filter(block => (
             (
@@ -83,5 +81,4 @@ export default class BlockStore {
             )
         ));
     }
-
 }

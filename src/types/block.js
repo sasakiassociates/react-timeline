@@ -10,10 +10,9 @@ import {action, computed, observable} from 'mobx';
 
 export default class Block {
 
-    constructor(start, end, y, ui, viewport) {
+    constructor(blockId, start, end, y) {
         this.id = uuidv4();
-        this.ui = ui;
-        this.viewport = viewport;
+        this.blockId = blockId;
 
         this.setEnd(end);
         this.setStart(start);
@@ -33,6 +32,11 @@ export default class Block {
             hackColor = '#ade859';
         }
         this.setColor(hackColor);
+    }
+
+    setViewport(ui, viewport) {
+        this.ui = ui;
+        this.viewport = viewport;
     }
 
     @observable name;
@@ -75,6 +79,10 @@ export default class Block {
         if (updateNeighbor && this.blockLeft) {
             this.blockLeft.setEnd(this.start, false);
         }
+    }
+
+    @computed get duration() {
+        return this.end - this.start;
     }
 
     @observable selected = false;
@@ -121,6 +129,7 @@ export default class Block {
     }
 
     @computed get width() {
+        if (!this.viewport) return 0;
         let time = (this.end - this.start) / this.viewport.width;
         if (time < 0) {
             time = 0;

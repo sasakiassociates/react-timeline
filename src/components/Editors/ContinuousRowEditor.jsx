@@ -29,11 +29,11 @@ class ContinuousRowEditor extends AbstractEditor {
             const endTime = startTime + config.defaultBlockWidth;
 
             if (Math.random() < 0.3) {
-                blocks.createBlock(startTime, endTime, y * config.blockHeight);
+                blocks.createBlock('', startTime, endTime, y * config.blockHeight);
             } else {
-                const block1 = blocks.createBlock(startTime - time.MONTH * 3, startTime, y * config.blockHeight);
+                const block1 = blocks.createBlock('', startTime - time.MONTH * 3, startTime, y * config.blockHeight);
                 block1.color = '#c8fff0';
-                const block2 = blocks.createBlock(startTime, endTime, y * config.blockHeight);
+                const block2 = blocks.createBlock('', startTime, endTime, y * config.blockHeight);
 
                 block1.setBlockRight(block2);
                 block2.setBlockLeft(block1);
