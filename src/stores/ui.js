@@ -26,27 +26,6 @@ export default class UIStore {
     }
 
 
-    @observable width;
-    @observable height;
-    @action readDimensions() {
-        this.width = this.container.width;
-        this.height = this.container.height;
-    }
-
-
-    @observable container;
-    @observable containerElement;
-    @action setContainer(container = null) {
-        if (container) {
-            this.containerElement = container;
-        }
-
-        if (this.containerElement) {
-            this.container = this.containerElement.getBoundingClientRect();
-            this.readDimensions();
-        }
-    }
-
     /*
      * The default listeners are suited for the ContinuousEditor. All other editors
      * will likely need to override a few of these listeners by using setListeners().
@@ -161,7 +140,10 @@ export default class UIStore {
         },
 
         onScrub({ x }) {
-            console.log(x);
+            const realPos = 100 * x / this.width;
+            const pos = realPos > 100 ? 100 : (realPos < 0 ? 0 : realPos);
+
+            this.setScrubberPosition(pos);
         },
 
         onSelect({ x, y }) {
@@ -200,16 +182,32 @@ export default class UIStore {
         },
     }
 
+    @observable container;
+    @observable containerElement;
+    @action setContainer(container = null) {
+        if (container) {
+            this.containerElement = container;
+        }
+
+        if (this.containerElement) {
+            this.container = this.containerElement.getBoundingClientRect();
+        }
+    }
+
     @observable listeners;
     @action setListeners(listeners = {}) {
         this.listeners = { ...this.defaultListeners, ...listeners };
+    }
+
+    @observable scrubberPosition = 10;
+    @action setScrubberPosition(pos) {
+        this.scrubberPosition = pos;
     }
 
     @observable selectBox;
     @action setSelectBox(box = null) {
         this.selectBox = box;
     }
-
 
     @observable userAction;
     @action setAction(action = null) {
@@ -251,7 +249,6 @@ export default class UIStore {
         }
     }
 
-
     @computed get cursor() {
         return ({
             [actions.DRAG]: 'react-timeline--dragging',
@@ -263,6 +260,13 @@ export default class UIStore {
         })[this.userAction.type];
     }
 
+    @computed get height() {
+        return this.container ? this.container.height : 0;
+    }
+
+    @computed get width() {
+        return this.container ? this.container.width : 0;
+    }
 
     clearEvents() {
         this._events.forEach(({ name, listener, target }) => {

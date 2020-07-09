@@ -25,11 +25,9 @@ class Timeline extends React.Component {
             () => {
                 const { blocks, ui, viewport } = this.store;
 
-                if (blocks.elements) {
-                    blocks.elements.forEach((block, i) => {
-                        block.setViewport(ui, viewport);
-                    });
-                }
+                blocks.elements.forEach((block, i) => {
+                    block.setViewport(ui, viewport);
+                });
             }
         );
     }
