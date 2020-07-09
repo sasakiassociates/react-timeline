@@ -50,10 +50,9 @@ class SpaceStore {
 
 
     timeToPx(time) {
-        const {ui, viewport} = this.root;
-        const {container} = ui;
+        const { ui, viewport } = this.root;
 
-        return (container.width * (time - viewport.left) / viewport.width);
+        return (ui.width * (time - viewport.left) / viewport.width);
     }
 
 

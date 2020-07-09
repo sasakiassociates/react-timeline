@@ -26,7 +26,6 @@ export default {
     pushSpeed: .01,   // %
 
     resizeHandleWidth: 15,
-    scrubber: true,
     timeMeridian: Math.round(Date.now() / 1000),
 
     zoomSpeed: 1.15,

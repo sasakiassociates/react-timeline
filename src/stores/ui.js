@@ -15,10 +15,11 @@ const keys = {
 
 export default class UIStore {
 
-    constructor(root) {
+    constructor(root, props) {
         this.root = root;
 
         this.setAction(new Action(actions.NOOP));
+        this.setScrubber(props.scrubber);
         this.setListeners();
 
         window.addEventListener('resize', () => this.setContainer.bind(this)());
@@ -140,10 +141,7 @@ export default class UIStore {
         },
 
         onScrub({ x }) {
-            const realPos = 100 * x / this.width;
-            const pos = realPos > 100 ? 100 : (realPos < 0 ? 0 : realPos);
-
-            this.setScrubberPosition(pos);
+            this.setScrubber(this.root.spaces.pxToTime(x));
         },
 
         onSelect({ x, y }) {
@@ -199,9 +197,9 @@ export default class UIStore {
         this.listeners = { ...this.defaultListeners, ...listeners };
     }
 
-    @observable scrubberPosition = 10;
-    @action setScrubberPosition(pos) {
-        this.scrubberPosition = pos;
+    @observable scrubber;
+    @action setScrubber(pos) {
+        this.scrubber = pos;
     }
 
     @observable selectBox;

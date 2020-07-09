@@ -8,17 +8,20 @@ import Action, { actions } from '../../types/action';
 @observer
 class Scrubber extends React.Component {
 
-    onMouseDown = e => {
-        const { ui } = this.props.store;
-
-        ui.setAction(new Action(actions.SCRUB));
+    onMouseDown = () => {
+        this.props.store.ui.setAction(new Action(actions.SCRUB));
     }
 
     render() {
+        const { spaces, ui } = this.props.store;
+
         return (
             <div
                 className="react-timeline__editor-scrubber"
-                onMouseDown={e => this.onMouseDown(e)}
+                onMouseDown={this.onMouseDown.bind(this)}
+                style={{
+                    left: `${100 * spaces.timeToPx(ui.scrubber) / ui.width}%`,
+                }}
             />
         );
     }

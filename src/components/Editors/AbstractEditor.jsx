@@ -128,7 +128,7 @@ class AbstractEditor extends React.Component {
     }
 
     render() {
-        const { config, viewport, ui } = this.props.store;
+        const { viewport, ui } = this.props.store;
         const { height, selectBox, userAction, width } = ui;
         const { left } = viewport;
 
@@ -152,7 +152,7 @@ class AbstractEditor extends React.Component {
                     {this.renderBlocks()}
                 </div>
 
-                {config.scrubber && <Scrubber />}
+                {ui.scrubber && <Scrubber />}
 
                 {userAction.type === actions.SELECT && selectBox && (
                     <SelectBox />
