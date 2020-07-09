@@ -128,8 +128,8 @@ class AbstractEditor extends React.Component {
     }
 
     render() {
-        const { viewport, ui } = this.props.store;
-        const { height, selectBox, userAction, width } = ui;
+        const { spaces, viewport, ui } = this.props.store;
+        const { height, scrubber, selectBox, userAction, width } = ui;
         const { left } = viewport;
 
         const dblClick = e => this.createBlock(e);
@@ -152,7 +152,11 @@ class AbstractEditor extends React.Component {
                     {this.renderBlocks()}
                 </div>
 
-                <Scrubber />
+                <Scrubber>
+                    <div className='react-timeline__scrubber-date'>
+                        {spaces.displaySecondary(scrubber)}
+                    </div>
+                </Scrubber>
 
                 {userAction.type === actions.SELECT && selectBox && (
                     <SelectBox />

@@ -61,7 +61,7 @@ export default class BlockStore {
     }
 
     @computed get visible() {
-        const {config, viewport} = this.root;
+        const { config, viewport } = this.root;
 
         return this.elements.filter(block => (
             (

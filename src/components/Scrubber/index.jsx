@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import { inject, observer } from 'mobx-react';
 
 import Action, { actions } from '../../types/action';
@@ -26,6 +26,8 @@ class Scrubber extends React.Component {
                     className="react-timeline__scrubber-buffer"
                     onMouseDown={this.onMouseDown.bind(this)}
                 />
+
+                {this.props.children}
             </div>
         ) : null;
     }

@@ -26,7 +26,7 @@ class ContinuousCalendar extends React.Component {
     renderDates() {
         const { spaces, ui } = this.props.store;
 
-        return this.props.store.spaces.grid.primary.map((x, i) => {
+        return spaces.grid.primary.map((x, i) => {
             let time = Math.round(spaces.internalPxToTime(x));
 
             const displayPrimary = spaces.displayPrimary(time);

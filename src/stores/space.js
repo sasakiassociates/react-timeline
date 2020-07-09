@@ -34,10 +34,11 @@ class SpaceStore {
     internalPxToTime(px) {
         const {ui, viewport} = this.root;
         const {container} = ui;
-        if (!container) {
-            return this.pxToTime(px);
+        if (container) {
+            px += container.left;
         }
-        return this.pxToTime(px + container.left);
+
+        return this.pxToTime(px);
     }
 
 
@@ -103,13 +104,16 @@ class SpaceStore {
     }
 
     displayPrimary(seconds) {
-        return time.displayTimeUnits(this.config.startYear, Math.round(seconds / this.primaryTimeUnit), this.primaryTimeUnit);
+        return time.displayTimeUnits(this.config.startYear, Math.floor(seconds / this.primaryTimeUnit), this.primaryTimeUnit);
     }
 
     @computed get secondaryTimeUnit() {
-        return time.ordered[this.time - 1];
+        return time.ordered[this.time > 0 ? this.time - 1 : 0];
     }
 
+    displaySecondary(seconds) {
+        return time.displayTimeUnits(this.config.startYear, Math.floor(seconds / this.secondaryTimeUnit), this.secondaryTimeUnit);
+    }
 
     @computed get secondaryUnits() {
         const {config, viewport} = this.root;
