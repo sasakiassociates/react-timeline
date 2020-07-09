@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { inject, observer } from 'mobx-react';
 
 import Action, { actions } from '../../types/action';
@@ -15,15 +15,19 @@ class Scrubber extends React.Component {
     render() {
         const { spaces, ui } = this.props.store;
 
-        return (
+        return ui.scrubber ? (
             <div
-                className="react-timeline__editor-scrubber"
-                onMouseDown={this.onMouseDown.bind(this)}
+                className="react-timeline__scrubber"
                 style={{
                     left: `${100 * spaces.timeToPx(ui.scrubber) / ui.width}%`,
                 }}
-            />
-        );
+            >
+                <div
+                    className="react-timeline__scrubber-buffer"
+                    onMouseDown={this.onMouseDown.bind(this)}
+                />
+            </div>
+        ) : null;
     }
 
 }

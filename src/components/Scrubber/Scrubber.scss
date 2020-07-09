@@ -1,0 +1,25 @@
+.react-timeline__scrubber {
+    position: absolute;
+    top: 0;
+
+    width: 1px;
+    height: 100%;
+    overflow: visible;
+
+    text-align: center;
+    background: #fff;
+
+    &-buffer {
+        position: absolute;
+        top: 0;
+        left: -5px;
+
+        width: 10px;
+        height: 100%;
+        margin: 0 auto;
+
+        &:hover {
+            cursor: col-resize;
+        }
+    }
+}

@@ -8,6 +8,7 @@ import React from 'react';
 import { inject, observer } from 'mobx-react';
 
 import time  from '../../time';
+import Scrubber from '../Scrubber';
 
 
 @inject('store')
@@ -72,6 +73,8 @@ class ContinuousCalendar extends React.Component {
                     height={`${height * .05}px`}
                     ref={el => this.grid = el}
                 />
+
+                <Scrubber />
 
                 {this.renderDates()}
             </div>

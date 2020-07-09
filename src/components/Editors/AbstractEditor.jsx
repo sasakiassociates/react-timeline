@@ -9,7 +9,7 @@ import { inject, observer } from 'mobx-react';
 
 import Block from '../Block';
 import time from '../../time';
-import Scrubber from './Scrubber';
+import Scrubber from '../Scrubber';
 import SelectBox from './SelectBox';
 import Action, { actions } from '../../types/action';
 
@@ -152,7 +152,7 @@ class AbstractEditor extends React.Component {
                     {this.renderBlocks()}
                 </div>
 
-                {ui.scrubber && <Scrubber />}
+                <Scrubber />
 
                 {userAction.type === actions.SELECT && selectBox && (
                     <SelectBox />
