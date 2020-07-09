@@ -74,6 +74,7 @@ class Block extends React.Component {
         };
 
         const showResizeHandleWidth = config.resizeHandleWidth * 3;
+
         return (
             <div
                 className={`react-timeline__block ${selected ? 'react-timeline__block--selected':''}`}

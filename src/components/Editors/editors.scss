@@ -25,4 +25,20 @@
             pointer-events: none;
         }
     }
+
+    &-scrubber {
+        position: absolute;
+        left: 5%;
+        top: 0;
+
+        width: 5px;
+        height: 100%;
+
+        background: red;
+
+        &:hover {
+            cursor: col-resize;
+        }
+    }
+
 }

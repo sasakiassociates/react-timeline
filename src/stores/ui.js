@@ -160,6 +160,10 @@ export default class UIStore {
             });
         },
 
+        onScrub({ x }) {
+            console.log(x);
+        },
+
         onSelect({ x, y }) {
             const { blocks, spaces, ui, viewport } = this.root;
             const { startX, startY, top } = this.userAction.data;
@@ -232,6 +236,11 @@ export default class UIStore {
                 this._addEvent('mouseup', this.listeners.onMouseUp.bind(this));
                 break;
 
+            case actions.SCRUB:
+                this._addEvent('mousemove', this.listeners.onScrub.bind(this));
+                this._addEvent('mouseup', this.listeners.onMouseUp.bind(this));
+                break;
+
             case actions.SELECT:
                 this._addEvent('mousemove', this.listeners.onSelect.bind(this));
                 this._addEvent('mouseup', this.listeners.onMouseUp.bind(this));
@@ -248,6 +257,7 @@ export default class UIStore {
             [actions.DRAG]: 'react-timeline--dragging',
             [actions.PAN]: 'react-timeline--dragging',
             [actions.RESIZE]: 'react-timeline--resizing',
+            [actions.SCRUB]: 'react-timeline--resizing',
             [actions.SELECT]: 'react-timeline--selecting',
             [actions.NOOP]: '',
         })[this.userAction.type];
