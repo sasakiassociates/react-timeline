@@ -19,8 +19,11 @@ export default class UIStore {
         this.root = root;
 
         this.setAction(new Action(actions.NOOP));
-        this.setScrubber(props.scrubber);
         this.setListeners();
+
+        if (props.scrubber) {
+            this.setScrubber(props.scrubber === true ? this.root.viewport.width / 5 : props.scrubber);
+        }
 
         window.addEventListener('resize', () => this.setContainer.bind(this)());
         window.addEventListener('keydown', e => this.listeners.onKeyDown.bind(this)(e));

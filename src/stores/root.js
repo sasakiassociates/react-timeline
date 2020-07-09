@@ -19,8 +19,8 @@ export default class RootStore {
 
         this.blocks = new BlockStore(this, props);
         this.spaces = new SpaceStore(this, props);
-        this.ui = new UIStore(this, props);
         this.viewport = new ViewportStore(this, props);
+        this.ui = new UIStore(this, props);
     }
 
 };
