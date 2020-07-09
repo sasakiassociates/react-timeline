@@ -29,7 +29,6 @@ export default class UIStore {
         window.addEventListener('keydown', e => this.listeners.onKeyDown.bind(this)(e));
     }
 
-
     /*
      * The default listeners are suited for the ContinuousEditor. All other editors
      * will likely need to override a few of these listeners by using setListeners().
@@ -91,9 +90,7 @@ export default class UIStore {
             const { startX, startY, top } = this.userAction.data;
             const { pushSpeed, pushBuffer } = config;
 
-            const FPS = 50;
-
-            const pushWidth = viewport.width * pushSpeed;
+            const pushDelta = viewport.width * pushSpeed;
             const xPos = (x - ui.container.left) + startX;
             const yPos = (y - startY) - top;
 
@@ -101,13 +98,13 @@ export default class UIStore {
             if (xDirection !== null) {
                 if (this._intervals.horizontalPush === null) {
                     this._intervals.horizontalPush = setInterval(() => {
-                        viewport.setLeft(viewport.left + (xDirection * pushWidth));
-                        viewport.setRight(viewport.right + (xDirection * pushWidth));
+                        viewport.setLeft(viewport.left + (xDirection * pushDelta));
+                        viewport.setRight(viewport.right + (xDirection * pushDelta));
                         blocks.selected.forEach(block => {
-                            block.setEnd(block.end + (xDirection * pushWidth));
-                            block.setStart(block.start + (xDirection * pushWidth));
+                            block.setEnd(block.end + (xDirection * pushDelta));
+                            block.setStart(block.start + (xDirection * pushDelta));
                         });
-                    }, 1000 / FPS);
+                    }, this._interval);
                 }
             }
             else {
@@ -122,7 +119,7 @@ export default class UIStore {
                     this._intervals.verticalPush = setInterval(() => {
                         viewport.setTop(viewport.top + (yDirection * pushHeight));
                         blocks.selected.forEach(block => block.setY(block.y + (yDirection * pushHeight)));
-                    }, 1000 / FPS);
+                    }, this._interval);
                 }
             }
             else {
@@ -145,6 +142,42 @@ export default class UIStore {
 
         onScrub({ x }) {
             this.setScrubber(this.root.spaces.pxToTime(x));
+        },
+
+        onScrubPan({ x , y }) {
+            const { config, ui, viewport } = this.root;
+            const { pushBuffer, pushSpeed } = config;
+
+            const xPushDelta = viewport.width * pushSpeed;
+            const xDirection = x < pushBuffer ? -1 : x > ui.width - pushBuffer ? 1 : null;
+            if (xDirection !== null) {
+                if (this._intervals.horizontalPush === null) {
+                    this._intervals.horizontalPush = setInterval(() => {
+                        viewport.setLeft(viewport.left + (xDirection * xPushDelta));
+                        viewport.setRight(viewport.right + (xDirection * xPushDelta));
+                    }, this._interval);
+                }
+            }
+            else {
+                clearInterval(this._intervals.horizontalPush);
+                this._intervals.horizontalPush = null;
+            }
+
+            const yPos = y - this.container.top;
+            const yPushDelta = (viewport.bottom - viewport.top) * (pushSpeed * 2);
+            const yDirection = yPos < pushBuffer ? -1 : yPos > (ui.height * .85) - pushBuffer ? 1 : null;
+            if (yDirection !== null) {
+                if (this._intervals.verticalPush === null) {
+                    this._intervals.verticalPush = setInterval(() => {
+                        viewport.setTop(viewport.top + (yDirection * yPushDelta));
+                    }, this._interval);
+                }
+            }
+            else {
+                clearInterval(this._intervals.verticalPush);
+                this._intervals.verticalPush = null;
+            }
+
         },
 
         onSelect({ x, y }) {
@@ -237,6 +270,7 @@ export default class UIStore {
 
             case actions.SCRUB:
                 this._addEvent('mousemove', this.listeners.onScrub.bind(this));
+                this._addEvent('mousemove', this.listeners.onScrubPan.bind(this));
                 this._addEvent('mouseup', this.listeners.onMouseUp.bind(this));
                 break;
 
@@ -280,7 +314,10 @@ export default class UIStore {
      * Private
      */
 
+
     _events = [];
+
+    _interval = 20;
 
     _addEvent(name, listener, target = window) {
         target.addEventListener(name, listener);
