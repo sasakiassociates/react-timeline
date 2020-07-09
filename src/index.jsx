@@ -1,4 +1,5 @@
 import React from 'react';
+import { reaction } from "mobx";
 import { Provider } from 'mobx-react';
 
 import './styles.scss';
@@ -9,7 +10,6 @@ import { actions } from './types/action';
 import Navigator from './components/Navigator';
 import { ContinuousCalendar } from './components/Calendars';
 import { ContinuousEditor, ContinuousRowEditor } from './components/Editors';
-import {autorun} from "mobx";
 
 class Timeline extends React.Component {
 
@@ -20,14 +20,18 @@ class Timeline extends React.Component {
 
         this.store = new RootStore(props);
 
-        const {ui, viewport} = this.store;
+        reaction(
+            () => this.store.blocks.elements.length,
+            () => {
+                const { blocks, ui, viewport } = this.store;
 
-        autorun(() => {
-            if (!this.store.blocks.elements) return;
-            this.store.blocks.elements.forEach((block, i) => {
-                block.setViewport(ui, viewport);
-            });
-        });
+                if (blocks.elements) {
+                    blocks.elements.forEach((block, i) => {
+                        block.setViewport(ui, viewport);
+                    });
+                }
+            }
+        );
     }
 
     componentWillUnmount() {
