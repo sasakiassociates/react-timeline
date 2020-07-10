@@ -39,6 +39,11 @@ export default class UIStore {
             const { blocks, config, spaces, ui, viewport } = this.root;
             const { block, startX, startY, top } = this.userAction.data;
 
+            if (!block) {
+                this.listeners.onMouseUp.bind(this)();
+                return;
+            }
+
             const xPos = (x - startX) - config.resizeHandleWidth; // Position minus the width of the resize handle
             const yPos = (y - startY) - top;
 
