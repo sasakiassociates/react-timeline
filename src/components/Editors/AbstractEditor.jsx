@@ -73,7 +73,11 @@ class AbstractEditor extends React.Component {
         }
     };
 
-    onScroll = ({clientX, deltaY, target}) => {
+    onScroll = e => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const {clientX, deltaY, target} = e;
         const {config, ui, viewport} = this.props.store;
 
         const xRatio = (clientX - target.getBoundingClientRect().left) / ui.width;

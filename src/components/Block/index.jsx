@@ -86,15 +86,23 @@ class Block extends React.Component {
                     background: color,
                 }}
                 onMouseUp={e => this.onMouseUp(e)}
+                draggable="false"
             >
-                {width.px > showResizeHandleWidth &&  <div className="react-timeline__block-handle" onMouseDown={e => this.onResize(e, 'start')} style={handleWidth} />}
+                {width.px > showResizeHandleWidth &&  (
+                    <div className="react-timeline__block-handle" onMouseDown={e => this.onResize(e, 'start')} style={handleWidth} />
+                )}
+
                 <div className="react-timeline__block-content" onMouseDown={e => this.onMouseDown(e)} />
-                {width.px > showResizeHandleWidth &&  <div className="react-timeline__block-handle" onMouseDown={e => this.onResize(e, 'end')} style={handleWidth} />}
-                {name && !blockRight &&
-                <div className="react-timeline__block-label" style={{
-                    left: `${width.px}px`,
-                }}>{name}</div>
-                }
+
+                {width.px > showResizeHandleWidth &&  (
+                    <div className="react-timeline__block-handle" onMouseDown={e => this.onResize(e, 'end')} style={handleWidth} />
+                )}
+
+                {name && !blockRight && (
+                    <div className="react-timeline__block-label" style={{left: `${width.px}px`}}>
+                        {name}
+                    </div>
+                )}
             </div>
         );
     }

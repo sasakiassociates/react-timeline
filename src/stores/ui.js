@@ -149,7 +149,7 @@ export default class UIStore {
             this.setScrubber(this.root.spaces.pxToTime(x));
         },
 
-        onScrubPan({ x , y }) {
+        onScrubPan({ x }) {
             const { config, ui, viewport } = this.root;
             const { pushBuffer, pushSpeed } = config;
 
@@ -167,22 +167,6 @@ export default class UIStore {
                 clearInterval(this._intervals.horizontalPush);
                 this._intervals.horizontalPush = null;
             }
-
-            const yPos = y - this.container.top;
-            const yPushDelta = 0;//TEMP(viewport.bottom - viewport.top) * (pushSpeed * 2);
-            const yDirection = yPos < pushBuffer ? -1 : yPos > (ui.height * .85) - pushBuffer ? 1 : null;
-            if (yDirection !== null) {
-                if (this._intervals.verticalPush === null) {
-                    this._intervals.verticalPush = setInterval(() => {
-                        viewport.setTop(viewport.top + (yDirection * yPushDelta));
-                    }, this._interval);
-                }
-            }
-            else {
-                clearInterval(this._intervals.verticalPush);
-                this._intervals.verticalPush = null;
-            }
-
         },
 
         onSelect({ x, y }) {
