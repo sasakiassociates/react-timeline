@@ -15,11 +15,11 @@ class Scrubber extends React.Component {
     render() {
         const { spaces, ui } = this.props.store;
 
-        return ui.scrubber ? (
+        return ui.scrubberPosition ? (
             <div
                 className="react-timeline__scrubber"
                 style={{
-                    left: `${100 * spaces.timeToPx(ui.scrubber) / ui.width}%`,
+                    left: `${100 * spaces.timeToPx(ui.scrubberPosition) / ui.width}%`,
                 }}
             >
                 <div

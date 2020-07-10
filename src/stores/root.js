@@ -4,8 +4,6 @@
  * Contains main component state.
  */
 
-import { action, computed, observable } from 'mobx';
-
 import BlockStore from './block';
 import SpaceStore from './space';
 import UIStore from './ui';

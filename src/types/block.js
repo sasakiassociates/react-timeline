@@ -5,7 +5,7 @@
  */
 
 import uuidv4 from 'uuid/v4';
-import {action, computed, observable} from 'mobx';
+import { action, computed, observable } from 'mobx';
 
 
 export default class Block {
@@ -17,7 +17,7 @@ export default class Block {
         this.setEnd(end);
         this.setStart(start);
         this.setY(y);
-        // console.log(y);
+
         let hackColor = '#e8ca15';
         if (y > 100) {
             hackColor = '#dd373a';
@@ -34,37 +34,22 @@ export default class Block {
         this.setColor(hackColor);
     }
 
-    setViewport(ui, viewport) {
-        this.ui = ui;
-        this.viewport = viewport;
-    }
-
-    @observable name;
-
-    @action setName(name) {
-        this.name = name;
-    }
-
     @observable blockLeft;
-
     @action setBlockLeft(blockLeft) {
         this.blockLeft = blockLeft;
     }
 
     @observable blockRight;
-
     @action setBlockRight(blockRight) {
         this.blockRight = blockRight;
     }
 
     @observable color;
-
     @action setColor(color) {
         this.color = color;
     }
 
     @observable end;
-
     @action setEnd(end, updateNeighbor = true) {
         this.end = Math.round(end);
         if (updateNeighbor && this.blockRight) {
@@ -72,21 +57,12 @@ export default class Block {
         }
     }
 
-    @observable start;
-
-    @action setStart(start, updateNeighbor = true) {
-        this.start = Math.round(start);
-        if (updateNeighbor && this.blockLeft) {
-            this.blockLeft.setEnd(this.start, false);
-        }
-    }
-
-    @computed get duration() {
-        return this.end - this.start;
+    @observable name;
+    @action setName(name) {
+        this.name = name;
     }
 
     @observable selected = false;
-
     @action setSelected(selected = true, updateNeighbor = false) {
         this.selected = selected;
         if (updateNeighbor) {
@@ -99,8 +75,22 @@ export default class Block {
         }
     }
 
-    @observable y;
+    @observable start;
+    @action setStart(start, updateNeighbor = true) {
+        this.start = Math.round(start);
+        if (updateNeighbor && this.blockLeft) {
+            this.blockLeft.setEnd(this.start, false);
+        }
+    }
 
+    @observable ui;
+    @observable viewport;
+    @action setViewport(ui, viewport) {
+        this.ui = ui;
+        this.viewport = viewport;
+    }
+
+    @observable y;
     @action setY(y, updateNeighbor = true) {
         this.y = y;
         if (updateNeighbor) {
@@ -113,8 +103,7 @@ export default class Block {
         }
     }
 
-    @action
-    moveBy(deltaX, deltaY, updateNeighbor = true) {
+    @action moveBy(deltaX, deltaY, updateNeighbor = true) {
         this.setStart(this.start + deltaX, false);
         this.setEnd(this.end + deltaX, false);
         this.setY(this.y + deltaY, false);
@@ -126,6 +115,10 @@ export default class Block {
                 this.blockRight.moveBy(deltaX, deltaY, false);
             }
         }
+    }
+
+    @computed get duration() {
+        return this.end - this.start;
     }
 
     @computed get width() {

@@ -129,15 +129,13 @@ class AbstractEditor extends React.Component {
 
     render() {
         const { spaces, viewport, ui } = this.props.store;
-        const { height, scrubber, selectBox, userAction, width } = ui;
+        const { height, scrubberPosition, selectBox, userAction, width } = ui;
         const { left } = viewport;
-
-        const dblClick = e => this.createBlock(e);
 
         return (
             <div
                 className="react-timeline__editor react-timeline__editor-continuous-row"
-                onDoubleClick={dblClick}
+                onDoubleClick={e => this.createBlock(e)}
             >
                 <canvas
                     width={`${width}px`}
@@ -154,7 +152,7 @@ class AbstractEditor extends React.Component {
 
                 <Scrubber>
                     <div className='react-timeline__scrubber-date'>
-                        {spaces.displaySecondary(scrubber)}
+                        {spaces.displaySecondary(scrubberPosition)}
                     </div>
                 </Scrubber>
 

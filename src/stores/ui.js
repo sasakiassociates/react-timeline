@@ -233,9 +233,14 @@ export default class UIStore {
         this.listeners = { ...this.defaultListeners, ...listeners };
     }
 
-    @observable scrubber;
-    @action setScrubber(pos) {
-        this.scrubber = pos;
+    @observable scrubber = { value: null };
+    @action setScrubber(value) {
+        if (typeof value === 'number') {
+            this.scrubber.value = value;
+        }
+        else {
+            this.scrubber = value;
+        }
     }
 
     @observable selectBox;
@@ -297,6 +302,10 @@ export default class UIStore {
 
     @computed get height() {
         return this.container ? this.container.height : 0;
+    }
+
+    @computed get scrubberPosition() {
+        return this.scrubber.value;
     }
 
     @computed get width() {

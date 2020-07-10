@@ -19,7 +19,6 @@ class SpaceStore {
 
 
     @observable timeMeridian;
-
     @action setTimeMeridian(meridian) {
         this.timeMeridian = meridian;
     }
@@ -30,6 +29,7 @@ class SpaceStore {
 
         return ((end - (withContainer ? container.left : 0)) - start) / container.width;
     }
+
 
     internalPxToTime(px) {
         const {ui, viewport} = this.root;

@@ -6,10 +6,10 @@ import './styles.scss';
 
 import config from './config';
 import RootStore from './stores/root';
-import { actions } from './types/action';
 import Navigator from './components/Navigator';
+import { ContinuousRowEditor } from './components/Editors';
 import { ContinuousCalendar } from './components/Calendars';
-import { ContinuousEditor, ContinuousRowEditor } from './components/Editors';
+
 
 class Timeline extends React.Component {
 
@@ -54,6 +54,7 @@ class Timeline extends React.Component {
     }
 
 }
+
 
 export { default as timeScale } from "./time";
 export { default as Block } from "./types/block";
