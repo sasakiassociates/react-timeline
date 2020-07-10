@@ -25,4 +25,20 @@
             pointer-events: none;
         }
     }
+
+    .react-timeline__scrubber-date {
+        position: absolute;
+        left: 1px;
+        top: 0;
+
+        width: max-content;
+        padding: 2px 5px;
+
+        font-size: 11px;
+        background: rgba($color_bg-dark, .8);
+        border-right: 1px solid $color_bg-light;
+        border-bottom: 1px solid $color_bg-light;
+        border-radius: 3px;
+        opacity: .8;
+    }
 }
