@@ -164,7 +164,7 @@ export default class UIStore {
             }
 
             const yPos = y - this.container.top;
-            const yPushDelta = (viewport.bottom - viewport.top) * (pushSpeed * 2);
+            const yPushDelta = 0;//TEMP(viewport.bottom - viewport.top) * (pushSpeed * 2);
             const yDirection = yPos < pushBuffer ? -1 : yPos > (ui.height * .85) - pushBuffer ? 1 : null;
             if (yDirection !== null) {
                 if (this._intervals.verticalPush === null) {
