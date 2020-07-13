@@ -27,8 +27,6 @@ class Navigator extends React.Component {
             const yValue = (yPos / height) * blocks.extent.height;
             const halfwidth = viewport.width / 2;
 
-            console.log(xValue, halfwidth);
-
             viewport.setLeft(xValue - halfwidth);
             viewport.setRight(xValue + halfwidth);
 
