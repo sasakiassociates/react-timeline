@@ -153,8 +153,10 @@ export default class UIStore {
             const { config, ui, viewport } = this.root;
             const { pushBuffer, pushSpeed } = config;
 
+            const xPos = x - ui.container.left;
+
             const xPushDelta = viewport.width * pushSpeed;
-            const xDirection = x < pushBuffer ? -1 : x > ui.width - pushBuffer ? 1 : null;
+            const xDirection = xPos < pushBuffer ? -1 : xPos > ui.width - pushBuffer ? 1 : null;
             if (xDirection !== null) {
                 if (this._intervals.horizontalPush === null) {
                     this._intervals.horizontalPush = setInterval(() => {
