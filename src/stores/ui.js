@@ -10,6 +10,8 @@ import Action, { actions } from '../types/action';
 
 const keys = {
     BACKSPACE: 8,
+    PLUS: 61,
+    MINUS: 173,
 };
 
 
@@ -58,13 +60,30 @@ export default class UIStore {
         },
 
         onKeyDown(e) {
-            e.preventDefault();
+            const { root } = this;
 
-            if (e.keyCode === keys.BACKSPACE) {
-                e.stopPropagation();
-                this.root.blocks.selected.forEach(block => {
-                    this.root.blocks.remove(block);
-                });
+            if (e.ctrlKey) return;
+
+            switch(e.keyCode) {
+                case keys.BACKSPACE:
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    root.blocks.selected.forEach(block => {
+                        root.blocks.remove(block);
+                    });
+
+                    break;
+
+                case keys.PLUS:
+                    if (e.shiftKey) {
+                        root.viewport.zoom(.5, -1);
+                    }
+                    break;
+
+                case keys.MINUS:
+                    root.viewport.zoom(.5, 1);
+                    break;
             }
         },
 
@@ -333,6 +352,5 @@ export default class UIStore {
         horizontalPush: null,
         verticalPush: null,
     }
-
 
 };

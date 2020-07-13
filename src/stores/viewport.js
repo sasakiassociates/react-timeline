@@ -35,6 +35,19 @@ export default class ViewportStore {
         this.top = top;
     }
 
+    @action zoom(xRatio, direction) {
+        const { zoomSpeed, viewportLimit } = this.root.config;
+
+        let growthMod = direction > 0 ? zoomSpeed : 1 / zoomSpeed;
+        growthMod = Math.min(growthMod, viewportLimit.max.width/this.width);
+        growthMod = Math.max(growthMod, viewportLimit.min.width/this.width);
+
+        const delta = ((this.width * growthMod) - this.width);
+
+        this.setLeft(this.left - (delta * xRatio));
+        this.setRight(this.right + (delta * (1 - xRatio)));
+    }
+
     @computed get bottom() {
         return this.top + (this.root.ui.height * .85) || this.top;
     }
