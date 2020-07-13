@@ -16,6 +16,8 @@ import Action, { actions } from '../../types/action';
 
 class AbstractEditor extends React.Component {
 
+    scrollEventAttached = false;
+
     componentDidMount() {
         this.renderGrid();
 
@@ -26,10 +28,19 @@ class AbstractEditor extends React.Component {
 
     componentWillUnmount() {
         this.props.store.ui.setListeners({});
+
+        if (this.scrollEventAttached) {
+            this.grid.removeEventListener('wheel', this.onScroll.bind(this));
+        }
     }
 
     componentDidUpdate() {
         this.renderGrid();
+
+        if (!this.scrollEventAttached && this.grid) {
+            this.scrollEventAttached = true;
+            this.grid.addEventListener('wheel', this.onScroll.bind(this), false);
+        }
     }
 
     createBlock() {
@@ -75,7 +86,6 @@ class AbstractEditor extends React.Component {
 
     onScroll = e => {
         e.preventDefault();
-        e.stopPropagation();
 
         const {clientX, deltaY, target} = e;
         const {config, ui, viewport} = this.props.store;
@@ -90,6 +100,8 @@ class AbstractEditor extends React.Component {
 
         viewport.setLeft(viewport.left - (delta * xRatio));
         viewport.setRight(viewport.right + (delta * (1 - xRatio)));
+
+        return false;
     };
 
     renderBlocks = () => {
@@ -145,7 +157,6 @@ class AbstractEditor extends React.Component {
                     width={`${width}px`}
                     height={`${height * .85}px`}
                     ref={el => this.grid = el}
-                    onWheel={e => this.onScroll(e)}
                     onMouseDown={e => this.onMouseDown(e)}
                     onMouseUp={() => this.onMouseUp()}
                 />
