@@ -208,12 +208,17 @@ export default class UIStore {
     @observable container;
     @observable containerElement;
     @action setContainer(container = null) {
+        const update = () => {
+            this.container = this.containerElement.getBoundingClientRect();
+        }
+
         if (container) {
             this.containerElement = container;
+            (new ResizeObserver(update.bind(this)).observe(this.containerElement));
         }
 
         if (this.containerElement) {
-            this.container = this.containerElement.getBoundingClientRect();
+            update();
         }
     }
 

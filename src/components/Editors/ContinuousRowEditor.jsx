@@ -60,8 +60,6 @@ class ContinuousRowEditor extends AbstractEditor {
             blocks.selected.forEach(_block => {
                 _block.moveBy(deltaX, deltaY - (_block.y % config.blockHeight));
             });
-            // console.log('onDrag');
-
         },
     }
 
