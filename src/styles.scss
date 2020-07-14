@@ -2,18 +2,7 @@
 * Styles Entrypoint
 */
 
-/**
- * Variables
- */
-
-$color_bg-dark: #111111;
-$color_bg-light: #DDDDDD;
-
-$color_font-light: #DDDDDD;
-
-$color_highlight: #3EC1C1;
-
-
+@import 'theme';
 
 /**
  * Globals
@@ -26,9 +15,9 @@ $color_highlight: #3EC1C1;
     width: 100%;
     height: 100%;
 
-    color: $color_font-light;
+    color: $color_font;
 
-    background: $color_bg-dark;
+    background: $color_bg;
 
     & * {
         position: relative;

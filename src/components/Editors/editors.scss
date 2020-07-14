@@ -27,6 +27,7 @@
     }
 
     .react-timeline__scrubber-date {
+        user-select: none;
         position: absolute;
         left: 1px;
         top: 0;
@@ -35,9 +36,9 @@
         padding: 2px 5px;
 
         font-size: 11px;
-        background: rgba($color_bg-dark, .8);
-        border-right: 1px solid $color_bg-light;
-        border-bottom: 1px solid $color_bg-light;
+        background: rgba($color_bg, .8);
+        border-right: 1px solid $color_bg-inverse;
+        border-bottom: 1px solid $color_bg-inverse;
         border-radius: 3px;
         opacity: .8;
     }

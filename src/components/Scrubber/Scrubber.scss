@@ -1,12 +1,14 @@
+@import '../../theme';
+
 .react-timeline__scrubber {
     position: absolute;
     top: 0;
 
-    width: 1px;
+    width: $width_scrubber;
     height: 100%;
 
     text-align: center;
-    background: #fff;
+    background: $color_scrubber_bg;
 
     &-buffer {
         position: absolute;

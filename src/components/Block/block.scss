@@ -1,3 +1,4 @@
+@import '../../theme';
 .react-timeline__block {
   position: absolute;
   display: flex;
@@ -15,7 +16,7 @@
 
   &--selected {
     border-color: rgba($color_highlight, 1);
-    box-shadow: 0 0 3px 5px rgba($color_bg-light, .3);
+    box-shadow: 0 0 3px 5px rgba($color_bg-inverse, .3);
     transition: border-color .15s, opacity .15s;
   }
 
@@ -30,7 +31,7 @@
       width: 300px;
       left: 0;
       top: 0;
-      color: white;
+      color: $color_font;
       padding-left: 6px;
       pointer-events: none;
       user-select: none;
