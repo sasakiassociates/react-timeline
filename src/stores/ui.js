@@ -26,9 +26,6 @@ export default class UIStore {
         if (props.scrubber) {
             this.setScrubber(props.scrubber === true ? this.root.viewport.width / 5 : props.scrubber);
         }
-
-        window.addEventListener('resize', () => this.setContainer.bind(this)());
-        window.addEventListener('keydown', e => this.listeners.onKeyDown.bind(this)(e));
     }
 
     /*
@@ -60,9 +57,9 @@ export default class UIStore {
         },
 
         onKeyDown(e) {
-            const { root } = this;
+            if (!this.isFocused) return;
 
-            if (e.ctrlKey) return;
+            const { root } = this;
 
             switch(e.keyCode) {
                 case keys.BACKSPACE:
@@ -224,6 +221,12 @@ export default class UIStore {
                 y: startY,
             });
         },
+
+        onWindowClick({ target }) {
+            if (this.containerElement) {
+                this.setFocused(this.containerElement.contains(target));
+            }
+        },
     }
 
     @observable container;
@@ -238,9 +241,24 @@ export default class UIStore {
             (new ResizeObserver(update.bind(this)).observe(this.containerElement));
         }
 
+
         if (this.containerElement) {
+            if (!this._hasSetEvents) {
+                this._hasSetEvents = true;
+                window.addEventListener('click', e => this.listeners.onWindowClick.call(this, e));
+                window.addEventListener('resize', () => this.setContainer.bind(this)(e));
+                window.addEventListener('keydown', e => this.listeners.onKeyDown.bind(this)(e));
+            }
+
             update();
         }
+    }
+
+    _hasSetEvents = false;
+
+    @observable isFocused = false;
+    @action setFocused(focused = true) {
+        this.isFocused = focused;
     }
 
     @observable listeners;
