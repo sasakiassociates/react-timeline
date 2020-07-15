@@ -44,6 +44,11 @@ export default class Block {
         this.blockRight = blockRight;
     }
 
+    @observable blockId;
+    @action setBlockId(blockId) {
+        this.blockId = blockId;
+    }
+
     @observable color;
     @action setColor(color) {
         this.color = color;
