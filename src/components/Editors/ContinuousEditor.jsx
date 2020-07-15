@@ -26,7 +26,9 @@ class ContinuousEditor extends AbstractEditor {
             const startTime = spaces.pxToTime(e.clientX);
             const endTime = spaces.pxToTime(e.clientX + (width * .1));
 
-            blocks.createBlock(startTime, endTime, y + top);
+            // blocks.createBlock(startTime, endTime, y + top);
+            blocks.createBlock(`new_${Math.round(Math.random() * 1000000)}`, startTime, endTime, y + top);
+
         }
     }
 

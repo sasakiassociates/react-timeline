@@ -9,6 +9,7 @@ import RootStore from './stores/root';
 import Navigator from './components/Navigator';
 import { ContinuousRowEditor } from './components/Editors';
 import { ContinuousCalendar } from './components/Calendars';
+import ContinuousEditor from "./components/Editors/ContinuousEditor";
 
 
 class Timeline extends React.Component {
@@ -46,7 +47,8 @@ class Timeline extends React.Component {
                     ref={el => !ui.container && ui.setContainer(el)}
                 >
                     <ContinuousCalendar />
-                    <ContinuousRowEditor />
+                    <ContinuousEditor />
+                    {/*<ContinuousRowEditor />*/}
                     <Navigator />
                 </div>
             </Provider>
