@@ -246,7 +246,7 @@ export default class UIStore {
             if (!this._hasSetEvents) {
                 this._hasSetEvents = true;
                 window.addEventListener('click', e => this.listeners.onWindowClick.call(this, e));
-                window.addEventListener('resize', () => this.setContainer.bind(this)(e));
+                window.addEventListener('resize', () => this.setContainer.bind(this)());
                 window.addEventListener('keydown', e => this.listeners.onKeyDown.bind(this)(e));
             }
 
