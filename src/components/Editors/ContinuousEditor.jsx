@@ -14,9 +14,9 @@ import AbstractEditor from './AbstractEditor';
 class ContinuousEditor extends AbstractEditor {
 
     createBlock = e => {
-        // Events propogate but we only want this behavior for the grid. It's easier
+        // Events propagate but we only want this behavior for the grid. It's easier
         // to check for a single correct target than having to remember to prevent
-        // propogation of doubleClick events for every incorrect child element.
+        // propagation of doubleClick events for every incorrect child element.
         if (e.target === this.grid) {
             const { blocks, spaces, ui, viewport } = this.props.store;
             const { width, height } = ui;
