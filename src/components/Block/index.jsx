@@ -70,7 +70,6 @@ class Block extends React.Component {
         const x = spaces.timeToPx(start);
 
         const width = ui.width * this.props.block.width;
-        console.log(ui.width);
 
         const handleWidth = {
             flex: `0 0 ${config.resizeHandleWidth}px`,
