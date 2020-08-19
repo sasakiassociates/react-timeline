@@ -19,6 +19,7 @@ class SpaceStore {
 
 
     @observable timeMeridian;
+
     @action setTimeMeridian(meridian) {
         this.timeMeridian = meridian;
     }
@@ -46,12 +47,15 @@ class SpaceStore {
         const {ui, viewport} = this.root;
         const {container} = ui;
 
+        console.log('pxToTime', container && container.width, px, viewport.left, viewport.width);
+
         return container ? viewport.left + (viewport.width * (px - container.left) / container.width) : 0;
     }
 
 
     timeToPx(time) {
-        const { ui, viewport } = this.root;
+        const {ui, viewport} = this.root;
+        console.log('timeToPx', ui.width, time, viewport.left, viewport.width);
 
         return (ui.width * (time - viewport.left) / viewport.width);
     }

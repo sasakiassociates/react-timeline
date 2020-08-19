@@ -89,6 +89,9 @@ class AbstractEditor extends React.Component {
 
         const {clientX, deltaY, target} = e;
         const {config, ui, viewport} = this.props.store;
+
+        if (ui.zoomLock) return;
+
         const xRatio = (clientX - target.getBoundingClientRect().left) / ui.width;
 
         viewport.zoom(xRatio, deltaY)

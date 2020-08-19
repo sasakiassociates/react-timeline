@@ -74,11 +74,13 @@ export default class UIStore {
 
                 case keys.PLUS:
                     if (e.shiftKey) {
+                        if (this.zoomLock) return;
                         root.viewport.zoom(.5, -1);
                     }
                     break;
 
                 case keys.MINUS:
+                    if (this.zoomLock) return;
                     root.viewport.zoom(.5, 1);
                     break;
             }
@@ -102,11 +104,16 @@ export default class UIStore {
             const deltaX = spaces.pxDelta(startX, x) * Math.abs(startLeft - startRight);
 
             viewport.setTop(startTop - ((y - top) - startY));
+
+            if (this.zoomLock) return;//zoomLock only locks left/right , you can still pan top/bottom
+
             viewport.setRight(startRight - deltaX);
             viewport.setLeft(startLeft - deltaX);
         },
 
         onPushPan({ x, y }) {
+            if (this.zoomLock) return;
+
             const { blocks, config, spaces, ui, viewport } = this.root;
             const { startX, startY, top } = this.userAction.data;
             const { pushSpeed, pushBuffer } = config;
@@ -115,22 +122,24 @@ export default class UIStore {
             const xPos = (x - ui.container.left) + startX;
             const yPos = (y - startY) - top;
 
-            const xDirection = xPos < pushBuffer ? -1 : xPos > ui.width - pushBuffer ? 1 : null;
-            if (xDirection !== null) {
-                if (this._intervals.horizontalPush === null) {
-                    this._intervals.horizontalPush = setInterval(() => {
-                        viewport.setLeft(viewport.left + (xDirection * pushDelta));
-                        viewport.setRight(viewport.right + (xDirection * pushDelta));
-                        blocks.selected.forEach(block => {
-                            block.setEnd(block.end + (xDirection * pushDelta));
-                            block.setStart(block.start + (xDirection * pushDelta));
-                        });
-                    }, this._interval);
+            if (!this.zoomLock) {//zoomLock only locks left/right , you can still pan top/bottom
+                const xDirection = xPos < pushBuffer ? -1 : xPos > ui.width - pushBuffer ? 1 : null;
+                if (xDirection !== null) {
+                    if (this._intervals.horizontalPush === null) {
+                        this._intervals.horizontalPush = setInterval(() => {
+                            viewport.setLeft(viewport.left + (xDirection * pushDelta));
+                            viewport.setRight(viewport.right + (xDirection * pushDelta));
+                            blocks.selected.forEach(block => {
+                                block.setEnd(block.end + (xDirection * pushDelta));
+                                block.setStart(block.start + (xDirection * pushDelta));
+                            });
+                        }, this._interval);
+                    }
                 }
-            }
-            else {
-                clearInterval(this._intervals.horizontalPush);
-                this._intervals.horizontalPush = null;
+                else {
+                    clearInterval(this._intervals.horizontalPush);
+                    this._intervals.horizontalPush = null;
+                }
             }
 
             const pushHeight = (viewport.bottom - viewport.top) * (pushSpeed * 2);
@@ -255,6 +264,11 @@ export default class UIStore {
     }
 
     _hasSetEvents = false;
+
+    @observable zoomLock = false;
+    @action setZoomLock(lock = true) {
+        this.zoomLock = lock;
+    }
 
     @observable isFocused = false;
     @action setFocused(focused = true) {

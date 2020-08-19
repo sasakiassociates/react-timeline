@@ -36,6 +36,6 @@ export default {
     viewportLimit: {
         max: {width: time.DECADE * 10},
         min: {width: time.YEAR}
-    }
-
+    },
+    timelineLock: false,
 };

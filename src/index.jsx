@@ -39,6 +39,14 @@ class Timeline extends React.Component {
     render() {
         const { ui } = this.store;
 
+        // console.log('TIMELINE RENDER ', this.props)
+
+        //TODO what is the best way to modify 'component state' from outside a component?
+        // we can set properties on the component
+        // and then apply those to the internal mobx state for react-timeline
+        // OR do we expose the store directly through the timeline component so we can call this from the main app?
+        ui.setZoomLock(this.props.timelineLock);
+
         return (
             <Provider store={this.store}>
                 <div
