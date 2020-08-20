@@ -175,6 +175,8 @@ export default class UIStore {
         },
 
         onScrubPan({ x }) {
+            if (this.zoomLock) return;
+
             const { config, ui, viewport } = this.root;
             const { pushBuffer, pushSpeed } = config;
 

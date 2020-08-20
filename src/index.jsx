@@ -1,14 +1,15 @@
 import React from 'react';
-import { reaction } from "mobx";
-import { Provider } from 'mobx-react';
+import {reaction} from "mobx";
+import {Provider} from 'mobx-react';
 
 import './styles.scss';
 
 import config from './config';
 import RootStore from './stores/root';
 import Navigator from './components/Navigator';
-import { ContinuousEditor } from './components/Editors';
-import { ContinuousCalendar } from './components/Calendars';
+import {ContinuousEditor} from './components/Editors';
+import {ContinuousCalendar} from './components/Calendars';
+import ContinuousRowEditor from "./components/Editors/ContinuousRowEditor";
 
 
 class Timeline extends React.Component {
@@ -23,7 +24,7 @@ class Timeline extends React.Component {
         reaction(
             () => this.store.blocks.elements.length,
             () => {
-                const { blocks, ui, viewport } = this.store;
+                const {blocks, ui, viewport} = this.store;
 
                 blocks.elements.forEach((block, i) => {
                     block.setViewport(ui, viewport);
@@ -37,7 +38,8 @@ class Timeline extends React.Component {
     }
 
     render() {
-        const { ui } = this.store;
+        const {ui, viewport} = this.store;
+        const {timelineLock, continuousMode, showNavigator} = this.props;
 
         // console.log('TIMELINE RENDER ', this.props)
 
@@ -45,7 +47,14 @@ class Timeline extends React.Component {
         // we can set properties on the component
         // and then apply those to the internal mobx state for react-timeline
         // OR do we expose the store directly through the timeline component so we can call this from the main app?
-        ui.setZoomLock(this.props.timelineLock);
+        if (timelineLock) {
+            ui.setZoomLock(true);
+
+            viewport.setLeft(timelineLock.left);
+            viewport.setRight(timelineLock.right);
+        } else {
+            ui.setZoomLock(false);
+        }
 
         return (
             <Provider store={this.store}>
@@ -53,9 +62,9 @@ class Timeline extends React.Component {
                     className={`react-timeline ${ui.cursor}`}
                     ref={el => !ui.container && ui.setContainer(el)}
                 >
-                    <ContinuousCalendar />
-                    <ContinuousEditor />
-                    <Navigator />
+                    <ContinuousCalendar/>
+                    {continuousMode ? <ContinuousEditor/> : <ContinuousRowEditor/>}
+                    {showNavigator && <Navigator/>}
                 </div>
             </Provider>
         );
@@ -64,6 +73,6 @@ class Timeline extends React.Component {
 }
 
 
-export { default as timeScale } from "./time";
-export { default as Block } from "./types/block";
+export {default as timeScale} from "./time";
+export {default as Block} from "./types/block";
 export default Timeline;

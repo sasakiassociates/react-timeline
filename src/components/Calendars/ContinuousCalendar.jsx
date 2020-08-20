@@ -9,6 +9,7 @@ import { inject, observer } from 'mobx-react';
 
 import time  from '../../time';
 import Scrubber from '../Scrubber';
+import Action, {actions} from "../../types/action";
 
 
 @inject('store')
@@ -62,12 +63,19 @@ class ContinuousCalendar extends React.Component {
         }
     }
 
+    setScrubberTime(e) {
+        const {spaces, ui} = this.props.store;
+
+        const time = spaces.pxToTime(e.clientX);
+        ui.setScrubber(time);
+    }
+
     render() {
         const { width, height} = this.props.store.ui;
         const { primary } = this.props.store.spaces.grid;
 
         return (
-            <div className="react-timeline__calendar react-timeline__calendar-continuous">
+            <div className="react-timeline__calendar react-timeline__calendar-continuous" onDoubleClick={e => this.setScrubberTime(e)}>
                 <canvas
                     width={`${width}px`}
                     height={`${height * .05}px`}
