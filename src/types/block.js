@@ -133,10 +133,7 @@ export default class Block {
             time = 0;
         }
 
-        return {
-            px: time * this.ui.width,
-            time,
-        };
+        return time;
     }
 
 };
