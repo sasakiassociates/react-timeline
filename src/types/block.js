@@ -88,13 +88,6 @@ export default class Block {
         }
     }
 
-    @observable ui;
-    @observable viewport;
-    @action setViewport(ui, viewport) {
-        this.ui = ui;
-        this.viewport = viewport;
-    }
-
     @observable y;
     @action setY(y, updateNeighbor = true) {
         this.y = y;
@@ -124,16 +117,6 @@ export default class Block {
 
     @computed get duration() {
         return this.end - this.start;
-    }
-
-    @computed get width() {
-        if (!this.viewport) return 0;
-        let time = (this.end - this.start) / this.viewport.width;
-        if (time < 0) {
-            time = 0;
-        }
-
-        return time;
     }
 
 };

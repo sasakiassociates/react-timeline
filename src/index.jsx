@@ -20,17 +20,6 @@ class Timeline extends React.Component {
         super(...arguments);
 
         this.store = new RootStore(props);
-
-        reaction(
-            () => this.store.blocks.elements.length,
-            () => {
-                const {blocks, ui, viewport} = this.store;
-
-                blocks.elements.forEach((block, i) => {
-                    block.setViewport(ui, viewport);
-                });
-            }
-        );
     }
 
     componentWillUnmount() {
