@@ -66,10 +66,15 @@ class Block extends React.Component {
 
     render() {
         const { config, spaces, viewport, ui } = this.props.store;
-        const { selected, start, y, color, blockRight, name } = this.props.block;
+        const { end, selected, start, y, color, blockRight, name } = this.props.block;
         const x = spaces.timeToPx(start);
 
-        const width = ui.width * this.props.block.width;
+        let time = (end - start) / viewport.width;
+        if (time < 0) {
+            time = 0;
+        }
+
+        const width = ui.width * time;
 
         const handleWidth = {
             flex: `0 0 ${config.resizeHandleWidth}px`,
