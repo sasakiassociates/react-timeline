@@ -17,20 +17,6 @@ export default class Block {
         this.setEnd(end);
         this.setStart(start);
         this.setY(y);
-
-        // let hackColor = '#e8ca15';
-        // if (y > 100) {
-        //     hackColor = '#dd373a';
-        // }
-        // if (y > 400) {
-        //     hackColor = '#ce3edd';
-        // }
-        // if (y > 700) {
-        //     hackColor = '#73eeed';
-        // }
-        // if (y > 1000) {
-        //     hackColor = '#ade859';
-        // }
         this.setColor(color);
     }
 

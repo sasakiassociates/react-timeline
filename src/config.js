@@ -5,10 +5,11 @@
  * through the Timeline component's props.
  */
 
-import { observable } from 'mobx';
+import { configure, observable } from 'mobx';
 
 import time from './time';
 
+configure({ isolateGlobalState: true });
 
 export default {
 

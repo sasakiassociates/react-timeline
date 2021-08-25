@@ -1,5 +1,4 @@
 import React from 'react';
-import {reaction} from "mobx";
 import {Provider} from 'mobx-react';
 
 import './styles.scss';
@@ -20,6 +19,13 @@ class Timeline extends React.Component {
         super(...arguments);
 
         this.store = new RootStore(props);
+    }
+
+    componentDidUpdate() {
+        if (this.props.scrubber !== this.store.ui.scrubber) {
+            console.log(this.props.scrubber);
+            this.store.ui.setScrubber(this.props.scrubber);
+        }
     }
 
     componentWillUnmount() {
@@ -62,6 +68,6 @@ class Timeline extends React.Component {
 }
 
 
-export {default as timeScale} from "./time";
+export {default as time} from "./time";
 export {default as Block} from "./types/block";
 export default Timeline;

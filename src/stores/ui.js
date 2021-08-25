@@ -23,9 +23,23 @@ export default class UIStore {
         this.setAction(new Action(actions.NOOP));
         this.setListeners();
 
+        if (props.onBlockChange) {
+            this.onBlockChange = props.onBlockChange;
+        }
+
+        if (props.onScrubberChange) {
+            this.onScrubberChange = props.onScrubberChange;
+        }
+
         if (props.scrubber) {
             this.setScrubber(props.scrubber === true ? this.root.viewport.width / 5 : props.scrubber);
         }
+    }
+
+    onBlockChange() {
+    }
+
+    onScrubberChange() {
     }
 
     /*
@@ -54,6 +68,8 @@ export default class UIStore {
                 _block.setEnd(_block.end + deltaX);
                 _block.setY(_block.y + deltaY);
             });
+
+            this.onBlockChange(blocks.selected);
         },
 
         onKeyDown(e) {
@@ -168,6 +184,8 @@ export default class UIStore {
             blocks.selected.forEach(block => {
                 block[method](block[bound] + delta);
             });
+
+            this.onBlockChange(blocks.selected);
         },
 
         onScrub({ x }) {
@@ -281,13 +299,11 @@ export default class UIStore {
         this.listeners = { ...this.defaultListeners, ...listeners };
     }
 
-    @observable scrubber = { value: null };
+    @observable scrubber = null;
     @action setScrubber(value) {
-        if (typeof value === 'number') {
-            this.scrubber.value = value;
-        }
-        else {
+        if (value !== this.scrubber) {
             this.scrubber = value;
+            this.onScrubberChange(this.scrubber);
         }
     }
 
@@ -350,10 +366,6 @@ export default class UIStore {
 
     @computed get height() {
         return this.container ? this.container.height : 0;
-    }
-
-    @computed get scrubberPosition() {
-        return this.scrubber.value;
     }
 
     @computed get width() {

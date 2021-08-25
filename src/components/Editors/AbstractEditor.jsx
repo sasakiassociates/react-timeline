@@ -140,7 +140,7 @@ class AbstractEditor extends React.Component {
 
     render() {
         const { spaces, viewport, ui } = this.props.store;
-        const { height, scrubberPosition, selectBox, userAction, width } = ui;
+        const { height, scrubber, selectBox, userAction, width } = ui;
         const { left } = viewport;
 
         return (
@@ -162,7 +162,7 @@ class AbstractEditor extends React.Component {
 
                 <Scrubber>
                     <div className='react-timeline__scrubber-date'>
-                        {spaces.displaySecondary(scrubberPosition)}
+                        {spaces.displaySecondary(scrubber)}
                     </div>
                 </Scrubber>
 
