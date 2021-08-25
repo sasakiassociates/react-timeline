@@ -10,14 +10,18 @@ import { action, computed, observable } from 'mobx';
 
 export default class Block {
 
-    constructor(blockId, start, end, y, color='#ffffff') {
+    constructor(blockId, start, end, y, opts = {}) {
         this.id = uuidv4();
         this.blockId = blockId;
 
+        this.onChange = opts.onChange || (() => {});
+
+        this._stopPropagation = true;
         this.setEnd(end);
         this.setStart(start);
         this.setY(y);
-        this.setColor(color);
+        this.setColor(opts.color || '#ffffff');
+        this._stopPropagation = false;
     }
 
     @observable blockLeft;
@@ -42,9 +46,14 @@ export default class Block {
 
     @observable end;
     @action setEnd(end, updateNeighbor = true) {
+        const prev = this.end;
         this.end = Math.round(end);
         if (updateNeighbor && this.blockRight) {
             this.blockRight.setStart(this.end, false);
+        }
+
+        if (!this._stopPropagation && prev !== this.end) {
+            this.onChange(this);
         }
     }
 
@@ -55,6 +64,7 @@ export default class Block {
 
     @observable selected = false;
     @action setSelected(selected = true, updateNeighbor = false) {
+        const prev = this.selected;
         this.selected = selected;
         if (updateNeighbor) {
             if (this.blockLeft) {
@@ -64,18 +74,28 @@ export default class Block {
                 this.blockRight.setSelected(this.selected, false);
             }
         }
+
+        if (!this._stopPropagation && prev !== this.selected) {
+            this.onChange(this);
+        }
     }
 
     @observable start;
     @action setStart(start, updateNeighbor = true) {
+        const prev = this.start;
         this.start = Math.round(start);
         if (updateNeighbor && this.blockLeft) {
             this.blockLeft.setEnd(this.start, false);
+        }
+
+        if (!this._stopPropagation && prev !== this.start) {
+            this.onChange(this);
         }
     }
 
     @observable y;
     @action setY(y, updateNeighbor = true) {
+        const prev = this.y;
         this.y = y;
         if (updateNeighbor) {
             if (this.blockLeft) {
@@ -84,6 +104,10 @@ export default class Block {
             if (this.blockRight) {
                 this.blockRight.setY(this.y, false);
             }
+        }
+
+        if (!this._stopPropagation && prev !== this.y) {
+            this.onChange(this);
         }
     }
 

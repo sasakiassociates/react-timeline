@@ -23,10 +23,6 @@ export default class UIStore {
         this.setAction(new Action(actions.NOOP));
         this.setListeners();
 
-        if (props.onBlockChange) {
-            this.onBlockChange = props.onBlockChange;
-        }
-
         if (props.onScrubberChange) {
             this.onScrubberChange = props.onScrubberChange;
         }
@@ -34,9 +30,6 @@ export default class UIStore {
         if (props.scrubber) {
             this.setScrubber(props.scrubber === true ? this.root.viewport.width / 5 : props.scrubber);
         }
-    }
-
-    onBlockChange() {
     }
 
     onScrubberChange() {
@@ -68,8 +61,6 @@ export default class UIStore {
                 _block.setEnd(_block.end + deltaX);
                 _block.setY(_block.y + deltaY);
             });
-
-            this.onBlockChange(blocks.selected);
         },
 
         onKeyDown(e) {
@@ -184,8 +175,6 @@ export default class UIStore {
             blocks.selected.forEach(block => {
                 block[method](block[bound] + delta);
             });
-
-            this.onBlockChange(blocks.selected);
         },
 
         onScrub({ x }) {
@@ -232,15 +221,13 @@ export default class UIStore {
             const y2 = height >= 0 ? startY + height + 1 : startY + 1;
 
             blocks.elements.forEach(block => {
-                block.setSelected(
-                    (
-                        (block.start >= x1 && block.start <= x2)
-                        || (block.end >= x1 && block.end <= x2)
-                        || (block.start <= x1 && block.end >= x2)
-                    ) && (
-                        block.y >= y1 && block.y <= y2
-                    )
-                );
+                block.setSelected((
+                    (block.start >= x1 && block.start <= x2)
+                    || (block.end >= x1 && block.end <= x2)
+                    || (block.start <= x1 && block.end >= x2)
+                ) && (
+                    block.y >= y1 && block.y <= y2
+                ));
             });
 
             this.setSelectBox({
