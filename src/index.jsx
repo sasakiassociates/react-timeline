@@ -22,7 +22,7 @@ class Timeline extends React.Component {
     }
 
     componentDidUpdate() {
-        if (this.props.scrubber !== this.store.ui.scrubber) {
+       if (this.props.scrubber !== this.store.ui.scrubber) {
             this.store.ui.setScrubber(this.props.scrubber);
         }
     }

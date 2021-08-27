@@ -48,7 +48,8 @@ export default class Block {
     @action setEnd(end, updateNeighbor = true) {
         const prev = this.end;
         this.end = Math.round(end);
-        if (updateNeighbor && this.blockRight) {
+
+        if (updateNeighbor && this.blockRight && !this.blockRight.selected) {
             this.blockRight.setStart(this.end, false);
         }
 
@@ -66,6 +67,7 @@ export default class Block {
     @action setSelected(selected = true, updateNeighbor = false) {
         const prev = this.selected;
         this.selected = selected;
+
         if (updateNeighbor) {
             if (this.blockLeft) {
                 this.blockLeft.setSelected(this.selected, false);
@@ -84,7 +86,7 @@ export default class Block {
     @action setStart(start, updateNeighbor = true) {
         const prev = this.start;
         this.start = Math.round(start);
-        if (updateNeighbor && this.blockLeft) {
+        if (updateNeighbor && this.blockLeft && !this.blockLeft.selected) {
             this.blockLeft.setEnd(this.start, false);
         }
 
@@ -97,11 +99,12 @@ export default class Block {
     @action setY(y, updateNeighbor = true) {
         const prev = this.y;
         this.y = y;
+
         if (updateNeighbor) {
-            if (this.blockLeft) {
+            if (this.blockLeft && !this.blockLeft.selected) {
                 this.blockLeft.setY(this.y, false);
             }
-            if (this.blockRight) {
+            if (this.blockRight && !this.blockRight.selected) {
                 this.blockRight.setY(this.y, false);
             }
         }
@@ -115,11 +118,12 @@ export default class Block {
         this.setStart(this.start + deltaX, false);
         this.setEnd(this.end + deltaX, false);
         this.setY(this.y + deltaY, false);
+
         if (updateNeighbor) {
-            if (this.blockLeft) {
+            if (this.blockLeft && !this.blockLeft.selected) {
                 this.blockLeft.moveBy(deltaX, deltaY, false);
             }
-            if (this.blockRight) {
+            if (this.blockRight && !this.blockRight.selected) {
                 this.blockRight.moveBy(deltaX, deltaY, false);
             }
         }
