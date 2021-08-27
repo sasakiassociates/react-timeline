@@ -57,9 +57,7 @@ export default class UIStore {
             const deltaY = (yPos - block.y) + viewport.top;
 
             blocks.selected.forEach(_block => {
-                _block.setStart(_block.start + deltaX);
-                _block.setEnd(_block.end + deltaX);
-                _block.setY(_block.y + deltaY);
+                _block.moveBy(deltaX, deltaY);
             });
         },
 

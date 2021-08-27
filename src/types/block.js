@@ -120,6 +120,7 @@ export default class Block {
         this.setY(this.y + deltaY, false);
 
         if (updateNeighbor) {
+            console.log('update');
             if (this.blockLeft && !this.blockLeft.selected) {
                 this.blockLeft.moveBy(deltaX, deltaY, false);
             }
