@@ -29,20 +29,6 @@ class ContinuousRowEditor extends AbstractEditor {
             const endTime = startTime + config.defaultBlockWidth;
 
             blocks.createBlock(`new_${Math.round(Math.random() * 1000000)}`, startTime, endTime, y * config.blockHeight);
-
-            // if (Math.random() < 0.3) {
-            //
-            // } else {
-            //     const block1 = blocks.createBlock('', startTime - time.MONTH * 3, startTime, y * config.blockHeight);
-            //     block1.color = '#c8fff0';
-            //     const block2 = blocks.createBlock('', startTime, endTime, y * config.blockHeight);
-            //
-            //     block1.setBlockRight(block2);
-            //     block2.setBlockLeft(block1);
-            //
-            //     block2.name = 'Project A';
-            // }
-
         }
     }
 
@@ -50,6 +36,11 @@ class ContinuousRowEditor extends AbstractEditor {
         onDrag({x, y}) {
             const {blocks, config, spaces, ui, viewport} = this.root;
             const {block, startX, startY, top} = this.userAction.data;
+
+            if (!block) {
+                this.listeners.onMouseUp.bind(this)();
+                return;
+            }
 
             const xPos = (x - startX) - config.resizeHandleWidth; // Position minus the width of the resize handle
             const yPos = y - top;
