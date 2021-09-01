@@ -54,13 +54,14 @@ class ContinuousRowEditor extends AbstractEditor {
             const xPos = (x - startX) - config.resizeHandleWidth; // Position minus the width of the resize handle
             const yPos = y - top;
 
+            const height = config.blockHeight + config.rowPadding;
             const deltaX = spaces.pxToTime(xPos) - block.start;
-            const rowLevel = Math.floor(((yPos - block.y) + viewport.top) / config.blockHeight);
+            const rowLevel = Math.floor(((yPos - block.y) + viewport.top) / height);
 
-            const deltaY = (config.blockHeight * rowLevel);
+            const deltaY = (height * rowLevel);
 
             blocks.selected.forEach(_block => {
-                _block.moveBy(deltaX, deltaY - (_block.y % config.blockHeight));
+                _block.moveBy(deltaX, deltaY - (_block.y % height));
             });
         },
     }

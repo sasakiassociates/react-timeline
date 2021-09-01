@@ -15,6 +15,7 @@ export default {
 
     blocks: observable([]),
     blockHeight: 20, // px
+    rowPadding: 2, // px
 
     colors: {
         primaryLine: '#e1e1ec',
