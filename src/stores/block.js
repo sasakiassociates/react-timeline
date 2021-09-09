@@ -16,6 +16,8 @@ export default class BlockStore {
         this.elements = props.blocks;
     }
 
+    @observable elements = [];
+
     @action createBlock(blockId, start, end, y) {
         let block = new Block(blockId, start, end, y);
         this.elements.push(block);
@@ -24,6 +26,10 @@ export default class BlockStore {
 
     @action remove(block) {
         this.elements.splice(this.elements.indexOf(block), 1);
+    }
+
+    @action setElements(elements) {
+        this.elements = elements;
     }
 
     @action select(block = null) {
