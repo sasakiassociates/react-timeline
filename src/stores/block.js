@@ -28,10 +28,6 @@ export default class BlockStore {
         this.elements.splice(this.elements.indexOf(block), 1);
     }
 
-    @action setElements(elements) {
-        this.elements = elements;
-    }
-
     @action select(block = null) {
         this.elements.forEach(block => {
             block.setSelected(false);
