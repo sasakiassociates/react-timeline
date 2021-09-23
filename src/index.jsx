@@ -6,9 +6,8 @@ import './styles.scss';
 import config from './config';
 import RootStore from './stores/root';
 import Navigator from './components/Navigator';
-import {ContinuousEditor} from './components/Editors';
+import Editors from './components/Editors';
 import {ContinuousCalendar} from './components/Calendars';
-import ContinuousRowEditor from "./components/Editors/ContinuousRowEditor";
 
 
 class Timeline extends React.Component {
@@ -33,7 +32,7 @@ class Timeline extends React.Component {
 
     render() {
         const {ui, viewport} = this.store;
-        const {timelineLock, continuousMode, showNavigator} = this.props;
+        const {editor, timelineLock, showNavigator} = this.props;
 
         // console.log('TIMELINE RENDER ', this.props)
 
@@ -50,6 +49,8 @@ class Timeline extends React.Component {
             ui.setZoomLock(false);
         }
 
+        const Editor = Editors[editor];
+
         return (
             <Provider store={this.store}>
                 <div
@@ -57,7 +58,7 @@ class Timeline extends React.Component {
                     ref={el => !ui.container && ui.setContainer(el)}
                 >
                     <ContinuousCalendar/>
-                    {continuousMode ? <ContinuousEditor/> : <ContinuousRowEditor/>}
+                    <Editor />
                     {showNavigator && <Navigator/>}
                 </div>
             </Provider>

@@ -22,6 +22,8 @@ export default {
         secondaryLine: '#edebf1',
     },
 
+    editor: 'ContinuousEditor',
+
     minLineWidth: 24, // px
 
     pushBuffer: 30,   // px
@@ -40,6 +42,5 @@ export default {
         min: {width: time.YEAR}
     },
     timelineLock: false,//or object {left:0, right:time.YEAR * 10}
-    continuousMode: true,
     showNavigator: true,
 };
