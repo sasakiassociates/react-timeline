@@ -39,6 +39,8 @@ class Block extends React.Component {
             if (!e.ctrlKey && delta < 15) {
                 blocks.select(block);
             }
+
+            block.emitChange(block);
         }
     }
 
@@ -66,7 +68,7 @@ class Block extends React.Component {
 
     render() {
         const { config, spaces, viewport, ui } = this.props.store;
-        const { end, selected, start, y, color, blockRight, name } = this.props.block;
+        const { end, selected, start, y, color, blockLeft, blockRight, name } = this.props.block;
         const x = spaces.timeToPx(start);
 
         let time = (end - start) / viewport.width;
@@ -82,9 +84,15 @@ class Block extends React.Component {
 
         const showResizeHandleWidth = config.resizeHandleWidth * 3;
 
+        let className = 'react-timeline__block';
+        if (selected) className += ' react-timeline__block--selected';
+        if (blockRight) className += ' react-timeline__block--left';
+        if (blockLeft) className += ' react-timeline__block--right';
+
+
         return (
             <div
-                className={`react-timeline__block ${selected ? 'react-timeline__block--selected':''}`}
+                className={className}
                 style={{
                     left: `${x}px`,
                     top: `${y - viewport.top}px`,
