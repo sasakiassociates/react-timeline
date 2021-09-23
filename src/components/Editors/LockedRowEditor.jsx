@@ -45,8 +45,56 @@ class LockedRowEditor extends AbstractEditor {
 
             blocks.selected.forEach(_block => {
                 _block.moveBy(deltaX, 0);
+                _block.setY(_block.y)
             });
         },
+
+        onPushPan({ x, y }) {
+            if (this.zoomLock) return;
+
+            const { blocks, config, ui, viewport } = this.root;
+            const { startX, startY, top } = this.userAction.data;
+            const { pushSpeed, pushBuffer } = config;
+
+            const pushDelta = viewport.width * pushSpeed;
+            const xPos = (x - ui.container.left) + startX;
+            const yPos = (y - startY) - top;
+
+            if (!this.zoomLock) {//zoomLock only locks left/right , you can still pan top/bottom
+                const xDirection = xPos < pushBuffer ? -1 : xPos > ui.width - pushBuffer ? 1 : null;
+                if (xDirection !== null) {
+                    if (this._intervals.horizontalPush === null) {
+                        this._intervals.horizontalPush = setInterval(() => {
+                            viewport.setLeft(viewport.left + (xDirection * pushDelta));
+                            viewport.setRight(viewport.right + (xDirection * pushDelta));
+                            blocks.selected.forEach(block => {
+                                block.setEnd(block.end + (xDirection * pushDelta));
+                                block.setStart(block.start + (xDirection * pushDelta));
+                            });
+                        }, this._interval);
+                    }
+                }
+                else {
+                    clearInterval(this._intervals.horizontalPush);
+                    this._intervals.horizontalPush = null;
+                }
+            }
+
+            const pushHeight = (viewport.bottom - viewport.top) * (pushSpeed * 2);
+            const yDirection = yPos < pushBuffer ? -1 : yPos > (ui.height * .85) - pushBuffer ? 1 : null;
+            if (yDirection !== null) {
+                if (this._intervals.verticalPush === null) {
+                    this._intervals.verticalPush = setInterval(() => {
+                        viewport.setTop(viewport.top + (yDirection * pushHeight));
+                    }, this._interval);
+                }
+            }
+            else {
+                clearInterval(this._intervals.verticalPush);
+                this._intervals.verticalPush = null;
+            }
+
+        }
     }
 
 }
