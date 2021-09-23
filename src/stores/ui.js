@@ -92,6 +92,10 @@ export default class UIStore {
         },
 
         onMouseUp() {
+            const { blocks } = this.root;
+
+            blocks.selected.forEach(_block => _block.emitChange());
+
             this.setAction(null);
             this.setSelectBox(null);
 
