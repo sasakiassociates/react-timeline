@@ -68,6 +68,8 @@ export default class Block {
     @action setSelected(selected = true, updateNeighbor = false) {
         this.selected = selected;
 
+        this.emitChange();
+
         if (updateNeighbor) {
             if (this.blockLeft) {
                 this.blockLeft.setSelected(this.selected, false);
