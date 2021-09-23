@@ -5,10 +5,8 @@
  */
 
 import React from 'react';
-import { inject, observer } from 'mobx-react';
 
 import Block from '../Block';
-import time from '../../time';
 import Scrubber from '../Scrubber';
 import SelectBox from './SelectBox';
 import Action, { actions } from '../../types/action';
@@ -17,6 +15,14 @@ import Action, { actions } from '../../types/action';
 class AbstractEditor extends React.Component {
 
     scrollEventAttached = false;
+
+    constructor() {
+        super();
+
+        this.state = {
+            editor: null,
+        };
+    }
 
     componentDidMount() {
         this.renderGrid();
@@ -30,16 +36,16 @@ class AbstractEditor extends React.Component {
         this.props.store.ui.setListeners({});
 
         if (this.scrollEventAttached) {
-            this.grid.removeEventListener('wheel', this.onScroll.bind(this));
+            this.state.editor.removeEventListener('wheel', this.onScroll.bind(this));
         }
     }
 
     componentDidUpdate() {
         this.renderGrid();
 
-        if (!this.scrollEventAttached && this.grid) {
+        if (!this.scrollEventAttached && this.state.editor) {
             this.scrollEventAttached = true;
-            this.grid.addEventListener('wheel', this.onScroll.bind(this), false);
+            this.state.editor.addEventListener('wheel', this.onScroll.bind(this), false);
         }
     }
 
@@ -50,7 +56,6 @@ class AbstractEditor extends React.Component {
     onMouseDown = e => {
         const { ui, viewport } = this.props.store;
         const container = e.target.getBoundingClientRect();
-        const editor = e.target.parentNode.parentNode.getBoundingClientRect();
 
         this.mouseDownTime = Date.now();
 
@@ -87,12 +92,12 @@ class AbstractEditor extends React.Component {
     onScroll = e => {
         e.preventDefault();
 
-        const {clientX, deltaY, target} = e;
-        const {config, ui, viewport} = this.props.store;
+        const {clientX, deltaY} = e;
+        const {ui, viewport} = this.props.store;
 
         if (ui.zoomLock) return;
 
-        const xRatio = (clientX - target.getBoundingClientRect().left) / ui.width;
+        const xRatio = (clientX - document.querySelector('.react-timeline__editor').getBoundingClientRect().left) / ui.width;
 
         viewport.zoom(xRatio, deltaY)
 
@@ -100,7 +105,7 @@ class AbstractEditor extends React.Component {
     };
 
     renderBlocks = () => {
-        const {blocks, config} = this.props.store;
+        const {blocks} = this.props.store;
 
         return blocks.visible.map(block => (
             <Block
@@ -112,7 +117,7 @@ class AbstractEditor extends React.Component {
 
     renderGrid = () => {
         if (this.grid) {
-            const { config, spaces, ui, viewport } = this.props.store;
+            const { config, spaces, ui } = this.props.store;
             const { width, height } = ui;
 
             const ctx = this.grid.getContext('2d');
@@ -139,12 +144,12 @@ class AbstractEditor extends React.Component {
     }
 
     render() {
-        const { spaces, viewport, ui } = this.props.store;
+        const { spaces, ui } = this.props.store;
         const { height, scrubber, selectBox, userAction, width } = ui;
-        const { left } = viewport;
 
         return (
             <div
+                ref={editor => !this.state.editor && this.setState({ editor })}
                 className="react-timeline__editor react-timeline__editor-continuous-row"
                 onDoubleClick={e => this.createBlock(e)}
             >
