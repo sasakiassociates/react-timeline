@@ -67,7 +67,7 @@ class Block extends React.Component {
     }
 
     render() {
-        const { block, store } = tihs.props;
+        const { block, store } = this.props;
         const { config, spaces, viewport, ui } = store;
         const { end, selected, start, y, color, blockLeft, blockRight, name } = block;
         const x = spaces.timeToPx(start);
