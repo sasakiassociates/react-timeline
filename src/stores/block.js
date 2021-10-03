@@ -26,6 +26,9 @@ export default class BlockStore {
 
     @action remove(block) {
         this.elements.splice(this.elements.indexOf(block), 1);
+
+        block.removed = true;
+        block.onChange(block);
     }
 
     @action select(block = null) {

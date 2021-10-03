@@ -17,6 +17,8 @@ export default class Block {
         this.onChange = opts.onChange || (() => {});
         this.store = opts.store;
 
+        this.removed = false;
+
         this._stopPropagation = true;
         this.setEnd(end);
         this.setStart(start);
