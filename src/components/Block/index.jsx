@@ -67,8 +67,9 @@ class Block extends React.Component {
     }
 
     render() {
-        const { config, spaces, viewport, ui } = this.props.store;
-        const { end, selected, start, y, color, blockLeft, blockRight, name } = this.props.block;
+        const { block, store } = tihs.props;
+        const { config, spaces, viewport, ui } = store;
+        const { end, selected, start, y, color, blockLeft, blockRight, name } = block;
         const x = spaces.timeToPx(start);
 
         let time = (end - start) / viewport.width;
@@ -84,7 +85,7 @@ class Block extends React.Component {
 
         const showResizeHandleWidth = config.resizeHandleWidth * 3;
 
-        let className = 'react-timeline__block';
+        let className = `react-timeline__block ${block.className}`;
         if (selected) className += ' react-timeline__block--selected';
         if (blockRight) className += ' react-timeline__block--left';
         if (blockLeft) className += ' react-timeline__block--right';

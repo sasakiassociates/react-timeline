@@ -22,6 +22,8 @@ export default {
         secondaryLine: '#edebf1',
     },
 
+    onBlockCreate: () => {},
+
     editor: 'ContinuousEditor',
 
     minLineWidth: 24, // px

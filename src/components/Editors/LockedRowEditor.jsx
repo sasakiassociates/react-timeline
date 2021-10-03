@@ -26,7 +26,8 @@ class LockedRowEditor extends AbstractEditor {
             const startTime = spaces.pxToTime(e.clientX);
             const endTime = startTime + config.defaultBlockWidth;
 
-            blocks.createBlock(`new_${Math.round(Math.random() * 1000000)}`, startTime, endTime, y * config.blockHeight);
+            const block = blocks.createBlock(`new_${Math.round(Math.random() * 1000000)}`, startTime, endTime, y * config.blockHeight, { store: blocks });
+            this.props.onBlockCreate(block);
         }
     }
 

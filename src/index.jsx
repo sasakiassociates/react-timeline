@@ -59,7 +59,7 @@ class Timeline extends React.Component {
                     ref={el => !ui.container && ui.setContainer(el)}
                 >
                     <ContinuousCalendar/>
-                    <Editor />
+                    <Editor onBlockCreate={this.props.onBlockCreate} />
                     {showNavigator && <Navigator/>}
                 </div>
             </Provider>

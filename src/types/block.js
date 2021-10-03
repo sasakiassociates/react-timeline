@@ -15,6 +15,7 @@ export default class Block {
         this.blockId = blockId;
 
         this.onChange = opts.onChange || (() => {});
+        this.store = opts.store;
 
         this._stopPropagation = true;
         this.setEnd(end);
@@ -27,6 +28,12 @@ export default class Block {
     emitChange() {
         if (!this._stopPropagation) {
             this.onChange(this);
+        }
+    }
+
+    @action remove() {
+        if (this.store) {
+            this.store.remove(this);
         }
     }
 
@@ -43,6 +50,11 @@ export default class Block {
     @observable blockId;
     @action setBlockId(blockId) {
         this.blockId = blockId;
+    }
+
+    @observable className = '';
+    @action setClassName(className) {
+        this.className = className;
     }
 
     @observable color;
