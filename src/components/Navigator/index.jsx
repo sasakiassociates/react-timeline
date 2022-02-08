@@ -35,9 +35,8 @@ class Navigator extends React.Component {
     }
 
     render() {
-        const { blocks, viewport } = this.props.store;
+        const { blocks, viewport, ui, spaces } = this.props.store;
         const { extent } = blocks;
-
         const offset = viewport.right >= extent.right ? 'right' : 'left';
         const navigator = {
             width: `${100 * viewport.width / extent.width}%`,
@@ -45,7 +44,6 @@ class Navigator extends React.Component {
             top: `${100 * (viewport.top - extent.top) / extent.height}%`,
             [offset]: `${100 * (viewport[offset] - extent[offset]) / extent.width}%`,
         };
-
         return (
             <div
                 ref={el => this.ref = el}
@@ -56,8 +54,15 @@ class Navigator extends React.Component {
                     className="react-timeline__navigator-viewport"
                     style={navigator}
                 />
+                <div
+                    className="react-timeline__navigator-scrubber-date"
+
+                >
+                    {spaces.displaySecondary(ui.scrubber)} | {(100 * (blocks.visible.length / blocks.elements.length)).toFixed(0)}%
+                </div>
 
                 <BlockVisualizer />
+
             </div>
         );
     }

@@ -4,7 +4,7 @@
  * Stores information regarding time blocks.
  */
 
-import uuidv4 from 'uuid/v4';
+const { v4: uuidv4 } = require('uuid');
 import { action, computed, observable } from 'mobx';
 
 
