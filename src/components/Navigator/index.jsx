@@ -9,7 +9,7 @@ import React from 'react';
 import { inject, observer } from 'mobx-react';
 
 import BlockVisualizer from './BlockVisualizer';
-
+import time from '../../time';
 
 @inject('store')
 @observer
@@ -35,7 +35,8 @@ class Navigator extends React.Component {
     }
 
     render() {
-        const { blocks, viewport, ui, spaces } = this.props.store;
+
+        const { blocks, viewport, ui } = this.props.store;
         const { extent } = blocks;
         const offset = viewport.right >= extent.right ? 'right' : 'left';
         const navigator = {
@@ -44,6 +45,13 @@ class Navigator extends React.Component {
             top: `${100 * (viewport.top - extent.top) / extent.height}%`,
             [offset]: `${100 * (viewport[offset] - extent[offset]) / extent.width}%`,
         };
+        const scrubberMonth = () => {
+            return Math.floor(ui.scrubber / time.MONTH) % 12;
+        }
+
+        const scrubberYear = () => {
+            return Math.floor(ui.scrubber  / time.YEAR) + this.props.store.config.startYear;
+        }
         return (
             <div
                 ref={el => this.ref = el}
@@ -58,7 +66,7 @@ class Navigator extends React.Component {
                     className="react-timeline__navigator-scrubber-date"
 
                 >
-                    {spaces.displaySecondary(ui.scrubber)} | {(100 * (blocks.visible.length / blocks.elements.length)).toFixed(0)}%
+                    {time.months[scrubberMonth()] + " " + scrubberYear()} | {(blocks.elements.length > 0) ? (100 * (blocks.visible.length / blocks.elements.length)).toFixed(0) : 100}%
                 </div>
 
                 <BlockVisualizer />
