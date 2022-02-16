@@ -1,5 +1,5 @@
 .react-timeline__editor {
-    flex: 1 0 85%;
+    flex: 1 0 96%;
     overflow: hidden;
 
     cursor: crosshair;
@@ -31,15 +31,16 @@
         position: absolute;
         left: 1px;
         top: 0;
-
+        text-transform: uppercase;
         width: max-content;
         padding: 2px 5px;
 
         font-size: 11px;
-        background: rgba($color_bg, .8);
-        border-right: 1px solid $color_bg-inverse;
-        border-bottom: 1px solid $color_bg-inverse;
-        border-radius: 3px;
+        background: rgba($color_bg-light, .8);
+        border-top: 1px solid $color_scrubber_bg;
+        border-right: 1px solid $color_scrubber_bg;
+        border-bottom: 1px solid $color_scrubber_bg;
+        border-radius: 0px 3px 3px 0px;
         opacity: .8;
     }
 }
