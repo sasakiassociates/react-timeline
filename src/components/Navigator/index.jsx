@@ -58,19 +58,18 @@ class Navigator extends React.Component {
                 className="react-timeline__navigator"
                 onClick={e => this.onClick(e)}
             >
-                <div
-                    className="react-timeline__navigator-viewport"
-                    style={navigator}
-                />
-                <div
-                    className="react-timeline__navigator-scrubber-date"
-
-                >
-                    {time.months[scrubberMonth()] + " " + scrubberYear()} | {(blocks.elements.length > 0) ? (100 * (blocks.visible.length / blocks.elements.length)).toFixed(0) : 100}%
+                <div >
+                    <div
+                        className="react-timeline__navigator-viewport"
+                        style={navigator}
+                    />
+                    <div
+                        className="react-timeline__navigator-scrubber-date"
+                    >
+                        {time.months[scrubberMonth()] + " " + scrubberYear()} | {(blocks.elements.length > 0) ? (100 * (blocks.visible.length / blocks.elements.length)).toFixed(0) : 100}%
+                    </div>
+                    <BlockVisualizer />
                 </div>
-
-                <BlockVisualizer />
-
             </div>
         );
     }

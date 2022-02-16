@@ -16,14 +16,6 @@ import Action, {actions} from "../../types/action";
 @observer
 class ContinuousCalendar extends React.Component {
 
-    componentDidMount() {
-        this.renderGrid();
-    }
-
-    componentWillUpdate() {
-        this.renderGrid();
-    }
-
     renderDates() {
         const { spaces, ui } = this.props.store;
 
@@ -44,25 +36,6 @@ class ContinuousCalendar extends React.Component {
         });
     }
 
-    renderGrid() {
-        if (this.grid) {
-            const { config, spaces, ui, viewport } = this.props.store;
-            const { width, height } = ui;
-
-            const ctx = this.grid.getContext('2d');
-            ctx.clearRect(0, 0, width, height);
-
-            // Primary Lines
-            ctx.strokeStyle = config.colors.primaryLine;
-            spaces.grid.primary.forEach(x => {
-                ctx.beginPath();
-                ctx.moveTo(x, 0);
-                ctx.lineTo(x, height);
-                ctx.stroke();
-            });
-        }
-    }
-
     setScrubberTime(e) {
         const {spaces, ui} = this.props.store;
 
@@ -71,19 +44,9 @@ class ContinuousCalendar extends React.Component {
     }
 
     render() {
-        const { width, height} = this.props.store.ui;
-        const { primary } = this.props.store.spaces.grid;
-
         return (
             <div className="react-timeline__calendar react-timeline__calendar-continuous" onDoubleClick={e => this.setScrubberTime(e)}>
-                <canvas
-                    width={`${width}px`}
-                    height={`${height * .05}px`}
-                    ref={el => this.grid = el}
-                />
-
                 <Scrubber />
-
                 {this.renderDates()}
             </div>
         );

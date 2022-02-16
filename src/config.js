@@ -26,7 +26,7 @@ export default {
 
     editor: 'ContinuousEditor',
 
-    minLineWidth: 24, // px
+    minLineWidth: 17, // px
 
     pushBuffer: 30,   // px
     pushSpeed: .01,   // %
