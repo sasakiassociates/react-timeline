@@ -1,0 +1,30 @@
+&__Timeline {
+
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+    height: 100%;
+
+    color: $color_font;
+
+    background: $color_bg;
+
+    & * {
+        position: relative;
+        box-sizing: border-box;
+    }
+
+    &--dragging * {
+        cursor: grabbing !important;
+    }
+
+    &--resizing * {
+        cursor: col-resize !important;
+    }
+
+    &--selecting * {
+        cursor: nwse-resize !important;
+    }
+
+}

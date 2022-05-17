@@ -1,0 +1,47 @@
+&__Block {
+    position: absolute;
+    display: flex;
+
+    cursor: grab;
+    opacity: .75;
+    pointer-events: all;
+    transition: border-color .15s, opacity .15s;
+
+    &:hover {
+        opacity: 1;
+        transition: border-color .15s, opacity .15s;
+    }
+
+    &--selected {
+        border-color: rgba($color_highlight, 1);
+        box-shadow: 0 0 3px 5px rgba($color_bg-inverse, .3);
+        transition: border-color .15s, opacity .15s;
+    }
+
+    &-content {
+        flex: 1 1;
+
+        height: 100%;
+    }
+
+    &-label {
+        position: absolute;
+        left: 0;
+        top: 0;
+
+        width: 300px;
+        padding-left: 5px;
+        padding-top: 4px;
+
+        color: $color_font;
+
+        pointer-events: none;
+        user-select: none;
+    }
+
+    &-handle {
+        height: 100%;
+
+        cursor: col-resize;
+    }
+}
