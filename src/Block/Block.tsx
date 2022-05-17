@@ -13,10 +13,13 @@ export type BlockProps = {
     name?: string;
     selected?: any[];
     timespan?: any[];
+    y?: any[];
 };
 
 export default observer(function Block(props: BlockProps) {
-    const { ui, viewport } = useTimeline();
+    const { spaces, ui, viewport } = useTimeline();
+
+    const [y, setY] = props.y || useState<number>(0);
     const [selected, setSelected] = props.selected || useState<boolean>(false);
     const [timespan] = props.timespan || useState<Timespan>({ start: 0, end: 300000 });
 
@@ -31,12 +34,15 @@ export default observer(function Block(props: BlockProps) {
         //ui.setAction(new Action(Actions.RESIZE, { bound, clientX: e.clientX }))
     }, [_setSelected]);
 
+    const onMouseDown = useCallback((e: MouseEvent<HTMLDivElement>) => {
+        _setSelected(e);
+    }, [_setSelected]);
+
     let time = (timespan.end - timespan.start) / viewport.width;
     if (time < 0) {
         time = 0;
     }
 
-    console.log(ui.width);
     const width = ui.width * time;
 
     const handleWidth = {
@@ -48,10 +54,12 @@ export default observer(function Block(props: BlockProps) {
     const style = {
         width: `${width}px`,
         height: `${config.blockHeight}px`,
+        left: `${spaces.timeToPx(timespan.start)}px`,
+        top: `${y - viewport.top}px`,
+        background: undefined,
     };
 
     if (props.color) {
-        // @ts-ignore
         style.background = props.color;
     }
 
@@ -72,7 +80,7 @@ export default observer(function Block(props: BlockProps) {
                 />
             )}
 
-            <div className="ReactTimeline__Block-content" onMouseDown={e => this.onMouseDown(e)} />
+            <div className="ReactTimeline__Block-content" onMouseDown={e => onMouseDown(e)} />
 
             {width > showResizeHandleWidth && (
                 <div 

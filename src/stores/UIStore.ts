@@ -4,7 +4,7 @@
  * Stores the current state of the UI.
  */
 
-import { action, computed, observable, makeObservable, runInAction } from 'mobx';
+import { action, computed, observable, makeObservable } from 'mobx';
 
 import TimelineStore from './TimelineStore';
 import Action, { Actions } from '../models/Action';
@@ -255,7 +255,7 @@ export default class UIStore {
     }
 
     @observable 
-    container: object = {};
+    container: DOMRect = new DOMRect();
 
     @action
     setContainer(container: DOMRect) {
