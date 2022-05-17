@@ -3,29 +3,35 @@
  */
 
 import { observer } from 'mobx-react';
-import { useEffect, useMemo, ReactNode  } from 'react';
+import { useEffect, useMemo, useState, ReactNode  } from 'react';
 
+import config from '../config';
+import { Box } from '../types';
 import Editor from '../Editor/Editor';
-import { TimelineContext, TimelineStore } from '../context';
+import TimelineStore from '../stores/TimelineStore';
+import { TimelineContext } from '../context';
 
 
 export type TimelineProps = {
     children?: ReactNode;
+    viewport?: any[];
 };
 
-export default observer(function Timeline({ children }: TimelineProps) {
+export default observer(function Timeline({ children, viewport }: TimelineProps) {
     const context = useMemo<TimelineStore>(() => new TimelineStore(), []);
+    const [_viewport, _setViewport] = viewport || useState<Box>({ top: 0, left: 0, right: config.defaultViewportWidth });
 
-    useEffect(() => () => context.clearEvents(), [context]);
+    useEffect(() => () => context.ui.clearEvents(), [context]);
+    useEffect(() => context.viewport.setState(_viewport, _setViewport), [_viewport, _setViewport]);
 
     return (
         <TimelineContext.Provider value={context}>
             <div 
                 className={`
                     ReactTimeline__Timeline
-                    ${context.cursor}
+                    ${context.ui.cursor}
                 `}
-                ref={e => !context.element && context.setElement(e)}
+                ref={e => !context.ui.element && context.ui.setElement(e)}
             >
                 <Editor>
                     {children}
