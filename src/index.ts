@@ -4,8 +4,8 @@
 
 import './index.scss';
 
-import Block from './Block/Block';
-import Timeline from './Timeline/Timeline';
+import Block from './components/Block/Block';
+import Timeline from './components/Timeline/Timeline';
 
 import { useTimeline } from './context';
 import time from './time';

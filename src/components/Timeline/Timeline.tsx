@@ -5,11 +5,11 @@
 import { observer } from 'mobx-react';
 import { useEffect, useMemo, useState, ReactNode  } from 'react';
 
-import config from '../config';
-import { Box } from '../types';
+import config from '../../config';
+import { Box } from '../../types';
 import Editor from '../Editor/Editor';
-import TimelineStore from '../stores/TimelineStore';
-import { TimelineContext } from '../context';
+import TimelineStore from '../../stores/TimelineStore';
+import { TimelineContext } from '../../context';
 
 
 export type TimelineProps = {
