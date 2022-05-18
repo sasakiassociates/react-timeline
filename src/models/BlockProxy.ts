@@ -2,7 +2,13 @@
  * Block Proxy
  */
 
-import { action, observable, runInAction } from 'mobx';
+import { 
+    action, 
+    computed, 
+    observable, 
+    makeObservable, 
+    runInAction 
+} from 'mobx';
 
 import { Timespan } from '../types';
 
@@ -17,6 +23,10 @@ export interface IBlockProxy {
 };
 
 export default class BlockProxy implements IBlockProxy {
+
+    constructor() {
+        makeObservable(this);
+    }
 
     // Selected Proxy
 
@@ -89,6 +99,36 @@ export default class BlockProxy implements IBlockProxy {
     @action
     __internalSetY(y: number) {
         this.y = y;
+    }
+
+
+    // Public Methods
+
+    moveBy(deltaX: number, deltaY: number) {
+        this.setTimespan({
+            start: this.start + deltaX,
+            end: this.end + deltaX,
+        });
+
+        this.setY(this.y + deltaY);
+    }
+
+
+    // Computed
+
+    @computed 
+    get duration() {
+        return this.end - this.start;
+    }
+
+    @computed
+    get start() {
+        return this.timespan.start;
+    }
+   
+    @computed
+    get end() {
+        return this.timespan.end;
     }
 
 }

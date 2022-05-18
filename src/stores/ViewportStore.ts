@@ -29,7 +29,6 @@ export default class ViewportStore {
 
     @action
     setState(value: Box, setValue: (_: Box) => any) {
-        console.log(value);
         this.value = value;
         this.setValue = setValue;
     }

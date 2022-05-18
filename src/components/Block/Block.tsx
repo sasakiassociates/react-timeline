@@ -43,7 +43,7 @@ export default observer(function Block(props: BlockProps) {
         if (props.timespan !== undefined) {
             block.__internalSetTimespan(props.timespan);
         }
-    }, [props.timespan.end, props.timespan.start]);
+    }, [props.timespan, props.timespan.end, props.timespan.start]);
 
     useEffect(() => {
         if (props.onTimespanChange !== undefined) {
@@ -70,8 +70,8 @@ export default observer(function Block(props: BlockProps) {
 
     const selectBlock = useCallback((e: MouseEvent) => {
         if (!block.selected) {
-            if (!e.ctrlKey) {
-                block.setSelected(!block.selected);
+            if (e.ctrlKey) {
+                block.setSelected(true);
             }
             else {
                 blocks.select(block);
@@ -142,10 +142,7 @@ export default observer(function Block(props: BlockProps) {
 
     return (
         <div 
-            className={`
-                ReactTimeline__Block
-                ${props.className}
-            `}
+            className={`ReactTimeline__Block ${props.className} ${block.selected ? 'ReactTimeline__Block--selected' : ''}`}
             style={style}
             draggable="false"
         >

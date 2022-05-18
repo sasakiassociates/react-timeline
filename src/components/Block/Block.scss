@@ -19,13 +19,13 @@
     }
 
     &-content {
-        flex: 1 1;
+        flex: 1 1 auto;
 
         height: 100%;
     }
 
     &-label {
-        position: absolute;
+        position: absolute !important;
         left: 0;
         top: 0;
 

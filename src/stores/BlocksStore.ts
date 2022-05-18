@@ -58,7 +58,7 @@ export default class BlockStore {
     }
 
     select(block?: BlockProxy) {
-        this.all.forEach(block => block.setSelected(false));
+        this.selected.forEach(block => block.setSelected(false));
 
         if (block) {
             block.setSelected(true);

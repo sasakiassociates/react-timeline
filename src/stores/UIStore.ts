@@ -6,7 +6,9 @@
 
 import { action, computed, observable, makeObservable } from 'mobx';
 
+import config from '../config';
 import TimelineStore from './TimelineStore';
+import BlockProxy from '../models/BlockProxy';
 import Action, { Actions } from '../models/Action';
 
 
@@ -49,7 +51,7 @@ export default class UIStore {
 
     defaultListeners = {
         onDrag({ x, y }) {
-            const { blocks, config, spaces, ui, viewport } = this.root;
+            const { blocks, spaces, viewport } = this.root as TimelineStore;
             const { block, startX, startY, top } = this.userAction.data;
 
             if (!block) {
@@ -63,47 +65,41 @@ export default class UIStore {
             const deltaX = spaces.pxToTime(xPos) - block.start;
             const deltaY = (yPos - block.y) + viewport.top;
 
-            blocks.selected.forEach(_block => {
+            blocks.selected.forEach((_block: BlockProxy) => {
                 _block.moveBy(deltaX, deltaY);
             });
         },
 
-        onKeyDown(e) {
+        onKeyDown(e: KeyboardEvent) {
             if (!this.isFocused) return;
 
-            const { root } = this;
+            const { blocks, viewport } = this.root as TimelineStore;
 
             switch(e.keyCode) {
                 case keys.BACKSPACE:
                     e.preventDefault();
                     e.stopPropagation();
 
-                    root.blocks.selected.forEach(block => {
-                        root.blocks.remove(block);
+                    blocks.selected.forEach((block: BlockProxy) => {
+                        blocks.remove(block);
                     });
 
                     break;
 
                 case keys.PLUS:
                     if (e.shiftKey) {
-                        if (this.zoomLock) return;
-                        root.viewport.zoom(.5, -1);
+                        viewport.zoom(.5, -1);
                     }
                     break;
 
                 case keys.MINUS:
-                    if (this.zoomLock) return;
-                    root.viewport.zoom(.5, 1);
+                    viewport.zoom(.5, 1);
                     break;
             }
         },
 
         onMouseUp() {
-            const { blocks } = this.root;
-
-            blocks.selected.forEach(_block => _block.emitChange());
-
-            this.setAction(null);
+            this.setAction();
             this.setSelectBox(null);
 
             for (let interval in this._intervals) {
@@ -114,48 +110,44 @@ export default class UIStore {
 
         // Pull Pan
         onPan({ x, y }) {
-            const { spaces, viewport } = this.root;
-            const { startLeft, startRight, startTop, startX, startY, top } = this.userAction.data;
+            const { spaces, viewport } = this.root as TimelineStore;
+            const { startLeft, startRight, startTop, startX, startY, top } = this.action.data;
 
             const deltaX = spaces.pxDelta(startX, x) * Math.abs(startLeft - startRight);
 
             viewport.setTop(startTop - ((y - top) - startY));
-
-            if (this.zoomLock) return;//zoomLock only locks left/right , you can still pan top/bottom
 
             viewport.setRight(startRight - deltaX);
             viewport.setLeft(startLeft - deltaX);
         },
 
         onPushPan({ x, y }) {
-            if (this.zoomLock) return;
-
-            const { blocks, config, spaces, ui, viewport } = this.root;
-            const { startX, startY, top } = this.userAction.data;
+            const { blocks, ui, viewport } = this.root as TimelineStore;
+            const { startX, startY, top } = this.action.data;
             const { pushSpeed, pushBuffer } = config;
 
             const pushDelta = viewport.width * pushSpeed;
             const xPos = (x - ui.container.left) + startX;
             const yPos = (y - startY) - top;
 
-            if (!this.zoomLock) {//zoomLock only locks left/right , you can still pan top/bottom
-                const xDirection = xPos < pushBuffer ? -1 : xPos > ui.width - pushBuffer ? 1 : null;
-                if (xDirection !== null) {
-                    if (this._intervals.horizontalPush === null) {
-                        this._intervals.horizontalPush = setInterval(() => {
-                            viewport.setLeft(viewport.left + (xDirection * pushDelta));
-                            viewport.setRight(viewport.right + (xDirection * pushDelta));
-                            blocks.selected.forEach(block => {
-                                block.setEnd(block.end + (xDirection * pushDelta));
-                                block.setStart(block.start + (xDirection * pushDelta));
+            const xDirection = xPos < pushBuffer ? -1 : xPos > ui.width - pushBuffer ? 1 : null;
+            if (xDirection !== null) {
+                if (this._intervals.horizontalPush === null) {
+                    this._intervals.horizontalPush = setInterval(() => {
+                        viewport.setLeft(viewport.left + (xDirection * pushDelta));
+                        viewport.setRight(viewport.right + (xDirection * pushDelta));
+                        blocks.selected.forEach((block: BlockProxy) => {
+                            block.setTimespan({
+                                start: block.start + (xDirection * pushDelta),
+                                end: block.end + (xDirection * pushDelta)
                             });
-                        }, this._interval);
-                    }
+                        });
+                    }, this._interval);
                 }
-                else {
-                    clearInterval(this._intervals.horizontalPush);
-                    this._intervals.horizontalPush = null;
-                }
+            }
+            else {
+                clearInterval(this._intervals.horizontalPush);
+                this._intervals.horizontalPush = null;
             }
 
             const pushHeight = (viewport.bottom - viewport.top) * (pushSpeed * 2);
@@ -164,7 +156,7 @@ export default class UIStore {
                 if (this._intervals.verticalPush === null) {
                     this._intervals.verticalPush = setInterval(() => {
                         viewport.setTop(viewport.top + (yDirection * pushHeight));
-                        blocks.selected.forEach(block => block.setY(block.y + (yDirection * pushHeight)));
+                        blocks.selected.forEach((block: BlockProxy) => block.setY(block.y + (yDirection * pushHeight)));
                     }, this._interval);
                 }
             }
@@ -215,7 +207,7 @@ export default class UIStore {
         },
 
         onSelect({ x, y }) {
-            const { blocks, spaces, ui, viewport } = this.root;
+            const { blocks, spaces, viewport } = this.root;
             const { startX, startY, top } = this.userAction.data;
 
             const blockHeight = 20;
@@ -229,7 +221,7 @@ export default class UIStore {
             const y1 = height >= 0 ? startY - 1 : ((startY + height) - blockHeight) - 8;
             const y2 = height >= 0 ? startY + height + 1 : startY + 1;
 
-            blocks.elements.forEach(block => {
+            blocks.all.forEach((block: BlockProxy) => {
                 block.setSelected((
                     (block.start >= x1 && block.start <= x2)
                     || (block.end >= x1 && block.end <= x2)
@@ -278,10 +270,8 @@ export default class UIStore {
             if (!this._hasSetEvents) {
                 this._hasSetEvents = true;
 
-                /*
                 window.addEventListener('click', e => this.listeners.onWindowClick.call(this, e));
                 window.addEventListener('keydown', e => this.listeners.onKeyDown.bind(this)(e));
-                */
             }
 
             update();
@@ -366,7 +356,6 @@ export default class UIStore {
 
     @computed 
     get width() {
-        console.log(this.container);
         return this.container ? this.container.width : 0;
     }
 
