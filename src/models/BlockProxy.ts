@@ -79,6 +79,9 @@ export default class BlockProxy {
         this.setY(this.y + deltaY);
     }
 
+    destroy() {
+    }
+
 
     // Computed
 

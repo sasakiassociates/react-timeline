@@ -29,6 +29,7 @@ export default class BlockStore {
     @action 
     remove(block: BlockProxy) {
         this.all.splice(this.all.indexOf(block), 1);
+        block.destroy();
     }
 
     @computed 

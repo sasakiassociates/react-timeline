@@ -115,10 +115,11 @@ export default class UIStore {
 
             const deltaX = spaces.pxDelta(startX, x) * Math.abs(startLeft - startRight);
 
-            viewport.setTop(startTop - ((y - top) - startY));
-
-            viewport.setRight(startRight - deltaX);
-            viewport.setLeft(startLeft - deltaX);
+            viewport.setValue({
+                top: startTop - ((y - top) - startY),
+                right: startRight - deltaX,
+                left: startLeft - deltaX,
+            });
         },
 
         onPushPan({ x, y }) {
@@ -134,8 +135,11 @@ export default class UIStore {
             if (xDirection !== null) {
                 if (this._intervals.horizontalPush === null) {
                     this._intervals.horizontalPush = setInterval(() => {
-                        viewport.setLeft(viewport.left + (xDirection * pushDelta));
-                        viewport.setRight(viewport.right + (xDirection * pushDelta));
+                        viewport.setValue({
+                            top: viewport.top,
+                            left: viewport.left + (xDirection * pushDelta),
+                            right: viewport.right + (xDirection * pushDelta),
+                        });
                         blocks.selected.forEach((block: BlockProxy) => {
                             block.setTimespan({
                                 start: block.start + (xDirection * pushDelta),
@@ -155,7 +159,11 @@ export default class UIStore {
             if (yDirection !== null) {
                 if (this._intervals.verticalPush === null) {
                     this._intervals.verticalPush = setInterval(() => {
-                        viewport.setTop(viewport.top + (yDirection * pushHeight));
+                        viewport.setValue({
+                            top: viewport.top + (yDirection * pushHeight),
+                            left: viewport.left,
+                            right: viewport.right,
+                        });
                         blocks.selected.forEach((block: BlockProxy) => block.setY(block.y + (yDirection * pushHeight)));
                     }, this._interval);
                 }
@@ -167,7 +175,7 @@ export default class UIStore {
         },
 
         onResize({ x }) {
-            const { blocks, spaces } = this.root;
+            const { blocks, spaces } = this.root as TimelineStore;
             const { block, bound } = this.userAction.data;
 
             const delta = spaces.pxToTime(x) - block[bound];
@@ -240,8 +248,8 @@ export default class UIStore {
         },
 
         onWindowClick({ target }) {
-            if (this.containerElement) {
-                this.setFocused(this.containerElement.contains(target));
+            if (this.element) {
+                this.setFocused(this.element.contains(target));
             }
         },
     }
