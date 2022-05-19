@@ -12,15 +12,13 @@ export type EditorProps = {
 
 export default observer(function Editor({ children }: EditorProps) {
     const { blocks, spaces, ui, viewport } = useTimeline();
-    const { height, width } = ui;
+    const { editor, height, width } = ui;
 
     const [mouseDownTime,setMouseDownTime] = useState<number>(0);
 
     /**
      * Lifecycle
      */
-
-    const [editor, setEditor] = useState<HTMLDivElement|null>(null);
 
     useEffect(() => {
         if (editor) {
@@ -119,7 +117,7 @@ export default observer(function Editor({ children }: EditorProps) {
     return (
         <div 
             className="ReactTimeline__Editor"
-            ref={el => el !== null && editor === null && setEditor(el)}
+            ref={el => el && !editor && ui.setEditor(el)}
         >
             <canvas
                 width={`${width}px`}

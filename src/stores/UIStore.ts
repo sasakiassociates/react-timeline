@@ -275,6 +275,13 @@ export default class UIStore {
         }
     }
 
+    @observable
+    editor?: HTMLDivElement;
+    
+    @action
+    setEditor(editor: HTMLDivElement) {
+        this.editor = editor; 
+    }
 
     @observable 
     isFocused: boolean = false;

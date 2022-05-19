@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useMemo, MouseEvent } from 'react';
 import { observer } from 'mobx-react';
 
-//import Action, { Actions } from '../models/Action';
 import config from '../../config';
 import { useTimeline } from '../../context';
 import BlockProxy from '../../models/BlockProxy';
+import Action, { Actions } from '../../models/Action';
 
 
 export type BlockProps = {
@@ -25,19 +25,21 @@ export default observer(function Block(props: BlockProps) {
         return () => blocks.remove(block);
     }, []);
 
-
-    /**
-     * Interactions
-     */
-
     const selectBlock = useCallback((e: MouseEvent) => {
-        if (e.ctrlKey) {
-            block.setSelected(!block.selected);
-        }
-        else {
-            blocks.select(block);
+        if (!block.selected) {
+            if (e.ctrlKey) {
+                block.setSelected(!block.selected);
+            }
+            else {
+                blocks.select(block);
+            }
         }
     }, [block, blocks]);
+
+
+    /**
+     * Events
+     */
 
     const onResize = useCallback((e: MouseEvent<HTMLDivElement>, _: string) => {
         selectBlock(e);
@@ -45,8 +47,19 @@ export default observer(function Block(props: BlockProps) {
     }, [selectBlock]);
 
     const onMouseDown = useCallback((e: MouseEvent<HTMLDivElement>) => {
+        const { left, top } = e.currentTarget.getBoundingClientRect();
+        const editor = ui.editor.getBoundingClientRect();
+
         selectBlock(e);
-    }, [selectBlock]);
+
+        ui.setAction(new Action(Actions.DRAG, {
+            block,
+            clientX: e.clientX,
+            startX: e.clientX - left,
+            startY: e.clientY - top,
+            top: editor.top,
+        }));
+    }, [ui, selectBlock, ui.editor]);
 
 
     /** 
