@@ -4,64 +4,26 @@ import { observer } from 'mobx-react';
 //import Action, { Actions } from '../models/Action';
 import config from '../../config';
 import { useTimeline } from '../../context';
-import BlockProxy, { IBlockProxy } from '../../models/BlockProxy';
+import BlockProxy from '../../models/BlockProxy';
 
 
-export type BlockProps = IBlockProxy & {
+export type BlockProps = {
     className?: string;
     color?: string;
     name?: string;
+    proxy?: BlockProxy;
 };
 
 export default observer(function Block(props: BlockProps) {
     const { blocks, spaces, ui, viewport } = useTimeline();
-    const block = useMemo<BlockProxy>(() => new BlockProxy(), []);
+    const block = props.proxy || useMemo<BlockProxy>(() => new BlockProxy(), []);
 
     // Proxy lifecycle
+
     useEffect(() => {
         blocks.add(block);
         return () => blocks.remove(block);
     }, []);
-
-    /**
-     * Proxy sync
-     */
-
-    useEffect(() => {
-        if (props.selected !== undefined) {
-            block.__internalSetSelected(props.selected);
-        }
-    }, [props.selected]);
-
-    useEffect(() => {
-        if (props.onSelectedChange !== undefined) {
-            block.setOnSelectedChange(props.onSelectedChange);
-        }
-    }, [props.onSelectedChange]);
-
-    useEffect(() => {
-        if (props.timespan !== undefined) {
-            block.__internalSetTimespan(props.timespan);
-        }
-    }, [props.timespan, props.timespan.end, props.timespan.start]);
-
-    useEffect(() => {
-        if (props.onTimespanChange !== undefined) {
-            block.setOnTimespanChange(props.onTimespanChange);
-        }
-    }, [props.onTimespanChange]);
-
-    useEffect(() => {
-        if (props.y !== undefined) {
-            block.__internalSetY(props.y);
-        }
-    }, [props.y]);
-
-    useEffect(() => {
-        if (props.onYChange !== undefined) {
-            block.setOnYChange(props.onYChange);
-        }
-    }, [props.onYChange]);
 
 
     /**
@@ -69,13 +31,11 @@ export default observer(function Block(props: BlockProps) {
      */
 
     const selectBlock = useCallback((e: MouseEvent) => {
-        if (!block.selected) {
-            if (e.ctrlKey) {
-                block.setSelected(true);
-            }
-            else {
-                blocks.select(block);
-            }
+        if (e.ctrlKey) {
+            block.setSelected(!block.selected);
+        }
+        else {
+            blocks.select(block);
         }
     }, [block, blocks]);
 
@@ -170,5 +130,5 @@ export default observer(function Block(props: BlockProps) {
                 </div>
             )}
         </div>
-    )
+    );
 });

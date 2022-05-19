@@ -3,7 +3,6 @@
  */
 
 import { 
-    action, 
     computed, 
     observable, 
     makeObservable, 
@@ -13,16 +12,7 @@ import {
 import { Timespan } from '../types';
 
 
-export interface IBlockProxy {
-    selected?: boolean;
-    onSelectedChange?: (selected: boolean) => any;
-    timespan?: Timespan;
-    onTimespanChange?: (t: Timespan) => any;
-    y?: number;
-    onYChange?: (y: number) => any;
-};
-
-export default class BlockProxy implements IBlockProxy {
+export default class BlockProxy {
 
     constructor() {
         makeObservable(this);
@@ -31,74 +21,50 @@ export default class BlockProxy implements IBlockProxy {
     // Selected Proxy
 
     @observable
-    selected: boolean = false;
+    _selected: boolean = false;
+
+    @computed
+    get selected() {
+        return this._selected;
+    }
 
     setSelected(selected: boolean) {
         runInAction(() => {
-            this._onSelectedChange(selected);
+            this._selected = selected;
         });
     }
  
-    setOnSelectedChange(onSelectedChange: (selected: boolean) => any) {
-        this._onSelectedChange = onSelectedChange;
-    }
-
-    private _onSelectedChange(selected: boolean) {
-        this.__internalSetSelected(selected);
-    }
-
-    @action
-    __internalSetSelected(selected: boolean) {
-        this.selected = selected;
-    }
 
     // Timespan Proxy
 
     @observable
-    timespan: Timespan = { start: 0, end: 0 };
+    _timespan: Timespan = { start: 0, end: 0 };
+
+    @computed
+    get timespan() {
+        return this._timespan;
+    }
 
     setTimespan(timespan: Timespan) {
         runInAction(() => {
-            this._onTimespanChange(timespan);
+            this._timespan = timespan;
         });
     }
- 
-    setOnTimespanChange(onTimespanChange: (timespan: Timespan) => any) {
-        this._onTimespanChange = onTimespanChange;
-    }
-
-    private _onTimespanChange(timespan: Timespan) {
-        this.__internalSetTimespan(timespan);
-    }
-
-    @action
-    __internalSetTimespan(timespan: Timespan) {
-        this.timespan = timespan;
-    }
-
 
     // Y Proxy
 
     @observable
-    y: number = 0;
+    _y: number = 0;
+
+    @computed
+    get y() {
+        return this._y;
+    }
 
     setY(y: number) {
         runInAction(() => {
-            this._onYChange(y);
+            this._y = y;
         });
-    }
-   
-    setOnYChange(onYChange: (y: number) => any) {
-        this._onYChange = onYChange;
-    }
-
-    private _onYChange(y: number) {
-        this.__internalSetY(y);
-    }
-
-    @action
-    __internalSetY(y: number) {
-        this.y = y;
     }
 
 
