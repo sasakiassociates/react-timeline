@@ -17,6 +17,22 @@ export default observer(function Editor({ children }: EditorProps) {
     const [mouseDownTime,setMouseDownTime] = useState<number>(0);
 
     /**
+     * Lifecycle
+     */
+
+    const [editor, setEditor] = useState<HTMLDivElement|null>(null);
+
+    useEffect(() => {
+        if (editor) {
+            editor.addEventListener('wheel', onWheel);
+
+            return () => {
+                editor.removeEventListener('wheel', onWheel);
+            };
+        }
+    }, [editor, onWheel]);
+
+    /**
      * Events
      */
 
@@ -55,6 +71,16 @@ export default observer(function Editor({ children }: EditorProps) {
         }
     }, [blocks, mouseDownTime]);
 
+    var onWheel = useCallback((e: WheelEvent) => {
+        e.preventDefault();
+
+        if (editor) {
+            const { clientX, deltaY } = e;
+            const xRatio = (clientX - editor.getBoundingClientRect().left) / width;
+
+            viewport.zoom(xRatio, deltaY);
+        }
+    }, [editor, viewport, width]);
 
 
     /** 
@@ -91,7 +117,10 @@ export default observer(function Editor({ children }: EditorProps) {
 
 
     return (
-        <div className="ReactTimeline__Editor">
+        <div 
+            className="ReactTimeline__Editor"
+            ref={el => el !== null && editor === null && setEditor(el)}
+        >
             <canvas
                 width={`${width}px`}
                 height={`${height * .96}px`}

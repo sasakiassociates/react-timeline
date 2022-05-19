@@ -15,7 +15,7 @@ export enum Actions {
 export default class Action {
 
     readonly type: Actions;
-    readonly data?: object;
+    readonly data?: any;
 
     constructor(type: Actions = Actions.NOOP, data?: object) {
         this.data = data;
