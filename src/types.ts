@@ -3,6 +3,13 @@
  */
 
 export type Box = {
+    height: number;
+    width: number;
+    x: number;
+    y: number;
+};
+
+export type Viewport = {
     top: number;
     left: number;
     right: number;

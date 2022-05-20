@@ -15,15 +15,6 @@
         pointer-events: none !important;
     }
 
-    &--select-box {
-        position: absolute !important;
-
-        background: rgba($color_highlight, .2);
-        border: 2px solid rgba($color_highlight, .5);
-
-        pointer-events: none !important;
-    }
-
     /*
     .react-timeline__scrubber-date {
         user-select: none;

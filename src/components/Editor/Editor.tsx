@@ -4,6 +4,7 @@ import { observer } from 'mobx-react';
 import config from '../../config';
 import { useTimeline } from '../../context';
 import Action, { Actions } from '../../models/Action';
+import SelectBox from '../SelectBox/SelectBox';
 
 
 export type EditorProps = {
@@ -58,7 +59,7 @@ export default observer(function Editor({ children }: EditorProps) {
         }
 
         ui.setAction(action);
-    }, [ui, viewport]);
+    }, [ui, viewport, setMouseDownTime]);
 
     const onMouseUp = useCallback(() => {
         // Simulate a click event by checking for time passed since mousedown.
@@ -130,6 +131,8 @@ export default observer(function Editor({ children }: EditorProps) {
             <div className="ReactTimeline__Editor--blocks">
                 {children}
             </div>
+
+            <SelectBox />
         </div>
     );
 })

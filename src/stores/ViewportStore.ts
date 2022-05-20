@@ -8,7 +8,7 @@
 import { action, computed, observable, makeObservable } from 'mobx';
 
 import config from '../config';
-import { Box, noop } from '../types';
+import { Viewport, noop } from '../types';
 import TimelineStore from './TimelineStore';
 
 
@@ -22,13 +22,13 @@ export default class ViewportStore {
     }
 
     @observable
-    setValue: (_: Box) => any = noop;
+    setValue: (_: Viewport) => any = noop;
 
     @observable
-    value: Box = { top: 0, left: 0, right: 0 };
+    value: Viewport = { top: 0, left: 0, right: 0 };
 
     @action
-    setState(value: Box, setValue: (_: Box) => any) {
+    setState(value: Viewport, setValue: (_: Viewport) => any) {
         this.value = value;
         this.setValue = setValue;
     }

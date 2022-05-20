@@ -8,7 +8,7 @@ import Block from './components/Block/Block';
 import BlockProxy from './models/BlockProxy';
 import Timeline from './components/Timeline/Timeline';
 
-import { Timespan } from './types';
+import { Timespan, Viewport } from './types';
 
 import { useTimeline } from './context';
 import time from './time';
@@ -21,6 +21,7 @@ export {
     Timeline,
 
     Timespan,
+    Viewport,
 
     time,
     useTimeline,

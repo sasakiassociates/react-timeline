@@ -7,6 +7,7 @@
 import { action, computed, observable, makeObservable } from 'mobx';
 
 import config from '../config';
+import { Box } from '../types';
 import TimelineStore from './TimelineStore';
 import BlockProxy from '../models/BlockProxy';
 import Action, { Actions } from '../models/Action';
@@ -21,7 +22,7 @@ const keys = {
 
 export default class UIStore {
 
-    private readonly root: TimelineStore; 
+    private readonly root: TimelineStore;
 
     constructor(root: TimelineStore) {
         this.root = root;
@@ -62,7 +63,7 @@ export default class UIStore {
     onKeyDown(e: KeyboardEvent) {
         if (!this.isFocused) return;
 
-        const { blocks, viewport } = this.root as TimelineStore;
+        const { blocks, viewport } = this.root;
 
         switch(e.keyCode) {
             case keys.BACKSPACE:
@@ -89,7 +90,7 @@ export default class UIStore {
 
     onMouseUp() {
         this.setAction();
-        this.setSelectBox(null);
+        this.setSelectBox();
 
         for (let interval in this._intervals) {
             clearInterval(this._intervals[interval]);
@@ -291,8 +292,11 @@ export default class UIStore {
         this.isFocused = focused;
     }
 
-    @observable selectBox;
-    @action setSelectBox(box = null) {
+    @observable 
+    selectBox: Box|null = null;
+
+    @action 
+    setSelectBox(box: Box|null = null) {
         this.selectBox = box;
     }
 
@@ -339,11 +343,11 @@ export default class UIStore {
     @computed 
     get cursor() {
         return ({
-            [Actions.DRAG]: 'react-timeline--dragging',
-            [Actions.PAN]: 'react-timeline--dragging',
-            [Actions.RESIZE]: 'react-timeline--resizing',
-            [Actions.SCRUB]: 'react-timeline--resizing',
-            [Actions.SELECT]: 'react-timeline--selecting',
+            [Actions.DRAG]: 'ReactTimeline--dragging',
+            [Actions.PAN]: 'ReactTimeline--dragging',
+            [Actions.RESIZE]: 'ReactTimeline--resizing',
+            [Actions.SCRUB]: 'ReactTimeline--resizing',
+            [Actions.SELECT]: 'ReactTimeline--selecting',
             [Actions.NOOP]: '',
         })[this.action.type];
     }
