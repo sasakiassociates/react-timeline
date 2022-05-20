@@ -8,6 +8,7 @@ import { useEffect, useMemo, useState, ReactNode  } from 'react';
 import config from '../../config';
 import { Viewport } from '../../types';
 import Editor from '../Editor/Editor';
+import Calendar from '../Calendar/Calendar';
 import TimelineStore from '../../stores/TimelineStore';
 import { TimelineContext } from '../../context';
 
@@ -33,6 +34,7 @@ export default observer(function Timeline({ children, viewport }: TimelineProps)
                 `}
                 ref={e => !context.ui.element && context.ui.setElement(e)}
             >
+                <Calendar />
                 <Editor>
                     {children}
                 </Editor>

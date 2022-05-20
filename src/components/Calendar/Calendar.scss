@@ -1,0 +1,17 @@
+&__Calendar {
+    flex: 1 0 4%;
+    min-height: 0;
+
+    overflow: hidden;
+
+    &-date {
+        position: absolute !important;
+        bottom: 5px;
+
+        margin-left: 4px;
+
+        font-size: 11px;
+
+        user-select: none;
+    }
+}

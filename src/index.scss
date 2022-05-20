@@ -20,12 +20,11 @@ $width_scrubber: 1px;
 .ReactTimeline {
 
     @import 'components/Block/Block';
+    @import 'components/Calendar/Calendar';
     @import 'components/Editor/Editor';
     @import 'components/SelectBox/SelectBox';
     @import 'components/Timeline/Timeline';
     /*
-    @import 'components/Calendars/calendars';
-    @import 'components/Editors/editors';
     @import 'components/Navigator/navigator';
     @import 'components/Navigator/visualizer';
     @import 'components/Scrubber/Scrubber';
