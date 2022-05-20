@@ -129,10 +129,10 @@ export default class UIStore {
                         left: viewport.left + (xDirection * pushDelta),
                         right: viewport.right + (xDirection * pushDelta),
                     });
-                    blocks.selected.forEach((block: BlockProxy) => {
+                    blocks.selected.forEach(block => {
                         block.setTimespan({
                             start: block.start + (xDirection * pushDelta),
-                            end: block.end + (xDirection * pushDelta)
+                            end: block.end + (xDirection * pushDelta),
                         });
                     });
                 }, this._interval);
@@ -149,11 +149,9 @@ export default class UIStore {
             if (this._intervals.verticalPush === null) {
                 this._intervals.verticalPush = setInterval(() => {
                     viewport.setValue({
+                        ...viewport.value,
                         top: viewport.top + (yDirection * pushHeight),
-                        left: viewport.left,
-                        right: viewport.right,
                     });
-                    blocks.selected.forEach((block: BlockProxy) => block.setY(block.y + (yDirection * pushHeight)));
                 }, this._interval);
             }
         }
@@ -168,10 +166,12 @@ export default class UIStore {
         const { block, bound } = this.action.data;
 
         const delta = spaces.pxToTime(x) - block[bound];
-        const method = `set${bound[0].toUpperCase()}${bound.substr(1,bound.length-1)}`;
 
         blocks.selected.forEach(block => {
-            block[method](block[bound] + delta);
+            block.setTimespan({
+                ...block.timespan,
+                [bound]: block[bound] + delta,
+            });
         });
     }
 

@@ -41,10 +41,18 @@ export default observer(function Block(props: BlockProps) {
      * Events
      */
 
-    const onResize = useCallback((e: MouseEvent<HTMLDivElement>, _: string) => {
+    const onResize = useCallback((e: MouseEvent<HTMLDivElement>, bound: string) => {
+        e.preventDefault();
+        e.stopPropagation();
+
         selectBlock(e);
-        //ui.setAction(new Action(Actions.RESIZE, { bound, clientX: e.clientX }))
-    }, [selectBlock]);
+
+        ui.setAction(new Action(Actions.RESIZE, { 
+            block, 
+            bound, 
+            clientX: e.clientX ,
+        }));
+    }, [ui, block, selectBlock]);
 
     const onMouseDown = useCallback((e: MouseEvent<HTMLDivElement>) => {
         const { left, top } = e.currentTarget.getBoundingClientRect();
@@ -60,6 +68,16 @@ export default observer(function Block(props: BlockProps) {
             top: editor.top,
         }));
     }, [ui, selectBlock, ui.editor]);
+
+    const onMouseUp = useCallback((e: MouseEvent<HTMLDivElement>) => {
+        if (ui.action.data) {
+            const delta = Math.abs(ui.action.data.clientX - e.clientX);
+
+            if (!e.ctrlKey && delta < 15) {
+                blocks.select(block);
+            }
+        }
+    }, [ui.action, block, blocks]);
 
 
     /** 
@@ -118,6 +136,7 @@ export default observer(function Block(props: BlockProps) {
             className={`ReactTimeline__Block ${props.className} ${block.selected ? 'ReactTimeline__Block--selected' : ''}`}
             style={style}
             draggable="false"
+            onMouseUp={onMouseUp}
         >
             {width > showResizeHandleWidth && (
                 <div 
