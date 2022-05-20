@@ -208,16 +208,14 @@ export default class UIStore {
     onSelect({ x, y }) {
         const { blocks, spaces, viewport } = this.root;
         const { startX, startY, top } = this.action.data;
+        const { blockHeight } = config;
 
-        const blockHeight = 20;
         const height = (y - (startY - viewport.top)) - top;
 
         const x1 = spaces.pxToTime(startX);
         const x2 = spaces.pxToTime(x);
 
-        // I don't know what this 8 is derived from, but it's necessary for the
-        // ranges to calculate properly.
-        const y1 = height >= 0 ? startY - 1 : ((startY + height) - blockHeight) - 8;
+        const y1 = height >= 0 ? startY - 1 : ((startY + height) - blockHeight);
         const y2 = height >= 0 ? startY + height + 1 : startY + 1;
 
         blocks.all.forEach((block: BlockProxy) => {
