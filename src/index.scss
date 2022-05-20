@@ -2,7 +2,20 @@
 * Styles Entrypoint
 */
 
-@import 'theme';
+$color_bg-dark: #111111;
+$color_bg-light: #ffffff;
+
+$color_font-light: #DDDDDD;
+$color_font-dark: #333333;
+
+$color_highlight: #6666ff;
+
+$color_scrubber_bg: #6666ff;
+$color_bg: $color_bg-light;
+$color_bg-inverse: $color_bg-dark;
+$color_font: $color_font-dark;
+
+$width_scrubber: 1px;
 
 .ReactTimeline {
 
