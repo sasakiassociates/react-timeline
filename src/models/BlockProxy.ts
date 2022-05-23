@@ -3,20 +3,28 @@
  */
 
 import { 
+    action,
     computed, 
     observable, 
     makeObservable, 
     runInAction 
 } from 'mobx';
 
+import { v4 as uuidv4 } from 'uuid';
+
 import { Timespan } from '../types';
 
 
 export default class BlockProxy {
 
+    readonly id: string;
+
     constructor() {
         makeObservable(this);
+
+        this.id = uuidv4();
     }
+
 
     // Selected Proxy
 
@@ -65,6 +73,16 @@ export default class BlockProxy {
         runInAction(() => {
             this._y = y;
         });
+    }
+
+    // Non-proxy properties
+    
+    @observable
+    color: string = '#aaa';
+
+    @action
+    setColor(color: string) {
+        this.color = color;
     }
 
 

@@ -36,6 +36,7 @@ export default observer(function Block(props: BlockProps) {
         }
     }, [block, blocks]);
 
+    useEffect(() => block.setColor(props.color), [props.color]);
 
     /**
      * Events

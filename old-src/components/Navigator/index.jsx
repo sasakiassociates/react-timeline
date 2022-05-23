@@ -66,7 +66,6 @@ class Navigator extends React.Component {
                     <div
                         className="react-timeline__navigator-scrubber-date"
                     >
-                        {time.months[scrubberMonth()] + " " + scrubberYear()} | {(blocks.elements.length > 0) ? (100 * (blocks.visible.length / blocks.elements.length)).toFixed(0) : 100}%
                     </div>
                     <BlockVisualizer />
                 </div>

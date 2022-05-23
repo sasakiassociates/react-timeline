@@ -7,8 +7,9 @@ import { useEffect, useMemo, useState, ReactNode  } from 'react';
 
 import config from '../../config';
 import { Viewport } from '../../types';
-import Editor from '../Editor/Editor';
 import Calendar from '../Calendar/Calendar';
+import Editor from '../Editor/Editor';
+import Navigator from '../Navigator/Navigator';
 import TimelineStore from '../../stores/TimelineStore';
 import { TimelineContext } from '../../context';
 
@@ -38,6 +39,7 @@ export default observer(function Timeline({ children, viewport }: TimelineProps)
                 <Editor>
                     {children}
                 </Editor>
+                <Navigator />
             </div>
         </TimelineContext.Provider>
     );
