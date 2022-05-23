@@ -7,7 +7,7 @@
 import { action, computed, observable } from 'mobx';
 
 import TimelineStore from './TimelineStore';
-import BlockProxy from '../models/BlockProxy';
+import BlockState from '../models/BlockState';
 
 
 export default class BlockStore {
@@ -19,17 +19,16 @@ export default class BlockStore {
     }
 
     @observable 
-    all: BlockProxy[] = [];
+    all: BlockState[] = [];
 
     @action
-    add(block: BlockProxy) {
+    add(block: BlockState) {
         this.all.push(block);
     }
 
     @action 
-    remove(block: BlockProxy) {
+    remove(block: BlockState) {
         this.all.splice(this.all.indexOf(block), 1);
-        block.destroy();
     }
 
     @computed 
@@ -58,7 +57,7 @@ export default class BlockStore {
         return this.all.filter(block => block.selected);
     }
 
-    select(block?: BlockProxy) {
+    select(block?: BlockState) {
         this.selected.forEach(block => block.setSelected(false));
 
         if (block) {

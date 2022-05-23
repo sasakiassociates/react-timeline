@@ -4,15 +4,18 @@
 
 import { observer } from 'mobx-react';
 
-import { Timespan } from '../../types';
+import { useBlock } from '../../context';
 
 
-export type SegmentProps = Timespan & {
+export type SegmentProps = {
     color?: string;
-    onChange?: (timespan: Timespan) => any;
+    value: number;
+    onChange?: (value: number) => any;
 };
 
 export default observer(function Segment(props: SegmentProps) {
+    const block = useBlock();
+
     return (
         <div 
             className="ReactTimeline__Segment"

@@ -3,26 +3,21 @@
  */
 
 import { 
-    action,
     computed, 
     observable, 
     makeObservable, 
     runInAction 
 } from 'mobx';
 
-import { v4 as uuidv4 } from 'uuid';
+//import { v4 as uuidv4 } from 'uuid';
 
 import { Timespan } from '../types';
 
 
 export default class BlockProxy {
 
-    readonly id: string;
-
     constructor() {
         makeObservable(this);
-
-        this.id = uuidv4();
     }
 
 
@@ -75,47 +70,8 @@ export default class BlockProxy {
         });
     }
 
-    // Non-proxy properties
-    
-    @observable
-    color: string = '#aaa';
-
-    @action
-    setColor(color: string) {
-        this.color = color;
-    }
-
-
-    // Public Methods
-
-    moveBy(deltaX: number, deltaY: number) {
-        this.setTimespan({
-            start: this.start + deltaX,
-            end: this.end + deltaX,
-        });
-
-        this.setY(this.y + deltaY);
-    }
 
     destroy() {
     }
-
-
-    // Computed
-
-    @computed 
-    get duration() {
-        return this.end - this.start;
-    }
-
-    @computed
-    get start() {
-        return this.timespan.start;
-    }
-   
-    @computed
-    get end() {
-        return this.timespan.end;
-    }
-
+ 
 }

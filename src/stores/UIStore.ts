@@ -9,7 +9,6 @@ import { action, computed, observable, makeObservable } from 'mobx';
 import config from '../config';
 import { Box } from '../types';
 import TimelineStore from './TimelineStore';
-import BlockProxy from '../models/BlockProxy';
 import Action, { Actions } from '../models/Action';
 
 
@@ -70,8 +69,9 @@ export default class UIStore {
                 e.preventDefault();
                 e.stopPropagation();
 
-                blocks.selected.forEach((block: BlockProxy) => {
+                blocks.selected.forEach(block => {
                     blocks.remove(block);
+                    block.destroy();
                 });
 
                 break;
@@ -218,7 +218,7 @@ export default class UIStore {
         const y1 = height >= 0 ? startY - 1 : ((startY + height) - blockHeight);
         const y2 = height >= 0 ? startY + height + 1 : startY + 1;
 
-        blocks.all.forEach((block: BlockProxy) => {
+        blocks.all.forEach(block => {
             block.setSelected((
                 (block.start >= x1 && block.start <= x2)
                 || (block.end >= x1 && block.end <= x2)

@@ -6,7 +6,8 @@ import { observer } from 'mobx-react';
 import { useCallback, useEffect, useMemo, MouseEvent, ReactNode } from 'react';
 
 import config from '../../config';
-import { useTimeline } from '../../context';
+import { useTimeline, BlockContext } from '../../context';
+import BlockState from '../../models/BlockState';
 import BlockProxy from '../../models/BlockProxy';
 import Action, { Actions } from '../../models/Action';
 
@@ -21,14 +22,17 @@ export type BlockProps = {
 
 export default observer(function Block(props: BlockProps) {
     const { blocks, spaces, ui, viewport } = useTimeline();
-    const block = props.proxy || useMemo<BlockProxy>(() => new BlockProxy(), []);
+    const block = useMemo<BlockState>(() => new BlockState(), []);
 
-    // Proxy lifecycle
+    // Lifecycle
 
     useEffect(() => {
         blocks.add(block);
         return () => blocks.remove(block);
     }, []);
+
+    useEffect(() => block.setColor(props.color), [props.color]);
+    useEffect(() => block.setProxy(props.proxy), [props.proxy]);
 
     const selectBlock = useCallback((e: MouseEvent) => {
         if (!block.selected) {
@@ -41,7 +45,6 @@ export default observer(function Block(props: BlockProps) {
         }
     }, [block, blocks]);
 
-    useEffect(() => block.setColor(props.color), [props.color]);
 
     /**
      * Events
@@ -152,9 +155,7 @@ export default observer(function Block(props: BlockProps) {
                 />
             )}
 
-            <div className="ReactTimeline__Block-content" onMouseDown={e => onMouseDown(e)}>
-                {props.children}
-            </div>
+            <div className="ReactTimeline__Block-content" onMouseDown={e => onMouseDown(e)} />
 
             {width > showResizeHandleWidth && (
                 <div 
@@ -169,6 +170,10 @@ export default observer(function Block(props: BlockProps) {
                     {props.name}
                 </div>
             )}
+
+            <BlockContext.Provider value={block}>
+                {props.children}
+            </BlockContext.Provider>
         </div>
     );
 });
