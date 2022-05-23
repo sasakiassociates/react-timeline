@@ -6,6 +6,7 @@ import './index.scss';
 
 import Block from './components/Block/Block';
 import BlockProxy from './models/BlockProxy';
+import Segment from './components/Segment/Segment';
 import Timeline from './components/Timeline/Timeline';
 
 import { Timespan, Viewport } from './types';
@@ -18,6 +19,7 @@ export {
 
     Block,
     BlockProxy,
+    Segment,
     Timeline,
 
     Timespan,

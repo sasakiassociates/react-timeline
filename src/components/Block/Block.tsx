@@ -1,5 +1,9 @@
-import { useCallback, useEffect, useMemo, MouseEvent } from 'react';
+/**
+ * Block
+ */
+
 import { observer } from 'mobx-react';
+import { useCallback, useEffect, useMemo, MouseEvent, ReactNode } from 'react';
 
 import config from '../../config';
 import { useTimeline } from '../../context';
@@ -8,6 +12,7 @@ import Action, { Actions } from '../../models/Action';
 
 
 export type BlockProps = {
+    children?: ReactNode;
     className?: string;
     color?: string;
     name?: string;
@@ -99,7 +104,7 @@ export default observer(function Block(props: BlockProps) {
             )
         ) && (
             block.y >= viewport.top - config.blockHeight
-            && block.y <= viewport.bottom + config.blockHeight
+            && block.y - config.blockHeight <= viewport.bottom + config.blockHeight
         )
     );
 
@@ -147,7 +152,9 @@ export default observer(function Block(props: BlockProps) {
                 />
             )}
 
-            <div className="ReactTimeline__Block-content" onMouseDown={e => onMouseDown(e)} />
+            <div className="ReactTimeline__Block-content" onMouseDown={e => onMouseDown(e)}>
+                {props.children}
+            </div>
 
             {width > showResizeHandleWidth && (
                 <div 
