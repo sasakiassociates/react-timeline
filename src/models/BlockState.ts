@@ -8,7 +8,7 @@ import { action, computed, observable, makeObservable } from 'mobx';
 import config from '../config';
 import { Timespan } from '../types';
 import BlockProxy from './BlockProxy';
-import SegmentState from './SegmentState';
+import SegmentProxy from './SegmentProxy';
 import TimelineStore from '../stores/TimelineStore';
 
 
@@ -42,15 +42,15 @@ export default class BlockState {
     }
 
     @observable
-    segments: SegmentState[] = [];
+    segments: SegmentProxy[] = [];
 
     @action
-    addSegment(segment: SegmentState) {
+    addSegment(segment: SegmentProxy) {
         this.segments.push(segment);
     }
 
     @action
-    removeSegment(segment: SegmentState) {
+    removeSegment(segment: SegmentProxy) {
         this.segments.splice(this.segments.indexOf(segment), 1);
     }
 
@@ -86,7 +86,10 @@ export default class BlockState {
     }
 
     moveBy(deltaX: number, deltaY: number) {
-        this.segments.forEach(segment => segment.setValue(segment.value + deltaX));
+        this.segments.forEach(segment => {
+            console.log(segment.value,  deltaX, segment.value + deltaX);
+            segment.setValue(segment.value + deltaX);
+        });
 
         this.setTimespan({
             start: this.start + deltaX,
@@ -101,7 +104,7 @@ export default class BlockState {
         const { viewport } = this.root;
         const { start, end, y }  = this;
 
-        return (
+        return this.selected || (
             (
                 (
                     start >= viewport.left

@@ -131,10 +131,13 @@ export default class UIStore {
                         right: viewport.right + (xDirection * pushDelta),
                     });
                     blocks.selected.forEach(block => {
+                        block.moveBy(xDirection * pushDelta, 0);
+                        /*
                         block.setTimespan({
                             start: block.start + (xDirection * pushDelta),
                             end: block.end + (xDirection * pushDelta),
                         });
+                        */
                     });
                 }, this._interval);
             }
@@ -175,6 +178,11 @@ export default class UIStore {
             });
         });
     }
+
+    /*
+    onSegmentResize({ x }) {
+    }
+    */
 
     onScrub({ x }) {
         this.action.data.setScrubber(this.root.spaces.pxToTime(x));
