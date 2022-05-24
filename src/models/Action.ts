@@ -8,6 +8,7 @@ export enum Actions {
     PAN,
     RESIZE,
     SCRUB,
+    SEGMENT,
     SELECT,
     NOOP
 };

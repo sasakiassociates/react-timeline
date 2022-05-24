@@ -20,6 +20,18 @@ $width_scrubber: 1px;
 
 .ReactTimeline {
 
+    &--dragging * {
+        cursor: grabbing !important;
+    }
+
+    &--resizing * {
+        cursor: col-resize !important;
+    }
+
+    &--selecting * {
+        cursor: nwse-resize !important;
+    }
+
     @import 'components/Block/Block';
     @import 'components/Calendar/Calendar';
     @import 'components/Editor/Editor';

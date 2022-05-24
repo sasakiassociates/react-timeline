@@ -15,16 +15,4 @@
         box-sizing: border-box;
     }
 
-    &--dragging * {
-        cursor: grabbing !important;
-    }
-
-    &--resizing * {
-        cursor: col-resize !important;
-    }
-
-    &--selecting * {
-        cursor: nwse-resize !important;
-    }
-
 }

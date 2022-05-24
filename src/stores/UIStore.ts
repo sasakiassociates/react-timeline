@@ -26,20 +26,7 @@ export default class UIStore {
     constructor(root: TimelineStore) {
         this.root = root;
 
-        /*
-        if (props.onScrubberChange) {
-            this.onScrubberChange = props.onScrubberChange;
-        }
-
-        if (props.scrubber) {
-            this.setScrubber(props.scrubber === true ? this.root.viewport.width / 5 : props.scrubber);
-        }
-        */
-
         makeObservable(this);
-    }
-
-    onScrubberChange() {
     }
 
     onDrag({ x }) {
@@ -179,10 +166,20 @@ export default class UIStore {
         });
     }
 
-    /*
     onSegmentResize({ x }) {
+        const { spaces } = this.root;
+        const { block, segment } = this.action.data;
+
+        let value = spaces.pxToTime(x);
+        if (value < block.start) {
+            value = block.start;
+        }
+        else if (value > block.end) {
+            value = block.end;
+        }
+
+        segment.setValue(value);
     }
-    */
 
     onScrub({ x }) {
         this.action.data.setScrubber(this.root.spaces.pxToTime(x));
@@ -330,6 +327,11 @@ export default class UIStore {
                 this._addEvent('mouseup', this.onMouseUp.bind(this));
                 break;
 
+            case Actions.SEGMENT:
+                this._addEvent('mousemove', this.onSegmentResize.bind(this))
+                this._addEvent('mouseup', this.onMouseUp.bind(this));
+                break;
+
             case Actions.SCRUB:
                 this._addEvent('mousemove', this.onScrub.bind(this));
                 this._addEvent('mousemove', this.onScrubPan.bind(this));
@@ -353,6 +355,7 @@ export default class UIStore {
             [Actions.PAN]: 'ReactTimeline--dragging',
             [Actions.RESIZE]: 'ReactTimeline--resizing',
             [Actions.SCRUB]: 'ReactTimeline--resizing',
+            [Actions.SEGMENT]: 'ReactTimeline--resizing',
             [Actions.SELECT]: 'ReactTimeline--selecting',
             [Actions.NOOP]: '',
         })[this.action.type];
