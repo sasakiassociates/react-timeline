@@ -8,7 +8,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { observer } from 'mobx-react';
 
-import time from '../../time';
+//import time from '../../time';
 import { useTimeline } from '../../context';
 import BlockVisualizer from './BlockVisualizer';
 
@@ -28,15 +28,14 @@ export default observer(function Navigator() {
         [offset]: `${100 * (viewport[offset] - extent[offset]) / extent.width}%`,
     };
 
-    /*
     useEffect(() => {
-        const month = time.months[Math.floor(app.scrubber / time.MONTH) % 12];
-        const year = Math.floor(app.scrubber  / time.YEAR) + config.startYear;
+        //const month = time.months[Math.floor(app.scrubber / time.MONTH) % 12];
+        //const year = Math.floor(app.scrubber  / time.YEAR) + config.startYear;
         const blockVisibility  = (blocks.all.length > 0) ? (100 * (blocks.visible.length / blocks.all.length)).toFixed(0) : 100;
 
-        setInfo(`${month} ${year} | ${blockVisibility}%`);
-    }, [setInfo, app.scrubber]);
-     */
+        //setInfo(`${month} ${year} | ${blockVisibility}%`);
+        setInfo(`${blockVisibility}%`);
+    }, [setInfo, blocks.visible.length, blocks.all.length]);
 
     return (
         <div 
@@ -49,7 +48,7 @@ export default observer(function Navigator() {
                     style={navigatorStyle}
                 />
 
-                <div className="ReactTimeline__Bavigator-info">
+                <div className="ReactTimeline__Navigator-info">
                     {info}
                 </div>
 

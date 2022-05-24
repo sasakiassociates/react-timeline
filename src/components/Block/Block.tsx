@@ -21,8 +21,9 @@ export type BlockProps = {
 };
 
 export default observer(function Block(props: BlockProps) {
-    const { blocks, spaces, ui, viewport } = useTimeline();
-    const block = useMemo<BlockState>(() => new BlockState(), []);
+    const timeline = useTimeline();
+    const { blocks, spaces, ui, viewport } = timeline;
+    const block = useMemo<BlockState>(() => new BlockState(timeline), [timeline]);
 
     // Lifecycle
 
@@ -93,40 +94,17 @@ export default observer(function Block(props: BlockProps) {
      * Render
      */
 
-    const visible = (
-        (
-            (
-                block.timespan.start >= viewport.left
-                && block.timespan.start <= viewport.right
-            ) || (
-                block.timespan.end >= viewport.left
-                && block.timespan.end <= viewport.right
-            ) || (
-                block.timespan.start <= viewport.left
-                && block.timespan.end >= viewport.right
-            )
-        ) && (
-            block.y >= viewport.top - config.blockHeight
-            && block.y - config.blockHeight <= viewport.bottom + config.blockHeight
-        )
-    );
-
-    if (!visible) {
+    if (!block.visible) {
         return <></>;
     }
 
-    let time = (block.timespan.end - block.timespan.start) / viewport.width;
-    if (time < 0) {
-        time = 0;
-    }
-
-    const width = ui.width * time;
+    const width = blocks.getBlockWidth(block);
 
     const handleWidth = {
         flex: `0 0 ${config.resizeHandleWidth}px`,
     };
 
-    const showResizeHandleWidth = config.resizeHandleWidth * 3;
+    const showResizeHandle = blocks.canShowResizeHandle(width);
 
     const style = {
         width: `${width}px`,
@@ -147,7 +125,7 @@ export default observer(function Block(props: BlockProps) {
             draggable="false"
             onMouseUp={onMouseUp}
         >
-            {width > showResizeHandleWidth && (
+            {showResizeHandle && (
                 <div 
                     className="ReactTimeline__Block-handle" 
                     onMouseDown={e => onResize(e, 'start')} 
@@ -157,7 +135,7 @@ export default observer(function Block(props: BlockProps) {
 
             <div className="ReactTimeline__Block-content" onMouseDown={e => onMouseDown(e)} />
 
-            {width > showResizeHandleWidth && (
+            {showResizeHandle && (
                 <div 
                     className="ReactTimeline__Block-handle" 
                     onMouseDown={e => onResize(e, 'end')} 

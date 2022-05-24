@@ -9,8 +9,6 @@ import {
     runInAction 
 } from 'mobx';
 
-//import { v4 as uuidv4 } from 'uuid';
-
 import { Timespan } from '../types';
 
 

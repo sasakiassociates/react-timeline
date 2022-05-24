@@ -5,18 +5,24 @@
 import { v4 as uuidv4 } from 'uuid';
 import { action, computed, observable, makeObservable } from 'mobx';
 
-import BlockProxy from './BlockProxy';
+import config from '../config';
 import { Timespan } from '../types';
+import BlockProxy from './BlockProxy';
+import SegmentState from './SegmentState';
+import TimelineStore from '../stores/TimelineStore';
 
 
 export default class BlockState {
     
-    readonly id: string;
 
-    constructor() {
+    readonly id: string;
+    private readonly root: TimelineStore;
+
+    constructor(root: TimelineStore) {
         makeObservable(this);
-        
+
         this.id = uuidv4();
+        this.root = root;
     }
 
     @observable
@@ -33,6 +39,19 @@ export default class BlockState {
     @action
     setColor(color: string) {
         this.color = color;
+    }
+
+    @observable
+    segments: SegmentState[] = [];
+
+    @action
+    addSegment(segment: SegmentState) {
+        this.segments.push(segment);
+    }
+
+    @action
+    removeSegment(segment: SegmentState) {
+        this.segments.splice(this.segments.indexOf(segment), 1);
     }
 
     @computed
@@ -67,12 +86,38 @@ export default class BlockState {
     }
 
     moveBy(deltaX: number, deltaY: number) {
+        this.segments.forEach(segment => segment.setValue(segment.value + deltaX));
+
         this.setTimespan({
             start: this.start + deltaX,
             end: this.end + deltaX,
         });
 
         this.setY(this.y + deltaY);
+    }
+
+    @computed
+    get visible() {
+        const { viewport } = this.root;
+        const { start, end, y }  = this;
+
+        return (
+            (
+                (
+                    start >= viewport.left
+                    && start <= viewport.right
+                ) || (
+                    end >= viewport.left
+                    && end <= viewport.right
+                ) || (
+                    start <= viewport.left
+                    && end >= viewport.right
+                )
+            ) && (
+                y >= viewport.top - config.blockHeight
+                && y - config.blockHeight <= viewport.bottom + config.blockHeight
+            )
+        );
     }
 
     @computed 

@@ -6,6 +6,7 @@
 
 import { action, computed, observable } from 'mobx';
 
+import config from '../config';
 import TimelineStore from './TimelineStore';
 import BlockState from '../models/BlockState';
 
@@ -57,12 +58,30 @@ export default class BlockStore {
         return this.all.filter(block => block.selected);
     }
 
+    @computed
+    get visible() {
+        return this.all.filter(block => block.visible);
+    }
+
     select(block?: BlockState) {
         this.selected.forEach(block => block.setSelected(false));
 
         if (block) {
             block.setSelected(true);
         }
+    }
+
+    getBlockWidth(block: BlockState): number {
+        let time = (block.timespan.end - block.timespan.start) / this.root.viewport.width;
+        if (time < 0) {
+            time = 0;
+        }
+
+        return this.root.ui.width * time;
+    }
+
+    canShowResizeHandle(width: number): boolean {
+        return width > config.resizeHandleWidth * 3;
     }
 
 }

@@ -176,8 +176,8 @@ export default class UIStore {
         });
     }
 
-    onScrub(/*{ x }*/) {
-        //this.setScrubber(this.root.spaces.pxToTime(x));
+    onScrub({ x }) {
+        this.action.data.setScrubber(this.root.spaces.pxToTime(x));
     }
 
     onScrubPan({ x }) {

@@ -1,0 +1,46 @@
+&__Scrubber {
+    position: absolute !important;
+    top: 0;
+    z-index: 10;
+
+    width: $width_scrubber;
+    height: 100%;
+
+    text-align: center;
+    background: $color_scrubber_bg;
+
+    &-buffer {
+        position: absolute !important;
+        top: 0;
+        left: -5px;
+
+        width: 10px;
+        height: 100%;
+        margin: 0 auto;
+
+        &:hover {
+            cursor: col-resize;
+        }
+    }
+
+    &-label {
+        position: absolute !important;
+        left: 1px;
+        top: 0;
+
+        width: max-content;
+        padding: 2px 5px;
+
+        font-size: 11px;
+        text-transform: uppercase;
+
+        background: rgba($color_bg-light, .8);
+        border-top: 1px solid $color_scrubber_bg;
+        border-right: 1px solid $color_scrubber_bg;
+        border-bottom: 1px solid $color_scrubber_bg;
+        border-radius: 0px 3px 3px 0px;
+        opacity: .8;
+        user-select: none;
+    }
+
+}
