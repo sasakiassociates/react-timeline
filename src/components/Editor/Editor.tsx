@@ -81,6 +81,15 @@ export default observer(function Editor({ children }: EditorProps) {
         }
     }, [editor, viewport, width]);
 
+    const onDoubleClick = useCallback(({ clientX }: MouseEvent<HTMLDivElement>) => {
+        const start = spaces.pxToTime(clientX);
+
+        blocks.createBlock({ 
+            start,
+            end: start + (viewport.width * .15) 
+        });
+    }, [blocks.createBlock, spaces, viewport.width]);
+
 
     /** 
      * Render Grid
@@ -119,6 +128,7 @@ export default observer(function Editor({ children }: EditorProps) {
         <div 
             className="ReactTimeline__Editor"
             ref={el => el && !editor && ui.setEditor(el)}
+            onDoubleClick={onDoubleClick}
         >
             <canvas
                 width={`${width}px`}

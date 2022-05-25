@@ -3,28 +3,30 @@
  */
 
 import { observer } from 'mobx-react';
-import { useEffect, useMemo, useState, ReactNode  } from 'react';
+import { useEffect, useMemo, ReactNode  } from 'react';
 
-import config from '../../config';
-import { Viewport } from '../../types';
 import Calendar from '../Calendar/Calendar';
 import Editor from '../Editor/Editor';
 import Navigator from '../Navigator/Navigator';
 import TimelineStore from '../../stores/TimelineStore';
+import { Timespan } from '../../types';
 import { TimelineContext } from '../../context';
 
 
 export type TimelineProps = {
     children?: ReactNode;
-    viewport?: any[];
+    startYear?: number;
+    onCreateBlock?: (timespan: Timespan) => any;
 };
 
-export default observer(function Timeline({ children, viewport }: TimelineProps) {
-    const context = useMemo<TimelineStore>(() => new TimelineStore(), []);
-    const [_viewport, _setViewport] = viewport || useState<Viewport>({ top: 0, left: 0, right: config.defaultViewportWidth });
+export default observer(function Timeline(props: TimelineProps) {
+    const { children, onCreateBlock, startYear } = props;
 
-    useEffect(() => () => context.ui.clearEvents(), [context]);
-    useEffect(() => context.viewport.setState(_viewport, _setViewport), [_viewport, _setViewport]);
+    const context = useMemo<TimelineStore>(() => new TimelineStore(), []);
+
+    useEffect(() => () => context.ui.clearEvents(), [context.ui]);
+    useEffect(() => startYear !== undefined && context.spaces.setStartYear(startYear), [context.spaces, startYear]);
+    useEffect(() => context.blocks.setCreateBlock(onCreateBlock), [context.blocks, onCreateBlock]);
 
     return (
         <TimelineContext.Provider value={context}>

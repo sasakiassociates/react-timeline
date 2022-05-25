@@ -4,7 +4,7 @@
  * Responsible for projecting between time, unit, and pixel spaces.
  */
 
-import { computed, makeObservable } from 'mobx';
+import { action, computed, observable, makeObservable } from 'mobx';
 
 import time from '../time';
 import config from '../config';
@@ -19,6 +19,14 @@ export default class SpacesStore {
         this.root = root;
 
         makeObservable(this);
+    }
+
+    @observable
+    startYear: number = 2020;
+
+    @action
+    setStartYear(startYear: number) {
+        this.startYear = startYear;
     }
 
     pxDelta(start: number, end: number, withContainer = true) {
@@ -72,7 +80,8 @@ export default class SpacesStore {
     }
 
 
-    @computed get time() {
+    @computed 
+    get time() {
         const { viewport } = this.root;
 
         let _time: number;
@@ -86,30 +95,34 @@ export default class SpacesStore {
     }
 
 
-    @computed get primaryUnits() {
+    @computed 
+    get primaryUnits() {
         const count = this.root.viewport.width / this.primaryTimeUnit;
         const width = this.root.ui.width / count;
 
         return {count, width};
     }
 
-    @computed get primaryTimeUnit() {
+    @computed 
+    get primaryTimeUnit() {
         return time.ordered[this.time];
     }
 
     displayPrimary(seconds: number) {
-        return time.displayTimeUnits(config.startYear, Math.floor(seconds / this.primaryTimeUnit), this.primaryTimeUnit);
+        return time.displayTimeUnits(this.startYear, Math.floor(seconds / this.primaryTimeUnit), this.primaryTimeUnit);
     }
 
-    @computed get secondaryTimeUnit() {
+    @computed 
+    get secondaryTimeUnit() {
         return time.ordered[this.time > 0 ? this.time - 1 : 0];
     }
 
     displaySecondary(seconds: number) {
-        return time.displayTimeUnits(config.startYear, Math.floor(seconds / this.secondaryTimeUnit), this.secondaryTimeUnit);
+        return time.displayTimeUnits(this.startYear, Math.floor(seconds / this.secondaryTimeUnit), this.secondaryTimeUnit);
     }
 
-    @computed get secondaryUnits() {
+    @computed 
+    get secondaryUnits() {
         const { viewport } = this.root;
         const primary = this.primaryUnits;
 

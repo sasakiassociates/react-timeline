@@ -7,6 +7,7 @@
 import { action, computed, observable } from 'mobx';
 
 import config from '../config';
+import { Timespan, noop } from '../types';
 import TimelineStore from './TimelineStore';
 import BlockState from '../models/BlockState';
 
@@ -17,6 +18,12 @@ export default class BlockStore {
 
     constructor(root: TimelineStore) {
         this.root = root;
+    }
+
+    createBlock: (_: Timespan) => any = noop;
+
+    setCreateBlock(createBlock: (t: Timespan) => any) {
+        this.createBlock = createBlock;
     }
 
     @observable 

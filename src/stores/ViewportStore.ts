@@ -22,15 +22,11 @@ export default class ViewportStore {
     }
 
     @observable
-    setValue: (_: Viewport) => any = noop;
-
-    @observable
-    value: Viewport = { top: 0, left: 0, right: 0 };
+    value: Viewport = { top: 0, left: 0, right: config.defaultViewportWidth };
 
     @action
-    setState(value: Viewport, setValue: (_: Viewport) => any) {
+    setValue(value: Viewport) {
         this.value = value;
-        this.setValue = setValue;
     }
 
     @action 

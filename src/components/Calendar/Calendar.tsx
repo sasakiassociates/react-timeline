@@ -9,7 +9,6 @@ import { useTimeline } from '../../context';
 
 export default observer(function Calendar() {
     const { spaces } = useTimeline();
-
     return (
         <div className="ReactTimeline__Calendar">
             {spaces.grid.primary.map((x, i) => {
