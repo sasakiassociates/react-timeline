@@ -46,6 +46,14 @@ export default class ViewportStore {
         });
     }
 
+    center(x: number, y: number) {
+        this.setValue({
+            top: y - (this.height / 2),
+            left: x - (this.width / 2),
+            right: x + (this.width / 2),
+        });
+    }
+
     @computed
     get top(){
         return this.value.top;
