@@ -20,7 +20,7 @@ export default class BlockStore {
         this.root = root;
     }
 
-    createBlock: (_: Timespan) => any = noop;
+    createBlock: any = noop;
 
     setCreateBlock(createBlock: (t: Timespan) => any) {
         this.createBlock = createBlock;

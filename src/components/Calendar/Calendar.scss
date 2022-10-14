@@ -4,6 +4,10 @@
 
     overflow: hidden;
 
+    * {
+        pointer-events: none;
+    }
+
     &-date {
         position: absolute !important;
         bottom: 5px;

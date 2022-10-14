@@ -22,4 +22,4 @@ export type Timespan = {
     end: number;
 };
 
-export function noop() {}
+export function noop(..._: any[]): any {}

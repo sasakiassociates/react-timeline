@@ -3,16 +3,17 @@
  */
 
 import { observer } from 'mobx-react';
-import { useCallback, MouseEvent } from 'react';
+import { MouseEvent, useCallback } from 'react';
 
 import { useTimeline } from '../../context';
 
 
 export default observer(function Calendar() {
-    const { spaces } = useTimeline();
+    const { spaces, ui, viewport } = useTimeline();
 
     const onDoubleClick = useCallback((e: MouseEvent<HTMLDivElement>) => {
-    }, []);
+        ui.onNavigatorClick(spaces.pxToTime(e.clientX));
+    }, [spaces, ui, viewport]);
 
     return (
         <div 

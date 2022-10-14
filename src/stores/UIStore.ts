@@ -7,7 +7,7 @@
 import { action, computed, observable, makeObservable } from 'mobx';
 
 import config from '../config';
-import { Box } from '../types';
+import { Box, noop } from '../types';
 import TimelineStore from './TimelineStore';
 import Action, { Actions } from '../models/Action';
 
@@ -375,6 +375,12 @@ export default class UIStore {
         this._events.forEach(({ name, listener, target }) => {
             target.removeEventListener(name, listener);
         }) ;
+    }
+
+    onNavigatorClick: any = noop;
+
+    setNavigatorClick(listener: (value: number) => any) {
+        this.onNavigatorClick = listener;
     }
 
 
