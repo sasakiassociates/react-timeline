@@ -38,7 +38,7 @@ export default observer(function Navigator() {
 
         viewport.center(
             (blocks.extent.width * ((x - rect.x) / rect.width)) + blocks.extent.left,
-            blocks.extent.height * ((y - rect.y) / rect.height)
+            blocks.extent.height * ((y - rect.y) / rect.height) + blocks.extent.top,
         );
     }, [blocks.extent]);
 
