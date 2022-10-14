@@ -46,11 +46,11 @@ export default class ViewportStore {
         });
     }
 
-    center(x: number, y: number) {
+    center(x: number, y?: number) {
         this.setValue({
-            top: y - (this.height / 2),
             left: x - (this.width / 2),
             right: x + (this.width / 2),
+            top: y !== undefined ? y - (this.height / 2) : this.value.top,
         });
     }
 
