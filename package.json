@@ -45,6 +45,7 @@
     "react-dom": "^18.1.0"
   },
   "dependencies": {
+    "@strategies/tokens": "^1.6.0",
     "uuid": "^8.3.2"
   }
 }

@@ -9,11 +9,11 @@ import { useTimeline } from '../../context';
 
 
 export default observer(function Calendar() {
-    const { spaces, ui, viewport } = useTimeline();
+    const { spaces, ui } = useTimeline();
 
     const onDoubleClick = useCallback((e: MouseEvent<HTMLDivElement>) => {
-        ui.onNavigatorClick(spaces.pxToTime(e.clientX));
-    }, [spaces, ui, viewport]);
+        ui.onCalendarClick(spaces.pxToTime(e.clientX));
+    }, [spaces, ui]);
 
     return (
         <div 

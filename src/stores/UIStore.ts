@@ -377,10 +377,10 @@ export default class UIStore {
         }) ;
     }
 
-    onNavigatorClick: any = noop;
+    onCalendarClick: any = noop;
 
-    setNavigatorClick(listener: (value: number) => any) {
-        this.onNavigatorClick = listener;
+    setCalendarClick(listener: (value: number) => any) {
+        this.onCalendarClick = listener;
     }
 
 

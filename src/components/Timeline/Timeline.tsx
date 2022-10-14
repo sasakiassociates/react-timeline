@@ -17,18 +17,18 @@ export type TimelineProps = {
     children?: ReactNode;
     startYear?: number;
     onCreateBlock?: (timespan: Timespan) => any;
-    onNavigatorClick?: (value: number) => any;
+    onCalendarClick?: (value: number) => any;
 };
 
 export default observer(function Timeline(props: TimelineProps) {
-    const { children, onCreateBlock = noop, onNavigatorClick = noop, startYear } = props;
+    const { children, onCreateBlock = noop, onCalendarClick = noop, startYear } = props;
 
     const context = useMemo<TimelineStore>(() => new TimelineStore(), []);
 
     useEffect(() => () => context.ui.clearEvents(), [context.ui]);
     useEffect(() => startYear !== undefined && context.spaces.setStartYear(startYear), [context.spaces, startYear]);
     useEffect(() => context.blocks.setCreateBlock(onCreateBlock), [context.blocks, onCreateBlock]);
-    useEffect(() => context.ui.setNavigatorClick(onNavigatorClick), [context.ui, onNavigatorClick]);
+    useEffect(() => context.ui.setCalendarClick(onCalendarClick), [context.ui, onCalendarClick]);
 
     return (
         <TimelineContext.Provider value={context}>
