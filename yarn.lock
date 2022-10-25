@@ -44,6 +44,11 @@
     estree-walker "^1.0.1"
     picomatch "^2.2.2"
 
+"@strategies/tokens@^1.6.0":
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/@strategies/tokens/-/tokens-1.6.0.tgz#3d2a7e601eced1507a94a7616c87ee7fdcc1315b"
+  integrity sha512-tmOVKJEPBTYwLtzG9W5cM96HZJYqlhpVWazjJazzC1nymP/obSvMXx9hz+gSU+Pq7UqgTpbeU+0i0n9NULz3hw==
+
 "@trysound/sax@0.2.0":
   version "0.2.0"
   resolved "https://registry.npmjs.org/@trysound/sax/-/sax-0.2.0.tgz"

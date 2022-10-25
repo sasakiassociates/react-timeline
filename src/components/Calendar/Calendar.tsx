@@ -3,14 +3,23 @@
  */
 
 import { observer } from 'mobx-react';
+import { MouseEvent, useCallback } from 'react';
 
 import { useTimeline } from '../../context';
 
 
 export default observer(function Calendar() {
-    const { spaces } = useTimeline();
+    const { spaces, ui } = useTimeline();
+
+    const onDoubleClick = useCallback((e: MouseEvent<HTMLDivElement>) => {
+        ui.onCalendarClick(spaces.pxToTime(e.clientX));
+    }, [spaces, ui]);
+
     return (
-        <div className="ReactTimeline__Calendar">
+        <div 
+            className="ReactTimeline__Calendar"
+            onDoubleClick={onDoubleClick}
+        >
             {spaces.grid.primary.map((x, i) => {
                 const time = Math.round(spaces.internalPxToTime(x));
                 const display = spaces.displayPrimary(time);

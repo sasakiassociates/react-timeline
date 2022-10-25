@@ -1,8 +1,23 @@
+@use '~@strategies/tokens/animation';
+@use '~@strategies/tokens/color';
+
+
 &__Calendar {
     flex: 1 0 4%;
     min-height: 0;
 
+    background: color.$white;
+    cursor: pointer;
     overflow: hidden;
+    transition: background animation.$speed;
+
+    * {
+        pointer-events: none;
+    }
+
+    &:hover {
+        background: color.$blue--lightest;
+    }
 
     &-date {
         position: absolute !important;
