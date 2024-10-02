@@ -15,6 +15,8 @@ export default observer(function Calendar() {
         ui.onCalendarClick(spaces.pxToTime(e.clientX));
     }, [spaces, ui]);
 
+    console.log("spaces",spaces)
+
     return (
         <div 
             className="ReactTimeline__Calendar"
@@ -28,7 +30,7 @@ export default observer(function Calendar() {
                     <div
                         key={i}
                         className="ReactTimeline__Calendar-date"
-                        style={{ left: `${x}px` }}
+                        style={{ left: `${x}px`, top: `10px` }}
                     >
                         {display}
                     </div>

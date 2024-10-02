@@ -22,6 +22,14 @@ export default class SpacesStore {
     }
 
     @observable
+    customSpaces: Object[] | undefined
+
+    @action
+    setCustomSpaces(customSpaces: Object[]) {
+        this.customSpaces = customSpaces;
+    }
+
+    @observable
     startYear: number = 2020;
 
     @action

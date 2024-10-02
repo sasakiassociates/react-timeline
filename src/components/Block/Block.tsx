@@ -24,7 +24,9 @@ export default observer(function Block(props: BlockProps) {
     const timeline = useTimeline();
     const { blocks, spaces, ui, viewport } = timeline;
     const block = useMemo<BlockState>(() => new BlockState(timeline), [timeline]);
+    
 
+    console.log("block", block)
     // Lifecycle
 
     useEffect(() => {
@@ -102,6 +104,7 @@ export default observer(function Block(props: BlockProps) {
 
     const handleWidth = {
         flex: `0 0 ${config.resizeHandleWidth}px`,
+        borderRadius: '2px'
     };
 
     const showResizeHandle = blocks.canShowResizeHandle(width);
@@ -119,6 +122,7 @@ export default observer(function Block(props: BlockProps) {
     }
 
     return (
+        <>
         <div 
             className={`ReactTimeline__Block ${props.className} ${block.selected ? 'ReactTimeline__Block--selected' : ''}`}
             style={style}
@@ -143,15 +147,18 @@ export default observer(function Block(props: BlockProps) {
                 />
             )}
 
-            {props.name && (
-                <div className="ReactTimeline__Block-label" style={{left: `${width}px`}}>
-                    {props.name}
-                </div>
-            )}
+            
 
             <BlockContext.Provider value={block}>
                 {props.children}
             </BlockContext.Provider>
         </div>
+            {props.name && (
+                <div className={`ReactTimeline__Block-label ${block.selected ? 'ReactTimeline__Block-label--selected' : ''}`} style={{left: `${ spaces.timeToPx(block.timespan.start) + width}px`, top: `${block.y - viewport.top}px`,}}>
+                    {props.name}
+                </div>
+            )}
+        </>
+        
     );
 });
