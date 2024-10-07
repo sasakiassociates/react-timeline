@@ -91,4 +91,16 @@ export default class BlockStore {
         return width > config.resizeHandleWidth * 3;
     }
 
+    @observable
+    groupBy: Object[]
+
+    @action
+    setGroupBy(groupBy: Object[]){
+        this.groupBy = groupBy;
+    }
+
+    sortByGroup() {
+        
+    }
+
 }

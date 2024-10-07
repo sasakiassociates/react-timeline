@@ -14,8 +14,8 @@ export default observer(function Calendar() {
     const onDoubleClick = useCallback((e: MouseEvent<HTMLDivElement>) => {
         ui.onCalendarClick(spaces.pxToTime(e.clientX));
     }, [spaces, ui]);
-
     console.log("spaces",spaces)
+    // TODO if the customSpacing is not undefined, then will be using info from there for display here...
 
     return (
         <div 

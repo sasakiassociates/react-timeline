@@ -76,7 +76,7 @@ export default class SpacesStore {
         const secondary = [];
 
         for (let i = -1; i < Math.ceil(this.primaryUnits.count); i++) {
-            const x = ((i + (offset > 0 ? 1 : 0)) * this.primaryUnits.width) - offset;
+            const x = ((i + (offset > 0 ? 1 : 0)) * this.primaryUnits.width) ;
             primary.push(x);
 
             for (let j = 1; j < Math.round(this.secondaryUnits.count / this.primaryUnits.count); j++) {
@@ -87,6 +87,37 @@ export default class SpacesStore {
         return {primary, secondary};
     }
 
+
+    @computed
+    get customSpaceGrid() {
+        // the custom spaces info lke labels are currently set in years format like [2024, 2030] showing the space 
+        // should be set x's that are set on start and end of each phase, where start of the phaze is top left of a rectangle, 
+        // with the end - start as the width of the rectangle
+        const { viewport } = this.root;
+        const rectsTopLeft = []
+        const rectsWidth = []
+        const label = []
+        // offset is the x of the starting of the left of the primary units
+        // so when the timeline is grabbed to right and left it will change to reflect where the startign point for the prinary unit is 
+        // for example if panning left, stuff on timeline move to right, the offset goes positive and when panning right, it will be negative
+        const offset = this.primaryUnits.width * (1 - (this.primaryTimeUnit - (viewport.left % this.primaryTimeUnit)) / this.primaryTimeUnit);
+        
+        console.log("offset",offset)
+        if (this.customSpaces)  this.customSpaces.forEach((cs)=>{
+            Object.keys(cs).forEach((k)=>{
+                const time_span = cs[k]
+                const span_start_sec = (time_span[0] - this.startYear) * time.YEAR   
+                const span_end_sec = (time_span[1] - this.startYear) * time.YEAR  
+                const span_start_px = this.timeToPx(+span_start_sec) - offset
+                const span_end_px = this.timeToPx(+span_end_sec) - offset
+                rectsTopLeft.push(span_start_px);
+                rectsWidth.push(span_start_px + span_end_px)
+                label.push(k)
+            })
+        })
+
+        return {rectsTopLeft, rectsWidth, label}
+    }
 
     @computed 
     get time() {

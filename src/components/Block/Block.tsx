@@ -26,7 +26,7 @@ export default observer(function Block(props: BlockProps) {
     const block = useMemo<BlockState>(() => new BlockState(timeline), [timeline]);
     
 
-    console.log("block", block)
+    // console.log("block", block)
     // Lifecycle
 
     useEffect(() => {
@@ -146,8 +146,6 @@ export default observer(function Block(props: BlockProps) {
                     style={handleWidth} 
                 />
             )}
-
-            
 
             <BlockContext.Provider value={block}>
                 {props.children}

@@ -19,6 +19,7 @@ export type TimelineProps = {
     onCreateBlock?: (timespan: Timespan) => any;
     onCalendarClick?: (value: number) => any;
     customSpacing?: Object[];
+    groupBy?: Object[];
 };
 
 export default observer(function Timeline(props: TimelineProps) {
