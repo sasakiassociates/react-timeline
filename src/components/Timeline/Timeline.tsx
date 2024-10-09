@@ -34,8 +34,8 @@ export default observer(function Timeline(props: TimelineProps) {
     useEffect(() => {
         if (customSpacing !== undefined) context.spaces.setCustomSpaces(customSpacing)}, [context.spaces, customSpacing]);
     useEffect(() => {
-        context.blocks.setGroupBy(undefined)
-            if (groupBy["active"]) {
+            context.blocks.setGroupBy(undefined)
+            if (groupBy) {
                     context.blocks.setGroupBy(groupBy['fieldName'])
                     context.blocks.all.forEach((block)=>{ //@ts-ignore
                         block.setGroupName(undefined)

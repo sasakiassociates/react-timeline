@@ -93,10 +93,10 @@ export default class BlockStore {
     }
 
     @observable
-    groupBy: string | null = null;
+    groupBy: string | undefined = undefined;
 
     @action
-    setGroupBy(groupBy: string | null){
+    setGroupBy(groupBy: string | undefined){
         this.groupBy = groupBy;
     }
 
@@ -154,6 +154,7 @@ export default class BlockStore {
                 _i = _i + grp_len
             })
         } else { 
+            console.log("no group by is passed but?")
             // if no groupby is passed just go by default
             this.sortDefault().forEach((_block, __i)=>{
                 _block.setY(__i  * (timelineBlockHeight + timelineRowPadding) )
@@ -161,6 +162,14 @@ export default class BlockStore {
         }
     }
 
+    triggerDefaultSort() {
+        const timelineBlockHeight = 20; // px
+            const timelineRowPadding = 2; // px
+            const timelineBlockGroupPadding = 50; // px
+        this.sortDefault().forEach((_block, __i)=>{
+            _block.setY(__i  * (timelineBlockHeight + timelineRowPadding) )
+        } )
+    }
 
     sortBlocks(a: BlockState, b: BlockState) { 
         //@ts-ignore

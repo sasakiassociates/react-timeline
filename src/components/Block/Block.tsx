@@ -49,7 +49,7 @@ export default observer(function Block(props: BlockProps) {
     }, [block, blocks]);
 
 
-    console.log("blockK", block.groupName, block.groupBound)
+    // console.log("blockK", block.groupName, block.groupBound)
 
     /**
      * Events
@@ -128,16 +128,7 @@ export default observer(function Block(props: BlockProps) {
          { (blocks.groupBy && block.visible) ? <> {
                 block.groupName && 
                     <span className='ReactTimeline__Block-GroupLabel' style={{left: `${ spaces.timeToPx(block.timespan.start)}px`, top: `${block.y - viewport.top - 25}px`, position: 'absolute'}}> 
-                        {block.groupName}
-                        <div
-                            style={{// @ts-ignore
-                                width: `${spaces.timeToPx(block.groupBound.width)}px`,// @ts-ignore
-                                height: `${block.groupBound.height}px`,// @ts-ignore
-                                left: `${block.groupBound.left}px`,// @ts-ignore
-                                top: `${block.groupBound.top}px`,// @ts-ignore
-                                background: "yellow",
-                            }}
-                        ></div>
+                        { (block.groupName !== 'nan') && block.groupName}
                     </span>
             }</> : <></>}
         <div 
