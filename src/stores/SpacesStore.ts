@@ -87,7 +87,7 @@ export default class SpacesStore {
         return {primary, secondary};
     }
 
-
+    // TODO this is part of the phase styling of the rice work and is wip
     @computed
     get customSpaceGrid() {
         // the custom spaces info lke labels are currently set in years format like [2024, 2030] showing the space 
@@ -102,7 +102,6 @@ export default class SpacesStore {
         // for example if panning left, stuff on timeline move to right, the offset goes positive and when panning right, it will be negative
         const offset = this.primaryUnits.width * (1 - (this.primaryTimeUnit - (viewport.left % this.primaryTimeUnit)) / this.primaryTimeUnit);
         
-        console.log("offset",offset)
         if (this.customSpaces)  this.customSpaces.forEach((cs)=>{
             Object.keys(cs).forEach((k)=>{
                 const time_span = cs[k]
