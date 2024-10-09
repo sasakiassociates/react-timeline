@@ -25,8 +25,6 @@ export default observer(function Block(props: BlockProps) {
     const { blocks, spaces, ui, viewport } = timeline;
     const block = useMemo<BlockState>(() => new BlockState(timeline), [timeline]);
     
-
-    // console.log("block", block)
     // Lifecycle
 
     useEffect(() => {
@@ -48,8 +46,6 @@ export default observer(function Block(props: BlockProps) {
         }
     }, [block, blocks]);
 
-
-    // console.log("blockK", block.groupName, block.groupBound)
 
     /**
      * Events
@@ -122,7 +118,7 @@ export default observer(function Block(props: BlockProps) {
     if (props.color) {
         style.background = props.color;
     }
-    console.log("left: `${ spaces.timeToPx(block.timespan.start)}px`, top: `${block.y - viewport.top - 25}px`" , `${ spaces.timeToPx(block.timespan.start)}px`,  `${block.y - viewport.top - 25}px`)
+
     return (
         <>
          { (blocks.groupBy && block.visible) ? <> {
