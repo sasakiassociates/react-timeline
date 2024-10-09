@@ -10,6 +10,7 @@ import config from '../config';
 import { Timespan, noop } from '../types';
 import TimelineStore from './TimelineStore';
 import BlockState from '../models/BlockState';
+import Block from '../components/Block/Block';
 
 
 export default class BlockStore {
@@ -92,15 +93,82 @@ export default class BlockStore {
     }
 
     @observable
-    groupBy: Object[]
+    groupBy: string | null = null;
 
     @action
-    setGroupBy(groupBy: Object[]){
+    setGroupBy(groupBy: string | null){
         this.groupBy = groupBy;
     }
 
-    sortByGroup() {
-        
+    @computed
+    sortDefault(): BlockState[] {
+        return this.all.sort((a: BlockState, b: BlockState)=>this.sortByName(a, b))
     }
 
+    sortByGroup() {
+            const timelineBlockHeight = 20; // px
+            const timelineRowPadding = 2; // px
+            const timelineBlockGroupPadding = 50; // px
+
+        if (this.groupBy){
+            const groupd = this.sortDefault().reduce((reslt,blck)=>{
+                if (Object.keys(reslt).includes(blck[this.groupBy])) { 
+                    reslt[blck[this.groupBy]].push(blck)
+                } else { 
+                    blck.setGroupName(blck[this.groupBy])
+                    reslt[blck[this.groupBy]] = [blck]
+                }
+                
+                let { left, right, bottom, top } = this.root.viewport;
+
+                reslt[blck[this.groupBy]].forEach(block => {
+                        if (block.timespan.start < left) left = block.timespan.start;
+                        if (block.timespan.end > right) right = block.timespan.end;
+                        if (block.y > bottom) bottom = block.y;
+                        if (block.y < top) top = block.y;
+                    });
+
+                    reslt[blck[this.groupBy]].filter((blc)=>blc.groupName)[0].setGroupBound({
+                        left,
+                        right,
+                        top,
+                        bottom,
+                        width: Math.abs(left - right),
+                        height: reslt[blck[this.groupBy]].length * config.blockHeight + timelineBlockGroupPadding / 2,
+                    })   
+
+                return reslt
+            }, {})
+            
+            let _i = 0
+            const sortedGroup = Object.keys(groupd).sort().reduce(function (result, key) {
+                result[key] = groupd[key];
+                return result;
+            }, {});
+
+            Object.keys(sortedGroup).forEach((grp, g_i)=>{
+                const grp_len = sortedGroup[grp].length
+                sortedGroup[grp].sort((a, b)=> this.sortBlocks(a, b)).forEach((block, i)=>{
+                    block.setY((_i  * (timelineBlockHeight + timelineRowPadding) )+ ((i + 1) * (timelineBlockHeight + timelineRowPadding)) + ((g_i + 1) * timelineBlockGroupPadding))
+                })
+                _i = _i + grp_len
+            })
+        } else { 
+            // if no groupby is passed just go by default
+            this.sortDefault().forEach((_block, __i)=>{
+                _block.setY(__i  * (timelineBlockHeight + timelineRowPadding) )
+            } )
+        }
+    }
+
+
+    sortBlocks(a: BlockState, b: BlockState) { 
+        //@ts-ignore
+        return a.timespan.start === b.timespan.start ? 0 : a.timespan.start < b.timespan.start ? -1 : 1;
+    }
+
+    sortByName(a: BlockState, b: BlockState) { 
+        //@ts-ignore
+        return a.name === b.name ? 0 : a.name > b.name ? -1 : 1;
+    }
 }

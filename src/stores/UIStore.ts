@@ -100,6 +100,7 @@ export default class UIStore {
     }
 
     onPushPan({ x, y }) {
+        
         const { blocks, ui, viewport } = this.root;
         const { startX, startY, top } = this.action.data;
         const { pushSpeed, pushBuffer } = config;

@@ -23,7 +23,7 @@ export type TimelineProps = {
 };
 
 export default observer(function Timeline(props: TimelineProps) {
-    const { children, onCreateBlock = noop, onCalendarClick = noop, startYear, customSpacing } = props;
+    const { children, onCreateBlock = noop, onCalendarClick = noop, startYear, customSpacing, groupBy } = props;
 
     const context = useMemo<TimelineStore>(() => new TimelineStore(), []);
 
@@ -33,7 +33,20 @@ export default observer(function Timeline(props: TimelineProps) {
     useEffect(() => context.ui.setCalendarClick(onCalendarClick), [context.ui, onCalendarClick]);
     useEffect(() => {
         if (customSpacing !== undefined) context.spaces.setCustomSpaces(customSpacing)}, [context.spaces, customSpacing]);
-
+    useEffect(() => {
+        context.blocks.setGroupBy(undefined)
+            if (groupBy["active"]) {
+                    context.blocks.setGroupBy(groupBy['fieldName'])
+                    context.blocks.all.forEach((block)=>{ //@ts-ignore
+                        block.setGroupName(undefined)
+                    })
+                    context.blocks.all.forEach((block)=>{ //@ts-ignore
+                        block[groupBy['fieldName']] = block.proxy.project[groupBy['fieldName']]
+                    })
+                }
+                context.blocks.sortByGroup()
+    }, [context.blocks, groupBy, context.blocks]);
+    
     return (
         <TimelineContext.Provider value={context}>
             <div 

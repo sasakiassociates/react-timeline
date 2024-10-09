@@ -10,6 +10,7 @@ import {
 } from 'mobx';
 
 import { Timespan } from '../types';
+import { action } from 'mobx';
 
 
 export default class BlockProxy {
@@ -17,7 +18,6 @@ export default class BlockProxy {
     constructor() {
         makeObservable(this);
     }
-
 
     // Selected Proxy
 
@@ -68,7 +68,7 @@ export default class BlockProxy {
         });
     }
 
-
+    
     destroy() {
     }
 

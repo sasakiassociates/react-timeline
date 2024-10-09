@@ -49,6 +49,8 @@ export default observer(function Block(props: BlockProps) {
     }, [block, blocks]);
 
 
+    console.log("blockK", block.groupName, block.groupBound)
+
     /**
      * Events
      */
@@ -120,15 +122,31 @@ export default observer(function Block(props: BlockProps) {
     if (props.color) {
         style.background = props.color;
     }
-
+    console.log("left: `${ spaces.timeToPx(block.timespan.start)}px`, top: `${block.y - viewport.top - 25}px`" , `${ spaces.timeToPx(block.timespan.start)}px`,  `${block.y - viewport.top - 25}px`)
     return (
         <>
+         { (blocks.groupBy && block.visible) ? <> {
+                block.groupName && 
+                    <span className='ReactTimeline__Block-GroupLabel' style={{left: `${ spaces.timeToPx(block.timespan.start)}px`, top: `${block.y - viewport.top - 25}px`, position: 'absolute'}}> 
+                        {block.groupName}
+                        <div
+                            style={{// @ts-ignore
+                                width: `${spaces.timeToPx(block.groupBound.width)}px`,// @ts-ignore
+                                height: `${block.groupBound.height}px`,// @ts-ignore
+                                left: `${block.groupBound.left}px`,// @ts-ignore
+                                top: `${block.groupBound.top}px`,// @ts-ignore
+                                background: "yellow",
+                            }}
+                        ></div>
+                    </span>
+            }</> : <></>}
         <div 
             className={`ReactTimeline__Block ${props.className} ${block.selected ? 'ReactTimeline__Block--selected' : ''}`}
             style={style}
             draggable="false"
             onMouseUp={onMouseUp}
         >
+           
             {showResizeHandle && (
                 <div 
                     className="ReactTimeline__Block-handle" 
@@ -147,10 +165,14 @@ export default observer(function Block(props: BlockProps) {
                 />
             )}
 
+            
+
+
             <BlockContext.Provider value={block}>
                 {props.children}
             </BlockContext.Provider>
         </div>
+                
             {props.name && (
                 <div className={`ReactTimeline__Block-label ${block.selected ? 'ReactTimeline__Block-label--selected' : ''}`} style={{left: `${ spaces.timeToPx(block.timespan.start) + width}px`, top: `${block.y - viewport.top}px`,}}>
                     {props.name}

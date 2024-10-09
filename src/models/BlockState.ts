@@ -150,4 +150,20 @@ export default class BlockState {
     setProjects_on_requiresProject(projects_on_requiresProject) {
         this.proxy.setProjects_on_requiresProject(projects_on_requiresProject)
     }
+
+    @observable
+    groupName: string 
+
+    @action
+    setGroupName(gname: string) {
+        this.groupName = gname;
+    }
+
+    @observable
+    groupBound: object 
+
+    @action
+    setGroupBound(gbound: object) {
+        this.groupBound = gbound;
+    }
 }
