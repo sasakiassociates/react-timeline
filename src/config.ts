@@ -14,8 +14,8 @@ import time from './time';
 export default {
 
     blocks: observable([]),
-    blockHeight: 20, // px
-    rowPadding: 2, // px
+    blockHeight: 14, // px
+    rowPadding: 1, // px
 
     colors: {
         primaryLine: '#e1e1ec',
@@ -26,12 +26,12 @@ export default {
 
     editor: 'ContinuousEditor',
 
-    minLineWidth: 17, // px
+    minLineWidth: 10, // px
 
     pushBuffer: 30,   // px
     pushSpeed: .01,   // %
 
-    resizeHandleWidth: 15,
+    resizeHandleWidth: 8,
     timeMeridian: Math.round(Date.now() / 1000),
 
     zoomSpeed: 1.15,
