@@ -15,7 +15,7 @@ export default {
 
     blocks: observable([]),
     blockHeight: 14, // px
-    rowPadding: 1, // px
+    rowPadding: 6, // px
 
     colors: {
         primaryLine: '#e1e1ec',
@@ -26,7 +26,7 @@ export default {
 
     editor: 'ContinuousEditor',
 
-    minLineWidth: 10, // px
+    minLineWidth: 17, // px
 
     pushBuffer: 30,   // px
     pushSpeed: .01,   // %
