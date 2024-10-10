@@ -115,6 +115,15 @@ export default observer(function Block(props: BlockProps) {
         background: undefined,
     };
 
+    const styleHover = {
+        width: `${width}px`,
+        height: `${config.blockHeight}px`,
+        left: `${spaces.timeToPx(block.timespan.start)}px`,
+        top: `${block.y - viewport.top}px`,
+    };
+
+
+
     if (props.color) {
         style.background = props.color;
     }
@@ -173,7 +182,7 @@ export default observer(function Block(props: BlockProps) {
             </div>
 
             {(blockHovered && (!block.selected)) ? (
-                <div key={`${block.id}-icon`} style={style}>
+                <div key={`${block.id}-icon`} style={styleHover}>
                     <div className={`ReactTimeline__Block-left-icon`} />
                     <div className='ReactTimeline__Block-right-icon' />
                 </div>
