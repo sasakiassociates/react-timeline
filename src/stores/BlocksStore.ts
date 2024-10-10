@@ -61,6 +61,10 @@ export default class BlockStore {
         };
     }
 
+    get groupExtent() {
+
+    }
+
     @computed 
     get selected() {
         return this.all.filter(block => block.selected);
@@ -120,22 +124,26 @@ export default class BlockStore {
                 }
                 
                 let { left, right, bottom, top } = this.root.viewport;
+                let groupLeft = right;
+                let groupRight = left;
+                let groupTop = bottom;
+                let groupBottom = top;
 
                 reslt[blck[this.groupBy]].forEach(block => {
-                        if (block.timespan.start < left) left = block.timespan.start;
-                        if (block.timespan.end > right) right = block.timespan.end;
-                        if (block.y > bottom) bottom = block.y;
-                        if (block.y < top) top = block.y;
-                    });
+                        if (block.timespan.start < groupLeft) groupLeft = block.timespan.start;
+                        if (block.timespan.end > groupRight) groupRight = block.timespan.end;
+                        if (block.y > groupBottom) groupBottom = block.y;
+                        if (block.y < groupTop) groupTop = block.y;
+                });
 
-                    reslt[blck[this.groupBy]].filter((blc)=>blc.groupName)[0].setGroupBound({
-                        left,
-                        right,
-                        top,
-                        bottom,
-                        width: Math.abs(left - right),
-                        height: reslt[blck[this.groupBy]].length * config.blockHeight + timelineBlockGroupPadding / 2,
-                    })   
+                reslt[blck[this.groupBy]].filter((blc)=>blc.groupName)[0].setGroupBound({
+                    groupLeft,
+                    groupRight,
+                    groupTop,
+                    groupBottom,
+                    width: Math.abs(groupLeft - groupRight),
+                    height: reslt[blck[this.groupBy]].length * config.blockHeight + timelineBlockGroupPadding / 2,
+                })
 
                 return reslt
             }, {})
