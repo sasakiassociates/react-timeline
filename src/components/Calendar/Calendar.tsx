@@ -28,7 +28,7 @@ export default observer(function Calendar() {
                     <div
                         key={i}
                         className="ReactTimeline__Calendar-date"
-                        style={{ left: `${x}px` }}
+                        style={{ left: `${x}px`, top: `10px` }}
                     >
                         {display}
                     </div>

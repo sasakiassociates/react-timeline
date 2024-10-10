@@ -18,10 +18,12 @@ export type TimelineProps = {
     startYear?: number;
     onCreateBlock?: (timespan: Timespan) => any;
     onCalendarClick?: (value: number) => any;
+    customSpacing?: Object[];
+    groupBy?: Object[];
 };
 
 export default observer(function Timeline(props: TimelineProps) {
-    const { children, onCreateBlock = noop, onCalendarClick = noop, startYear } = props;
+    const { children, onCreateBlock = noop, onCalendarClick = noop, startYear, customSpacing, groupBy } = props;
 
     const context = useMemo<TimelineStore>(() => new TimelineStore(), []);
 
@@ -29,7 +31,22 @@ export default observer(function Timeline(props: TimelineProps) {
     useEffect(() => startYear !== undefined && context.spaces.setStartYear(startYear), [context.spaces, startYear]);
     useEffect(() => context.blocks.setCreateBlock(onCreateBlock), [context.blocks, onCreateBlock]);
     useEffect(() => context.ui.setCalendarClick(onCalendarClick), [context.ui, onCalendarClick]);
-
+    useEffect(() => {
+        if (customSpacing !== undefined) context.spaces.setCustomSpaces(customSpacing)}, [context.spaces, customSpacing]);
+    useEffect(() => {
+            context.blocks.setGroupBy(undefined)
+            if (groupBy) {
+                    context.blocks.setGroupBy(groupBy['fieldName'])
+                    context.blocks.all.forEach((block)=>{ //@ts-ignore
+                        block.setGroupName(undefined)
+                    })
+                    context.blocks.all.forEach((block)=>{ //@ts-ignore
+                        block[groupBy['fieldName']] = block.proxy.project[groupBy['fieldName']]
+                    })
+                }
+                context.blocks.sortByGroup()
+    }, [context.blocks, groupBy, context.blocks]);
+    
     return (
         <TimelineContext.Provider value={context}>
             <div 

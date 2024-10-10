@@ -106,6 +106,8 @@ export default observer(function Editor({ children }: EditorProps) {
             ctx.strokeStyle = config.colors.primaryLine;
             spaces.grid.primary.forEach(x => {
                 ctx.beginPath();
+                ctx.setLineDash([3, 5]);
+
                 ctx.moveTo(x, 0);
                 ctx.lineTo(x, height);
                 ctx.stroke();
@@ -115,6 +117,8 @@ export default observer(function Editor({ children }: EditorProps) {
             ctx.strokeStyle = config.colors.secondaryLine;
             spaces.grid.secondary.forEach(x => {
                 ctx.beginPath();
+                ctx.setLineDash([3, 5]);
+
                 ctx.moveTo(x, 0);
                 ctx.lineTo(x, height);
                 ctx.stroke();

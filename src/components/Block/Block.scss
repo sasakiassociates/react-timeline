@@ -1,29 +1,75 @@
+@use '~@strategies/tokens/color';
+@use '~@strategies/tokens/space';
+@use '~@strategies/tokens/elevation';
+
+@import '~@strategies/tokens/mixins';
 &__Block {
     position: absolute !important;
     display: flex;
-
+    overflow: hidden;
     cursor: grab;
-    opacity: .75;
+    // opacity: .75;
     pointer-events: all;
     transition: border-color .15s, opacity .15s;
+    border-color: color.$border-bold;
+    border-radius: space.$s100;
+    border-width: 1px;
+    border-style: solid;
 
     &:hover {
         opacity: 1;
         transition: border-color .15s, opacity .15s;
+        box-shadow: elevation.$shadow;
+        border-radius: space.$s100;
+        border-color: color.$border-active;
     }
 
     &--selected {
-        border-color: rgba($color_highlight, 1);
-        box-shadow: 0 0 3px 5px rgba($color_bg-inverse, .3);
+        box-shadow: elevation.$shadow;
         transition: border-color .15s, opacity .15s;
+        border-width: space.$s050;
+        border-radius: space.$s100;
+        border-color: color.$border-active;
     }
 
     &-content {
         flex: 1 1 auto;
-
+        
         height: 100%;
     }
 
+    
+
+    &-handle {
+        height: 100%;
+        z-index: 2;
+        cursor: col-resize;
+        border-radius: space.$s100;
+    }
+
+    &-GroupLabel {
+        position: absolute !important;
+        left: 0;
+        top: 0;
+        @include font-body('title-xxsmall-lower');
+        width: 500px;
+        padding-left: 5px;
+        padding-top: 2px;
+
+        color: color.$text-neutral;
+
+        pointer-events: none;
+        user-select: none;
+        
+
+
+        text-transform: uppercase;
+        &--selected {
+            color: color.$border-active;
+        }
+    }
+}
+&__Block {
     &-label {
         position: absolute !important;
         left: 0;
@@ -31,18 +77,16 @@
 
         width: 300px;
         padding-left: 5px;
-        padding-top: 4px;
+        padding-top: 2px;
 
-        color: $color_font;
+        color: color.$text;
 
         pointer-events: none;
         user-select: none;
-    }
-
-    &-handle {
-        height: 100%;
-        z-index: 2;
-
-        cursor: col-resize;
+        @include font-body('title-xxsmall-lower');
+        
+        &--selected {
+            color: color.$border-active;
+        }
     }
 }

@@ -138,4 +138,32 @@ export default class BlockState {
         return this.timespan.end;
     }
 
+    @computed
+    get projects_on_requiredByProject() {
+        return this.proxy.projects_on_requiredByProject;
+    }
+
+    setProjects_on_requiredByProject(projects_on_requiredByProject) {
+        this.proxy.setProjects_on_requiredByProject(projects_on_requiredByProject)
+    }
+
+    setProjects_on_requiresProject(projects_on_requiresProject) {
+        this.proxy.setProjects_on_requiresProject(projects_on_requiresProject)
+    }
+
+    @observable
+    groupName: string 
+
+    @action
+    setGroupName(gname: string) {
+        this.groupName = gname;
+    }
+
+    @observable
+    groupBound: object 
+
+    @action
+    setGroupBound(gbound: object) {
+        this.groupBound = gbound;
+    }
 }
