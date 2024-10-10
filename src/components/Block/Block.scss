@@ -15,6 +15,7 @@
     border-radius: space.$s100;
     border-width: 1px;
     border-style: solid;
+    
 
     &:hover {
         opacity: 1;
@@ -38,13 +39,57 @@
         height: 100%;
     }
 
-    
+    &-overflow {
+        overflow: hidden !important;
+    }
+    &-left-icon {
+        flex: 0 0 15px;
+        left: -4px;
+        top: 3px;
+        width: space.$s200;
+        height: space.$s200;
+        position: absolute !important;
+        border-radius: 10px;
+        border: elevation.$border-width-small solid color.$border-bold;
+        background: color.$background-active-tertiary;
+        z-index: 3;
+    }
+    &-right-icon {
+        flex: 0 0 15px;
+        right: -4px;
+        top: 3px;
+        width: space.$s200;
+        height: space.$s200;
+        position: absolute !important;
+        border-radius: 10px;
+        border: elevation.$border-width-small solid color.$border-bold;
+        background: color.$background-active-tertiary;
+        z-index: 3;
+    }
 
-    &-handle {
-        height: 100%;
-        z-index: 2;
+    &-handleleft {
+        z-index: 3;
         cursor: col-resize;
-        border-radius: space.$s100;
+        left: -4px;
+        top: 1.5px;
+        width: space.$s200;
+        height: space.$s200;
+        border-radius: 10px;
+        border: elevation.$border-width-small solid color.$border-active;
+        background: color.$background-active;
+
+        
+    }
+    &-handleright {
+        z-index: 3;
+        cursor: col-resize;
+        right: -4px;
+        top: 1.5px;
+        width: space.$s200;
+        height: space.$s200;
+        border-radius: 10px;
+        border: elevation.$border-width-small solid color.$border-active;
+        background: color.$background-active;
     }
 
     &-GroupLabel {
@@ -55,14 +100,9 @@
         width: 500px;
         padding-left: 5px;
         padding-top: 2px;
-
         color: color.$text-neutral;
-
         pointer-events: none;
         user-select: none;
-        
-
-
         text-transform: uppercase;
         &--selected {
             color: color.$border-active;

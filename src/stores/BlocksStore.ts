@@ -106,9 +106,9 @@ export default class BlockStore {
     }
 
     sortByGroup() {
-            const timelineBlockHeight = 20; // px
-            const timelineRowPadding = 2; // px
-            const timelineBlockGroupPadding = 50; // px
+            const timelineBlockHeight = config.blockHeight; // px
+            const timelineRowPadding = config.rowPadding; // px
+            const timelineBlockGroupPadding = config.blockHeight * 2; // px
 
         if (this.groupBy){
             const groupd = this.sortDefault().reduce((reslt,blck)=>{
@@ -149,7 +149,7 @@ export default class BlockStore {
             Object.keys(sortedGroup).forEach((grp, g_i)=>{
                 const grp_len = sortedGroup[grp].length
                 sortedGroup[grp].sort((a, b)=> this.sortBlocks(a, b)).forEach((block, i)=>{
-                    block.setY((_i  * (timelineBlockHeight + timelineRowPadding) )+ ((i + 1) * (timelineBlockHeight + timelineRowPadding)) + ((g_i + 1) * timelineBlockGroupPadding))
+                    block.setY((_i  * (timelineBlockHeight + timelineRowPadding) )+ ((i ) * (timelineBlockHeight + timelineRowPadding)) + ((g_i ) * timelineBlockGroupPadding))
                 })
                 _i = _i + grp_len
             })
@@ -163,9 +163,9 @@ export default class BlockStore {
     }
 
     triggerDefaultSort() {
-        const timelineBlockHeight = 20; // px
-            const timelineRowPadding = 2; // px
-            const timelineBlockGroupPadding = 50; // px
+        const timelineBlockHeight = config.blockHeight; // px
+            const timelineRowPadding = config.rowPadding; // px
+            
         this.sortDefault().forEach((_block, __i)=>{
             _block.setY(__i  * (timelineBlockHeight + timelineRowPadding) )
         } )

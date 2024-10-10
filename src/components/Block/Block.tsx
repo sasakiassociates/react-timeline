@@ -3,7 +3,7 @@
  */
 
 import { observer } from 'mobx-react';
-import { useCallback, useEffect, useMemo, MouseEvent, ReactNode } from 'react';
+import { useCallback, useEffect, useMemo, MouseEvent, ReactNode, useState } from 'react';
 
 import config from '../../config';
 import { useTimeline, BlockContext } from '../../context';
@@ -24,7 +24,8 @@ export default observer(function Block(props: BlockProps) {
     const timeline = useTimeline();
     const { blocks, spaces, ui, viewport } = timeline;
     const block = useMemo<BlockState>(() => new BlockState(timeline), [timeline]);
-    
+    const [blockHovered, setBlockHovered] = useState<boolean>(false)
+
     // Lifecycle
 
     useEffect(() => {
@@ -57,10 +58,10 @@ export default observer(function Block(props: BlockProps) {
 
         selectBlock(e);
 
-        ui.setAction(new Action(Actions.RESIZE, { 
-            block, 
-            bound, 
-            clientX: e.clientX ,
+        ui.setAction(new Action(Actions.RESIZE, {
+            block,
+            bound,
+            clientX: e.clientX,
         }));
     }, [ui, block, selectBlock]);
 
@@ -102,7 +103,6 @@ export default observer(function Block(props: BlockProps) {
 
     const handleWidth = {
         flex: `0 0 ${config.resizeHandleWidth}px`,
-        borderRadius: '2px'
     };
 
     const showResizeHandle = blocks.canShowResizeHandle(width);
@@ -121,51 +121,70 @@ export default observer(function Block(props: BlockProps) {
 
     return (
         <>
-         { (blocks.groupBy && block.visible) ? <> {
-                block.groupName && 
-                    <span className='ReactTimeline__Block-GroupLabel' style={{left: `${ spaces.timeToPx(block.timespan.start)}px`, top: `${block.y - viewport.top - 25}px`, position: 'absolute'}}> 
-                        { (block.groupName !== 'nan') && block.groupName}
-                    </span>
+            {(blocks.groupBy && block.visible) ? <> {
+                block.groupName &&
+                <span className='ReactTimeline__Block-GroupLabel' style={{ left: `${spaces.timeToPx(block.timespan.start)}px`, top: `${block.y - viewport.top - 25}px`, position: 'absolute' }}>
+                    {(block.groupName !== 'nan') && block.groupName}
+                </span>
             }</> : <></>}
-        <div 
-            className={`ReactTimeline__Block ${props.className} ${block.selected ? 'ReactTimeline__Block--selected' : ''}`}
-            style={style}
-            draggable="false"
-            onMouseUp={onMouseUp}
-        >
-           
-            {showResizeHandle && (
-                <div 
-                    className="ReactTimeline__Block-handle" 
-                    onMouseDown={e => onResize(e, 'start')} 
-                    style={handleWidth} 
-                />
-            )}
+            <div
+                className={`ReactTimeline__Block ${props.className} ${block.selected ? 'ReactTimeline__Block--selected' : ''}`}
+                style={style}
+                draggable="false"
+                onMouseUp={onMouseUp}
+                onMouseEnter={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setBlockHovered(true)
+                }}
+                onMouseLeave={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    setBlockHovered(false)
+                }}
+            >
+                {(block.selected) ? (
+                    <>
+                        <div
+                            className="ReactTimeline__Block-handleleft"
+                            onMouseDown={e => onResize(e, 'start')}
+                            style={handleWidth}
+                        >
+                        </div>
+                    </>
+                ) : <></>}
 
-            <div className="ReactTimeline__Block-content" onMouseDown={e => onMouseDown(e)} />
+                <div className="ReactTimeline__Block-content" onMouseDown={e => onMouseDown(e)} />
 
-            {showResizeHandle && (
-                <div 
-                    className="ReactTimeline__Block-handle" 
-                    onMouseDown={e => onResize(e, 'end')} 
-                    style={handleWidth} 
-                />
-            )}
+                {(block.selected) ? (
+                    <>
+                        <div
+                            className="ReactTimeline__Block-handleright"
+                            onMouseDown={e => onResize(e, 'end')}
+                            style={handleWidth}
+                        ></div>
+                    </>
+                ) : <></>}
 
+                <BlockContext.Provider value={block}>
+                    <div className='ReactTimeline__Block-overflow'></div>
+                    {props.children}
+                </BlockContext.Provider>
+            </div>
+
+            {(blockHovered && (!block.selected)) ? (
+                <div key={`${block.id}-icon`} style={style}>
+                    <div className={`ReactTimeline__Block-left-icon`} />
+                    <div className='ReactTimeline__Block-right-icon' />
+                </div>
+            ) : (block.selected) ? <></> : <></>}
             
-
-
-            <BlockContext.Provider value={block}>
-                {props.children}
-            </BlockContext.Provider>
-        </div>
-                
             {props.name && (
-                <div className={`ReactTimeline__Block-label ${block.selected ? 'ReactTimeline__Block-label--selected' : ''}`} style={{left: `${ spaces.timeToPx(block.timespan.start) + width}px`, top: `${block.y - viewport.top}px`,}}>
+                <div className={`ReactTimeline__Block-label ${block.selected ? 'ReactTimeline__Block-label--selected' : ''}`} style={{ left: `${spaces.timeToPx(block.timespan.start) + width}px`, top: `${block.y - viewport.top}px`, }}>
                     {props.name}
                 </div>
             )}
         </>
-        
+
     );
 });

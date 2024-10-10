@@ -1,15 +1,18 @@
-&__Timeline {
+@use '~@strategies/tokens/color';
+@use '~@strategies/tokens/space';
+@use '~@strategies/tokens/elevation';
 
+@import '~@strategies/tokens/mixins';
+&__Timeline {
     display: flex;
     flex-direction: column;
-
     width: 100%;
     height: 100%;
-
-    color: $color_font;
+    color: color.$text;
     border-radius: 2px !important;
     background: $color_bg;
-
+    @include font-body('title-xxsmall-lower');
+    
     & * {
         position: relative;
         box-sizing: border-box;
