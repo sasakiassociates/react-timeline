@@ -47,9 +47,9 @@ export default {
             case YEAR:
                 return startYear + value;
             case QUIN:
-                return Math.floor(startYear / 5) * 5 + value * 5;
+                return startYear + value * 5;
             case DECADE:
-                return Math.floor(startYear / 10) * 10 + value * 10;
+                return startYear + value * 10;
         }
     },
     displayText: (unit: number) => {

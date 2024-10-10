@@ -69,7 +69,6 @@ export default class SpacesStore {
     @computed 
     get grid() {
         const { viewport } = this.root;
-
         const offset = this.primaryUnits.width * (1 - (this.primaryTimeUnit - (viewport.left % this.primaryTimeUnit)) / this.primaryTimeUnit);
 
         const primary = [];
@@ -77,10 +76,10 @@ export default class SpacesStore {
 
         for (let i = -1; i < Math.ceil(this.primaryUnits.count); i++) {
             const x = ((i + (offset > 0 ? 1 : 0)) * this.primaryUnits.width) ;
-            primary.push(x);
+            primary.push(x - offset);
 
             for (let j = 1; j < Math.round(this.secondaryUnits.count / this.primaryUnits.count); j++) {
-                secondary.push(x + (j * this.secondaryUnits.width));
+                secondary.push(x + (j * this.secondaryUnits.width) - offset);
             }
         }
 
