@@ -199,7 +199,6 @@ export default class BlockStore {
                 _i = _i + grp_len
             })
         } else { 
-            console.log("no group by is passed but?")
             // if no groupby is passed just go by default
             this.sortDefault.forEach((_block, __i)=>{
                 _block.setY(__i  * (timelineBlockHeight + timelineRowPadding) )
