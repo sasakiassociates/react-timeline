@@ -76,7 +76,8 @@ export default observer(function Editor({ children }: EditorProps) {
         if (editor) {
             const { clientX, deltaY } = e;
             const xRatio = (clientX - editor.getBoundingClientRect().left) / width;
-
+            console.log("xratio", xRatio)
+            viewport.setXratioOnZoom(xRatio)
             viewport.zoom(xRatio, deltaY);
         }
     }, [editor, viewport, width]);

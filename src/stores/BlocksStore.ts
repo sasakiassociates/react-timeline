@@ -109,6 +109,22 @@ export default class BlockStore {
         return this.all.sort((a: BlockState, b: BlockState)=>this.sortByName(a, b))
     }
 
+
+    @computed 
+    groupedAll() {
+        if (!this.groupBy) return {"nan": this.all}
+        const groupd = this.sortDefault().reduce((reslt,blck)=>{
+            if (Object.keys(reslt).includes(blck[this.groupBy])) { 
+                reslt[blck[this.groupBy]].push(blck)
+            } else { 
+                blck.setGroupName(blck[this.groupBy])
+                reslt[blck[this.groupBy]] = [blck]
+            }
+            return reslt
+        }, {})
+        return groupd
+    }
+
     sortByGroup() {
             const timelineBlockHeight = config.blockHeight; // px
             const timelineRowPadding = config.rowPadding; // px
@@ -128,20 +144,23 @@ export default class BlockStore {
                 let groupRight = left;
                 let groupTop = bottom;
                 let groupBottom = top;
-
+                let block_width = 0
                 reslt[blck[this.groupBy]].forEach(block => {
                         if (block.timespan.start < groupLeft) groupLeft = block.timespan.start;
                         if (block.timespan.end > groupRight) groupRight = block.timespan.end;
                         if (block.y > groupBottom) groupBottom = block.y;
                         if (block.y < groupTop) groupTop = block.y;
-                });
+                        if ((Math.abs(groupRight - groupLeft) / this.root.viewport.width) > block_width) block_width = ((groupRight - groupLeft) / this.root.viewport.width);
+
+                }); 
+                console.log("block_width", block_width)
 
                 reslt[blck[this.groupBy]].filter((blc)=>blc.groupName)[0].setGroupBound({
                     groupLeft,
                     groupRight,
                     groupTop,
                     groupBottom,
-                    width: Math.abs(groupLeft - groupRight),
+                    width: block_width,
                     height: reslt[blck[this.groupBy]].length * config.blockHeight + timelineBlockGroupPadding / 2,
                 })
 
