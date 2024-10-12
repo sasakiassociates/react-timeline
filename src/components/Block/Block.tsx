@@ -128,28 +128,9 @@ export default observer(function Block(props: BlockProps) {
         style.background = props.color;
     }
 
+    
     return (
         <>
-            {(blocks.groupBy && block.visible) ? <> {
-                block.groupName &&
-                <span className='ReactTimeline__Block-GroupLabel' style={{
-                    left: `${spaces.timeToPx(block.timespan.start) -10}px`,
-                    top: `${block.y - viewport.top - 25}px`,
-                    position: 'absolute'
-                }}>
-                    {(block.groupName !== 'nan') && block.groupName}
-                    <div
-                        style={{// @ts-ignore
-                            width: `${spaces.timeToPx(block.groupBound.width) + 10}px`,// @ts-ignore
-                            height: `${block.groupBound.height + 25}px`,// @ts-ignore
-                            left: `${block.groupBound.left}px`,// @ts-ignore
-                            top: `${block.groupBound.top}px`,// @ts-ignore
-                            // background: "yellow",
-                            border: "1px dashed blue",
-                        }}
-                    ></div>
-                </span>
-            }</> : <></>}
             <div
                 className={`ReactTimeline__Block ${props.className} ${block.selected ? 'ReactTimeline__Block--selected' : ''}`}
                 style={style}
@@ -166,6 +147,7 @@ export default observer(function Block(props: BlockProps) {
                     setBlockHovered(false)
                 }}
             >
+
                 {(block.selected) ? (
                     <>
                         <div

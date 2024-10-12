@@ -91,23 +91,6 @@
         border: elevation.$border-width-small solid color.$border-active;
         background: color.$background-active;
     }
-
-    &-GroupLabel {
-        position: absolute !important;
-        left: 0;
-        top: 0;
-        @include font-body('title-xxsmall-lower');
-        width: 500px;
-        padding-left: 5px;
-        padding-top: 2px;
-        color: color.$text-neutral;
-        pointer-events: none;
-        user-select: none;
-        text-transform: uppercase;
-        &--selected {
-            color: color.$border-active;
-        }
-    }
 }
 &__Block {
     &-label {
