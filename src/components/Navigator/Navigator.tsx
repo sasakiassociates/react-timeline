@@ -13,7 +13,7 @@ import BlockVisualizer from './BlockVisualizer';
 
 
 export default observer(function Navigator() {
-    const { blocks, viewport } = useTimeline();
+    const { blocks, viewport, spaces } = useTimeline();
     const { extent } = blocks;
     const [info, setInfo] = useState<string>('');
 
@@ -46,6 +46,7 @@ export default observer(function Navigator() {
         <div 
             className="ReactTimeline__Navigator"
             onDoubleClick={onDoubleClick}
+            style={{top: `${(spaces.customSpaces && spaces.customSpaces.length > 0) ? '65px': '35px'}`}}
         >
             <div>
                 <div

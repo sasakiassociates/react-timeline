@@ -15,7 +15,7 @@
     border-radius: space.$s100;
     border-width: 1px;
     border-style: solid;
-    
+    z-index: 2;
 
     &:hover {
         opacity: 1;
@@ -97,7 +97,7 @@
         position: absolute !important;
         left: 0;
         top: 0;
-
+        z-index: 3;
         width: 300px;
         padding-left: 5px;
         padding-top: 2px;
