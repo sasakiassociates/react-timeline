@@ -91,6 +91,12 @@
         border: elevation.$border-width-small solid color.$border-active;
         background: color.$background-active;
     }
+
+    &-dependency {
+        position: absolute !important;
+        z-index: 4;
+        cursor: col-resize;
+    }
 }
 &__Block {
     &-label {
