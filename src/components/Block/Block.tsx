@@ -164,7 +164,7 @@ export default observer(function Block(props: BlockProps) {
                     </>
                 ) : <></>}
 
-                {(block.projects_on_requiredByProject.length > 0 || block.projects_on_requiresProject.length > 0) && <span
+                {((block.projects_on_requiredByProject.length > 0) || (block.projects_on_requiresProject.length > 0)) && <span
                         className='ReactTimeline__Block-dependency'
                         style={{left: '10px', top: '0'}} // TODO this is very manual I know ...
                     >
