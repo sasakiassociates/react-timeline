@@ -76,7 +76,7 @@ export default observer(function Editor({ children }: EditorProps) {
         if (editor) {
             const { clientX, deltaY } = e;
             const xRatio = (clientX - editor.getBoundingClientRect().left) / width;
-
+            viewport.setXratioOnZoom(xRatio)
             viewport.zoom(xRatio, deltaY);
         }
     }, [editor, viewport, width]);
@@ -133,6 +133,15 @@ export default observer(function Editor({ children }: EditorProps) {
             className="ReactTimeline__Editor"
             ref={el => el && !editor && ui.setEditor(el)}
             onDoubleClick={onDoubleClick}
+            onMouseEnter={(e)=>{
+                // we didnt' want to get the re sort triggered as resizing a block since it means the block would then jump to another y and is confusing,
+                blocks.preventSorting()
+            }}
+            onMouseLeave={(e)=>{
+                // for now on mouse leave of the editor it reactivates it
+                blocks.preventSorting(false)
+                blocks.sortByGroup()
+            }}
         >
             <canvas
                 width={`${width}px`}
@@ -143,6 +152,60 @@ export default observer(function Editor({ children }: EditorProps) {
             />
 
             <div className="ReactTimeline__Editor--blocks">
+
+            {
+                    (blocks.groupBy) && (blocks.groupNames.length > 0) && <>
+                        {blocks.groupNames.map((name)=>(
+                            <>
+                             {name !== 'nan' && 
+                                <span className='ReactTimeline__Editor--blocks--GroupLabel' style={{
+                                    'left': ( blocks.extentByGroupName[name]) ? blocks.extentByGroupName[name]['style']['left'] : 0,
+                                    'top': (blocks.extentByGroupName[name]) ? blocks.extentByGroupName[name]['style']['top']: 0,
+                                    'position':'absolute',
+                                    'padding': '5px',
+                                    'marginLeft': '5px',
+                                    'paddingLeft': '1px',
+                                }}>
+                                    {name}
+                                </span>
+                            }
+                                <span
+                                    className='ReactTimeline__Editor--blocks--GroupBorder'
+                                    style={{// @ts-ignore
+                                        width:  ( blocks.extentByGroupName[name]) ? blocks.extentByGroupName[name]['style']['width'] : 0,
+                                        height: ( blocks.extentByGroupName[name]) ? blocks.extentByGroupName[name]['style']['height'] : 0,
+                                        left: ( blocks.extentByGroupName[name]) ? blocks.extentByGroupName[name]['style']['left'] : 0,
+                                        top: ( blocks.extentByGroupName[name]) ? blocks.extentByGroupName[name]['style']['top'] : 0,
+                                        // background: "yellow",
+                                        border: "1px dashed blue",
+                                        borderRadius: "6px",
+                                        'position':'absolute'
+                                    }}
+                                ></span>
+                            </>
+                        ))}
+                    </>
+                }
+
+                {/* custom grid */}
+                {(spaces.customSpaces) && <>
+                    
+                    {spaces.customSpaceGrid.label.map((label,i) => (
+                        <div
+                            className='ReactTimeline__Editor--blocks--customSpacing'
+                            style={{
+                                'left': `${spaces.customSpaceGrid.rectsTopLeft[i]}px`,
+                                'top': `${viewport.top}`,
+                                'width': `${spaces.customSpaceGrid.rectsWidth[i]}px`,
+                                'height': `100%`,
+                                'position': 'absolute',
+                                'background': `${spaces.customSpaceGrid.color[i]}`
+                            }}
+                        
+                        ></div>
+                    ))}
+                    
+                </>}
                 {children}
             </div>
 

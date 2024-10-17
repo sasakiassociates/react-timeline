@@ -45,7 +45,7 @@ export default observer(function Timeline(props: TimelineProps) {
                     })
                 }
                 context.blocks.sortByGroup()
-    }, [context.blocks, groupBy, context.blocks]);
+    }, [groupBy]);
     
     return (
         <TimelineContext.Provider value={context}>

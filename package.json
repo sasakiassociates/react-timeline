@@ -1,6 +1,6 @@
 {
   "name": "@strategies/react-timeline",
-  "version": "1.2.3",
+  "version": "1.2.5",
   "description": "A timeline component for React",
   "author": "Eric Youngberg <eyoungberg@sasaki.com>",
   "repository": "https://github.com/sasakiassociates/react-timeline",
@@ -54,6 +54,7 @@
   "dependencies": {
     "@strategies/tokens": "^4.0.29",
     "@strategies/ui": "^2.4.19",
+    "react-icons": "^5.3.0",
     "uuid": "^8.3.2"
   }
 }

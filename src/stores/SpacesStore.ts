@@ -96,25 +96,32 @@ export default class SpacesStore {
         const rectsTopLeft = []
         const rectsWidth = []
         const label = []
+        const color = []
         // offset is the x of the starting of the left of the primary units
         // so when the timeline is grabbed to right and left it will change to reflect where the startign point for the prinary unit is 
         // for example if panning left, stuff on timeline move to right, the offset goes positive and when panning right, it will be negative
-        const offset = this.primaryUnits.width * (1 - (this.primaryTimeUnit - (viewport.left % this.primaryTimeUnit)) / this.primaryTimeUnit);
+        const offset = (this.root.ui.width / this.root.viewport.width / time.YEAR) * (1 - (time.YEAR - (viewport.left % time.YEAR)) / time.YEAR);
         
         if (this.customSpaces)  this.customSpaces.forEach((cs)=>{
-            Object.keys(cs).forEach((k)=>{
+            Object.keys(cs).forEach((k,i)=>{
                 const time_span = cs[k]
                 const span_start_sec = (time_span[0] - this.startYear) * time.YEAR   
                 const span_end_sec = (time_span[1] - this.startYear) * time.YEAR  
-                const span_start_px = this.timeToPx(+span_start_sec) - offset
-                const span_end_px = this.timeToPx(+span_end_sec) - offset
+                const span_start_px = this.timeToPx(+span_start_sec) 
+                const span_end_px = this.timeToPx(+span_end_sec) 
+
                 rectsTopLeft.push(span_start_px);
-                rectsWidth.push(span_start_px + span_end_px)
+                rectsWidth.push(Math.abs(span_start_px - span_end_px))
                 label.push(k)
+                if (!(i % 2)) {
+                    color.push("#F2F5FA")
+                } else {
+                    color.push("white")
+                }
             })
         })
 
-        return {rectsTopLeft, rectsWidth, label}
+        return {rectsTopLeft, rectsWidth, label, color}
     }
 
     @computed 

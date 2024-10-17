@@ -60,7 +60,42 @@ export default class BlockStore {
             height: Math.abs(top - bottom),
         };
     }
+    
+    @computed
+    get groupNames(){
+        return [...Object.keys(this.groupedAll)]//.filter((name)=> {return name!=='nan'});
+    }
 
+    @computed
+    get extentByGroupName() {
+        const results = {}
+        Object.keys(this.groupedAll).forEach((key)=>{
+            const _blocks = this.groupedAll[key] //@ts-ignore maybe bring out the name out of the proxy similar to how it is done for color or selected ...
+            const maxBlockNameLength = Math.max(..._blocks.map((block)=>block.proxy.project.name.length))
+            const minLeft = Math.min(..._blocks.map((block)=>block.timespan.start))
+            const maxRight = Math.max(..._blocks.map((block)=>block.timespan.end))
+            const minY = Math.min(..._blocks.map((block)=>block.y))
+            const maxY = Math.max(..._blocks.map((block)=>block.y))
+            const gStyle = {
+                width: `${this.root.spaces.timeToPx(maxRight ) - this.root.spaces.timeToPx(minLeft) + (maxBlockNameLength * 6.2)}px`, // 6.2 here is an estimate of charecter width, which depends on typeface etc. 
+                height: `${(_blocks.length + 1) * (config.blockHeight + config.rowPadding)}px`,
+                left: `${this.root.spaces.timeToPx(minLeft) - 5}px`,
+                top: `${minY - this.root.viewport.top - 15}px`,
+                background: undefined,
+            };
+                results[key] = 
+                    {
+                        'name': key,
+                        'left': minLeft,
+                        'top': minY,
+                        'style': gStyle
+                    }
+        })
+        return results;
+
+    }
+
+    
     @computed 
     get selected() {
         return this.all.filter(block => block.selected);
@@ -101,47 +136,57 @@ export default class BlockStore {
     }
 
     @computed
-    sortDefault(): BlockState[] {
+    get sortDefault(): BlockState[] {
         return this.all.sort((a: BlockState, b: BlockState)=>this.sortByName(a, b))
     }
 
-    sortByGroup() {
-            const timelineBlockHeight = config.blockHeight; // px
-            const timelineRowPadding = config.rowPadding; // px
-            const timelineBlockGroupPadding = config.blockHeight * 2; // px
+    @computed
+    sortDefaultTime(): BlockState[] {
+        return this.all.sort((a: BlockState, b: BlockState)=>this.sortBlocks(a, b))
+    }
 
+
+    @computed 
+    get groupedAll(): {[key:string]: BlockState[]} {
+        if (!this.groupBy) return {"nan": this.all}
+        const groupd = this.sortDefault.reduce((reslt,blck)=>{
+            if (Object.keys(reslt).includes(blck[this.groupBy])) { 
+                reslt[blck[this.groupBy]].push(blck)
+            } else { 
+                blck.setGroupName(blck[this.groupBy])
+                reslt[blck[this.groupBy]] = [blck]
+            }
+            return reslt
+        }, {})
+        return groupd
+    }
+
+    sortByGroup() {
+        const timelineBlockHeight = config.blockHeight; // px
+        const timelineRowPadding = config.rowPadding; // px
+        const timelineBlockGroupPadding = config.blockHeight * 4; // px
+
+        if (this.sortingPrevented) return;
         if (this.groupBy){
-            const groupd = this.sortDefault().reduce((reslt,blck)=>{
+            const groupd: {[key:string]: BlockState[]} = this.sortDefault.reduce((reslt,blck)=>{
                 if (Object.keys(reslt).includes(blck[this.groupBy])) { 
                     reslt[blck[this.groupBy]].push(blck)
                 } else { 
                     blck.setGroupName(blck[this.groupBy])
                     reslt[blck[this.groupBy]] = [blck]
                 }
-                
-                let { left, right, bottom, top } = this.root.viewport;
-
-                reslt[blck[this.groupBy]].forEach(block => {
-                        if (block.timespan.start < left) left = block.timespan.start;
-                        if (block.timespan.end > right) right = block.timespan.end;
-                        if (block.y > bottom) bottom = block.y;
-                        if (block.y < top) top = block.y;
-                    });
-
-                    reslt[blck[this.groupBy]].filter((blc)=>blc.groupName)[0].setGroupBound({
-                        left,
-                        right,
-                        top,
-                        bottom,
-                        width: Math.abs(left - right),
-                        height: reslt[blck[this.groupBy]].length * config.blockHeight + timelineBlockGroupPadding / 2,
-                    })   
-
                 return reslt
             }, {})
             
             let _i = 0
-            const sortedGroup = Object.keys(groupd).sort().reduce(function (result, key) {
+            const sortedGroup = Object.keys(groupd).sort((a:string, b:string)=> {
+                // this is to make sure groups that have starting time earlier show up higher in the time line (requested by uncle TayTay)
+                // if decided against it just make it a pure sort() here
+                const a_first_block = Math.min(...groupd[a].map((blc)=>blc.timespan.start))
+                const b_first_block = Math.min(...groupd[b].map((blc)=>blc.timespan.start))
+                return (a_first_block > b_first_block) ? 1 : -1
+
+            }).reduce(function (result, key) {
                 result[key] = groupd[key];
                 return result;
             }, {});
@@ -154,9 +199,8 @@ export default class BlockStore {
                 _i = _i + grp_len
             })
         } else { 
-            console.log("no group by is passed but?")
             // if no groupby is passed just go by default
-            this.sortDefault().forEach((_block, __i)=>{
+            this.sortDefault.forEach((_block, __i)=>{
                 _block.setY(__i  * (timelineBlockHeight + timelineRowPadding) )
             } )
         }
@@ -164,9 +208,9 @@ export default class BlockStore {
 
     triggerDefaultSort() {
         const timelineBlockHeight = config.blockHeight; // px
-            const timelineRowPadding = config.rowPadding; // px
+        const timelineRowPadding = config.rowPadding; // px
             
-        this.sortDefault().forEach((_block, __i)=>{
+        this.sortDefault.forEach((_block, __i)=>{
             _block.setY(__i  * (timelineBlockHeight + timelineRowPadding) )
         } )
     }
@@ -180,4 +224,14 @@ export default class BlockStore {
         //@ts-ignore
         return a.name === b.name ? 0 : a.name > b.name ? -1 : 1;
     }
+
+
+    @observable
+    sortingPrevented: boolean = false
+
+    @action
+    preventSorting(sort=true){
+        this.sortingPrevented = sort
+    }
+
 }

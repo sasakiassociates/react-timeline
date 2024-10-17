@@ -11,6 +11,12 @@ import BlockState from '../../models/BlockState';
 import BlockProxy from '../../models/BlockProxy';
 import Action, { Actions } from '../../models/Action';
 
+import { BaseIcon, Sizes, States } from '@strategies/ui';
+import {
+    PiGitCommitBold,
+    PiLeafBold,
+} from 'react-icons/pi';
+
 
 export type BlockProps = {
     children?: ReactNode;
@@ -128,14 +134,9 @@ export default observer(function Block(props: BlockProps) {
         style.background = props.color;
     }
 
+
     return (
         <>
-            {(blocks.groupBy && block.visible) ? <> {
-                block.groupName &&
-                <span className='ReactTimeline__Block-GroupLabel' style={{ left: `${spaces.timeToPx(block.timespan.start)}px`, top: `${block.y - viewport.top - 25}px`, position: 'absolute' }}>
-                    {(block.groupName !== 'nan') && block.groupName}
-                </span>
-            }</> : <></>}
             <div
                 className={`ReactTimeline__Block ${props.className} ${block.selected ? 'ReactTimeline__Block--selected' : ''}`}
                 style={style}
@@ -152,6 +153,7 @@ export default observer(function Block(props: BlockProps) {
                     setBlockHovered(false)
                 }}
             >
+
                 {(block.selected) ? (
                     <>
                         <div
@@ -163,6 +165,12 @@ export default observer(function Block(props: BlockProps) {
                     </>
                 ) : <></>}
 
+                {(block.projects_on_requiredByProject.length > 0) && <span
+                        className='ReactTimeline__Block-dependency'
+                        style={{left: '10px', top: '25%'}} // TODO this is very manual I know ...
+                    >
+                            <BaseIcon size={Sizes.XSMALL} icon={<PiGitCommitBold />} />
+                        </span>}
                 <div className="ReactTimeline__Block-content" onMouseDown={e => onMouseDown(e)} />
 
                 {(block.selected) ? (
@@ -176,7 +184,10 @@ export default observer(function Block(props: BlockProps) {
                 ) : <></>}
 
                 <BlockContext.Provider value={block}>
-                    <div className='ReactTimeline__Block-overflow'></div>
+                    <div className='ReactTimeline__Block-overflow'>
+                    </div>
+
+                    
                     {props.children}
                 </BlockContext.Provider>
             </div>
@@ -187,7 +198,7 @@ export default observer(function Block(props: BlockProps) {
                     <div className='ReactTimeline__Block-right-icon' />
                 </div>
             ) : (block.selected) ? <></> : <></>}
-            
+
             {props.name && (
                 <div className={`ReactTimeline__Block-label ${block.selected ? 'ReactTimeline__Block-label--selected' : ''}`} style={{ left: `${spaces.timeToPx(block.timespan.start) + width}px`, top: `${block.y - viewport.top}px`, }}>
                     {props.name}

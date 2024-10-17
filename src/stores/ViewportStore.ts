@@ -10,6 +10,7 @@ import { action, computed, observable, makeObservable } from 'mobx';
 import config from '../config';
 import { Viewport, noop } from '../types';
 import TimelineStore from './TimelineStore';
+import { act } from 'react';
 
 
 export default class ViewportStore {
@@ -82,6 +83,14 @@ export default class ViewportStore {
     @computed 
     get height() {
         return Math.abs(this.top - this.bottom);
+    }
+
+    @observable
+    xRatioOnZoom: number = 1
+
+    @action
+    setXratioOnZoom(xratio: number) {
+        this.xRatioOnZoom = xratio;
     }
 
 }

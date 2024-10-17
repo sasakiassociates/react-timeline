@@ -1,15 +1,21 @@
 @use '~@strategies/tokens/animation';
 @use '~@strategies/tokens/color';
+@import '~@strategies/tokens/mixins';
 
 
 &__Calendar {
-    flex: 1 0 30px;
+    
     min-height: 0;
 
     background: color.$white;
     cursor: pointer;
     overflow: hidden;
     transition: background animation.$speed;
+    color: color.$text-neutral;
+    fill-opacity: .5;
+
+    @include font-body('title-xsmall-upper');
+
 
     * {
         pointer-events: none;
@@ -21,12 +27,58 @@
 
     &-date {
         position: absolute !important;
-        bottom: 5px;
+        display: flex;
+        align-items: center;
 
         margin-left: 4px;
-
-        font-size: 11px;
-
+        justify-content: center;
         user-select: none;
+        &-label {
+            display: flex;
+            height: 100%;
+
+
+            user-select: none;
+
+            align-items: center;
+
+        
+        }
+
+    }
+    &-customSpacing {
+        position: absolute !important;
+        display: flex;
+        fill-opacity: .5;
+
+        bottom: 5px;
+        user-select: none;
+
+        width: 100%;
+
+        align-items: center;
+        justify-content: center;
+        border-color: #EDEBFF;
+        border-width: 1px;
+
+        border-style: solid ;
+        z-index: 1;
+
+        white-space: nowrap;
+        
+        &-label {
+            z-index: 2;
+            display: flex;
+            height: 100%;
+            opacity: 1;
+
+            user-select: none;
+
+            align-items: center;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            overflow: hidden;
+        
+        }
     }
 }
