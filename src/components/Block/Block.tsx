@@ -11,7 +11,6 @@ import BlockState from '../../models/BlockState';
 import BlockProxy from '../../models/BlockProxy';
 import Action, { Actions } from '../../models/Action';
 
-import { BaseIcon, Sizes, States } from '@strategies/ui';
 import {
     PiGitCommitBold,
     PiLeafBold,
@@ -165,11 +164,11 @@ export default observer(function Block(props: BlockProps) {
                     </>
                 ) : <></>}
 
-                {(block.projects_on_requiredByProject.length > 0) && <span
+                {(block.projects_on_requiredByProject.length === 0) && <span
                         className='ReactTimeline__Block-dependency'
-                        style={{left: '10px', top: '25%'}} // TODO this is very manual I know ...
+                        style={{left: '10px', top: '0'}} // TODO this is very manual I know ...
                     >
-                            <BaseIcon size={Sizes.XSMALL} icon={<PiGitCommitBold />} />
+                            <PiGitCommitBold />
                         </span>}
                 <div className="ReactTimeline__Block-content" onMouseDown={e => onMouseDown(e)} />
 

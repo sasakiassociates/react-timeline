@@ -158,7 +158,8 @@ export default observer(function Editor({ children }: EditorProps) {
                         {blocks.groupNames.map((name)=>(
                             <>
                              {name !== 'nan' && 
-                                <span className='ReactTimeline__Editor--blocks--GroupLabel' style={{
+                             <>
+                             <span className='ReactTimeline__Editor--blocks--GroupLabel' style={{
                                     'left': ( blocks.extentByGroupName[name]) ? blocks.extentByGroupName[name]['style']['left'] : 0,
                                     'top': (blocks.extentByGroupName[name]) ? blocks.extentByGroupName[name]['style']['top']: 0,
                                     'position':'absolute',
@@ -168,7 +169,7 @@ export default observer(function Editor({ children }: EditorProps) {
                                 }}>
                                     {name}
                                 </span>
-                            }
+                            
                                 <span
                                     className='ReactTimeline__Editor--blocks--GroupBorder'
                                     style={{// @ts-ignore
@@ -182,6 +183,10 @@ export default observer(function Editor({ children }: EditorProps) {
                                         'position':'absolute'
                                     }}
                                 ></span>
+                             </>
+                                
+                                
+                                }
                             </>
                         ))}
                     </>

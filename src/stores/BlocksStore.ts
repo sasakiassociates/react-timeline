@@ -164,40 +164,115 @@ export default class BlockStore {
     sortByGroup() {
         const timelineBlockHeight = config.blockHeight; // px
         const timelineRowPadding = config.rowPadding; // px
-        const timelineBlockGroupPadding = config.blockHeight * 4; // px
-
+        const timelineBlockGroupPadding = config.blockHeight * 3; // px
+        
         if (this.sortingPrevented) return;
         if (this.groupBy){
-            const groupd: {[key:string]: BlockState[]} = this.sortDefault.reduce((reslt,blck)=>{
-                if (Object.keys(reslt).includes(blck[this.groupBy])) { 
-                    reslt[blck[this.groupBy]].push(blck)
-                } else { 
-                    blck.setGroupName(blck[this.groupBy])
-                    reslt[blck[this.groupBy]] = [blck]
-                }
-                return reslt
-            }, {})
+            if (this.root.spaces.customSpaces && this.root.spaces.customSpaces.length > 0) {
+                this.root.spaces.customSpaces.forEach((spaceCustom)=>{
+                    const space = spaceCustom['spaces']
+                    let _i = 0      
+                    let _i_p = 0                  
+                    Object.keys(space).forEach((spcValue, ii)=>{
+                        const phaseBlocks = this.sortDefault.filter((block)=>{
+                            //@ts-ignore
+                            return block.proxy.project[spaceCustom['blockSpaceFieldName']] === spcValue
+                        })
+
+                        const phaseHeightLength = phaseBlocks.length;
+                        const inGroupPhaseBlocks = phaseBlocks.filter((blk)=>{
+                            return blk[this.groupBy] !== 'nan';
+                        }) 
+
+                        const outGroupPhaseBlocks = phaseBlocks.filter((blk)=>{
+                            return blk[this.groupBy] === 'nan';
+                        }) 
+                        const ingroupLength = inGroupPhaseBlocks.length 
+                        const ungroupLength = outGroupPhaseBlocks.length 
+                        const groupd: {[key:string]: BlockState[]} = inGroupPhaseBlocks.reduce((reslt,blck)=>{
+                            if (Object.keys(reslt).includes(blck[this.groupBy])) { 
+                                reslt[blck[this.groupBy]].push(blck)
+                            } else { 
+                                blck.setGroupName(blck[this.groupBy])
+                                reslt[blck[this.groupBy]] = [blck]
+                            }
+                            return reslt
+                        }, {})
+                        
+                        
+                        
+                        const sortedGroup = Object.keys(groupd)
+                        // .sort((a:string, b:string)=> {
+                        //     // this is to make sure groups that have starting time earlier show up higher in the time line (requested by uncle TayTay)
+                        //     // if decided against it just make it a pure sort() here
+                        //     const a_first_block = Math.min(...groupd[a].map((blc)=>blc.timespan.start))
+                        //     const b_first_block = Math.min(...groupd[b].map((blc)=>blc.timespan.start))
+                        //     return (a_first_block > b_first_block) ? 1 : -1
             
-            let _i = 0
-            const sortedGroup = Object.keys(groupd).sort((a:string, b:string)=> {
-                // this is to make sure groups that have starting time earlier show up higher in the time line (requested by uncle TayTay)
-                // if decided against it just make it a pure sort() here
-                const a_first_block = Math.min(...groupd[a].map((blc)=>blc.timespan.start))
-                const b_first_block = Math.min(...groupd[b].map((blc)=>blc.timespan.start))
-                return (a_first_block > b_first_block) ? 1 : -1
-
-            }).reduce(function (result, key) {
-                result[key] = groupd[key];
-                return result;
-            }, {});
-
-            Object.keys(sortedGroup).forEach((grp, g_i)=>{
-                const grp_len = sortedGroup[grp].length
-                sortedGroup[grp].sort((a, b)=> this.sortBlocks(a, b)).forEach((block, i)=>{
-                    block.setY((_i  * (timelineBlockHeight + timelineRowPadding) )+ ((i ) * (timelineBlockHeight + timelineRowPadding)) + ((g_i ) * timelineBlockGroupPadding))
+                        // })
+                        .sort()
+                        .reduce(function (result, key) {
+                            result[key] = groupd[key];
+                            return result;
+                        }, {});
+                        Object.keys(sortedGroup).forEach((grp, g_i)=>{
+                            const grp_len = sortedGroup[grp].length
+                            sortedGroup[grp].sort((a, b)=> this.sortBlocks(a, b)).forEach((block, i)=>{
+                                block.setY((  _i  * (timelineBlockHeight + timelineRowPadding) )+ ((i ) * (timelineBlockHeight + timelineRowPadding)) + ((_i_p + g_i) * timelineBlockGroupPadding))
+                            })
+                            _i = _i + grp_len
+                        })
+                        _i_p = _i_p + Object.keys(sortedGroup).length;
+                        outGroupPhaseBlocks.sort((a, b)=> this.sortBlocks(a, b)).forEach((block, ui)=>{
+                            block.setY( (_i  * (timelineBlockHeight + timelineRowPadding) )+ (_i_p * timelineBlockGroupPadding) + ((ui) * (timelineBlockHeight + timelineRowPadding)))
+                            
+                        })
+                        _i_p = _i_p + 1
+                        _i = _i + ungroupLength;
+                    })
+                        
+                        
+                    
                 })
-                _i = _i + grp_len
-            })
+            } else { // this is when there is a groupby but there is no custom spacing (phasing ...)
+                let _gi = 0  
+                const groupd: {[key:string]: BlockState[]} = this.sortDefault.reduce((reslt,blck)=>{
+                    if (Object.keys(reslt).includes(blck[this.groupBy])) { 
+                        reslt[blck[this.groupBy]].push(blck)
+                    } else { 
+                        blck.setGroupName(blck[this.groupBy])
+                        reslt[blck[this.groupBy]] = [blck]
+                    }
+                    return reslt
+                }, {})
+                
+                
+                
+                const sortedGroup = Object.keys(groupd)
+                // .sort((a:string, b:string)=> {
+                //     // this is to make sure groups that have starting time earlier show up higher in the time line (requested by uncle TayTay)
+                //     // if decided against it just make it a pure sort() here
+                //     const a_first_block = Math.min(...groupd[a].map((blc)=>blc.timespan.start))
+                //     const b_first_block = Math.min(...groupd[b].map((blc)=>blc.timespan.start))
+                //     return (a_first_block > b_first_block) ? 1 : -1
+    
+                // })
+                .sort()
+                .reduce(function (result, key) {
+                    result[key] = groupd[key];
+                    return result;
+                }, {});
+                Object.keys(sortedGroup).forEach((grp, g_ig)=>{
+                    const ggrp_len = sortedGroup[grp].length
+                    sortedGroup[grp].sort((a, b)=> this.sortBlocks(a, b)).forEach((block, i__)=>{
+                        block.setY((  _gi  * (timelineBlockHeight + timelineRowPadding) )+ ((i__) * (timelineBlockHeight + timelineRowPadding)) + ((g_ig) * timelineBlockGroupPadding))
+                    })
+                    _gi = _gi + ggrp_len
+                })
+
+
+            }
+            
         } else { 
             // if no groupby is passed just go by default
             this.sortDefault.forEach((_block, __i)=>{
