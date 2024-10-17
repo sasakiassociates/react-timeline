@@ -37,7 +37,7 @@ export default observer(function Timeline(props: TimelineProps) {
             context.blocks.setGroupBy(undefined)
             if (groupBy) {
                     context.blocks.setGroupBy(groupBy['fieldName'])
-                    context.blocks.all.forEach((block)=>{ //@ts-ignore
+                    context.blocks.all.forEach((block)=>{ 
                         block.setGroupName(undefined)
                     })
                     context.blocks.all.forEach((block)=>{ //@ts-ignore

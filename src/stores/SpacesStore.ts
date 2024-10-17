@@ -103,8 +103,8 @@ export default class SpacesStore {
         const offset = (this.root.ui.width / this.root.viewport.width / time.YEAR) * (1 - (time.YEAR - (viewport.left % time.YEAR)) / time.YEAR);
         
         if (this.customSpaces)  this.customSpaces.forEach((cs)=>{
-            Object.keys(cs).forEach((k,i)=>{
-                const time_span = cs[k]
+            Object.keys(cs['spaces']).forEach((k,i)=>{
+                const time_span = cs['spaces'][k]
                 const span_start_sec = (time_span[0] - this.startYear) * time.YEAR   
                 const span_end_sec = (time_span[1] - this.startYear) * time.YEAR  
                 const span_start_px = this.timeToPx(+span_start_sec) 
