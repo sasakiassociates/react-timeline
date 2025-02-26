@@ -164,7 +164,7 @@ export default class BlockStore {
     sortByGroup() {
         const timelineBlockHeight = config.blockHeight; // px
         const timelineRowPadding = config.rowPadding; // px
-        const timelineBlockGroupPadding = config.blockHeight * 3; // px
+        const timelineBlockGroupPadding = config.blockHeight * 0; // px
         
         if (this.sortingPrevented) return;
         if (this.groupBy){
