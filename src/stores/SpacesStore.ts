@@ -22,7 +22,8 @@ export default class SpacesStore {
     }
 
     @observable
-    customSpaces: Object[] | undefined
+    customSpaces: Object[] = [];
+
 
     @action
     setCustomSpaces(customSpaces: Object[]) {

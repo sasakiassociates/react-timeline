@@ -73,6 +73,15 @@ export default class BlockState {
     }
 
     @computed
+    get attrProps() {
+        return this.proxy.attrProps;
+    }
+
+    setAttrProps(attrProps: any) {
+        this.proxy.setAttrProps(attrProps);
+    }
+
+    @computed
     get y() {
         return this.proxy.y;
     }

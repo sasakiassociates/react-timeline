@@ -135,12 +135,12 @@ export default observer(function Editor({ children }: EditorProps) {
             onDoubleClick={onDoubleClick}
             onMouseEnter={(e)=>{
                 // we didnt' want to get the re sort triggered as resizing a block since it means the block would then jump to another y and is confusing,
-                blocks.preventSorting()
+                // blocks.preventSorting()
             }}
             onMouseLeave={(e)=>{
                 // for now on mouse leave of the editor it reactivates it
-                blocks.preventSorting(false)
-                blocks.sortByGroup()
+                // blocks.preventSorting(false)
+                // blocks.sortByGroup()
             }}
         >
             <canvas
