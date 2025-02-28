@@ -10,7 +10,6 @@ import Scrubber from './components/Scrubber/Scrubber';
 import Segment from './components/Segment/Segment';
 import SegmentProxy from './models/SegmentProxy';
 import Timeline from './components/Timeline/Timeline';
-
 import { Timespan, Viewport } from './types';
 
 import time from './time';

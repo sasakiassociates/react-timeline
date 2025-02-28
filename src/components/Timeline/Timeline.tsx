@@ -3,14 +3,14 @@
  */
 
 import { observer } from 'mobx-react';
-import { useEffect, useMemo, ReactNode  } from 'react';
+import React, { useEffect, useMemo, ReactNode  } from 'react';
 
 import Calendar from '../Calendar/Calendar';
 import Editor from '../Editor/Editor';
 import Navigator from '../Navigator/Navigator';
 import TimelineStore from '../../stores/TimelineStore';
 import { Timespan, noop } from '../../types';
-import { TimelineContext, useTimeline } from '../../context';
+import { TimelineContext } from '../../context';
 import time from '../../time';
 
 
@@ -21,17 +21,18 @@ export type TimelineProps = {
     onCalendarClick?: (value: number) => any;
     customSpacing?: Object[];
     groupBy?: Object[];
-    onResortClick?: ()=>any;
+    // timelineStore?: TimelineStore;
 };
 
 export default observer(function Timeline(props: TimelineProps) {
-    const { children, onCreateBlock = noop, onCalendarClick = noop, startYear, customSpacing, groupBy, onResortClick } = props;
+    const { children, onCreateBlock = noop, onCalendarClick = noop, startYear, customSpacing, groupBy, timelineStore } = props;
 
-    const context = useTimeline(); // we have been doing this wrong this entire time??!!
-    //  useMemo<TimelineStore>(() => new TimelineStore(), []);
-    
+    const context = 
+    // timelineStore ||
+    //  useTimeline();
+     // we have been doing this wrong this entire time??!!
+     useMemo<TimelineStore>(() => new TimelineStore(), []);
 
-   
     useEffect(() => {
         // @ts-expect-error: stores does not exist on window
         window.timeline = context;
@@ -40,7 +41,7 @@ export default observer(function Timeline(props: TimelineProps) {
     useEffect(() => () => context.ui.clearEvents(), [context.ui]);
     useEffect(() => startYear !== undefined && context.spaces.setStartYear(startYear), [context.spaces, startYear]);
     useEffect(() => {
-        console.log("use timline effect?", groupBy['fieldName'])
+        // console.log("use timline effect?", groupBy['fieldName'])
         context.blocks.setGroupBy(undefined)
         context.blocks.setAsSorted(true);
         if (groupBy) {

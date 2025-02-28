@@ -10,16 +10,16 @@ import { useTimeline, BlockContext } from '../../context';
 import BlockState from '../../models/BlockState';
 import BlockProxy from '../../models/BlockProxy';
 import Action, { Actions } from '../../models/Action';
-import {
-    animate,
-    AnimatePresence,
-    motion,
-    useAnimate,
-    useMotionTemplate,
-    useMotionValue,
-    useMotionValueEvent,
-    useTransform,
-  } from 'framer-motion'
+// import {
+//     animate,
+//     AnimatePresence,
+//     motion,
+//     useAnimate,
+//     useMotionTemplate,
+//     useMotionValue,
+//     useMotionValueEvent,
+//     useTransform,
+//   } from 'framer-motion'
 import {
     PiGitCommitBold,
     PiLeafBold,
@@ -149,7 +149,8 @@ export default observer(function Block(props: BlockProps) {
 
     return (
         <>
-            <motion.div
+            {/* <motion.div  layout transition={transition} */}
+            <div
                 className={`ReactTimeline__Block ${props.className} ${block.selected ? 'ReactTimeline__Block--selected' : ''}`}
                 style={style}
                 draggable="false"
@@ -164,8 +165,7 @@ export default observer(function Block(props: BlockProps) {
                     e.stopPropagation();
                     setBlockHovered(false)
                 }}
-                layout
-                transition={transition}
+               
                 
             >
 
@@ -205,19 +205,24 @@ export default observer(function Block(props: BlockProps) {
                     
                     {props.children}
                 </BlockContext.Provider>
-            </motion.div>
+                </div>
+            {/* </motion.div> */}
 
             {(blockHovered && (!block.selected)) ? (
-                <motion.div transition={transition} layout key={`${block.id}-icon`} style={styleHover}>
+                // <motion.div transition={transition} layout 
+                <div key={`${block.id}-icon`} style={styleHover}>
                     <div className={`ReactTimeline__Block-left-icon`} />
                     <div className='ReactTimeline__Block-right-icon' />
-                </motion.div>
+                </div>
+                // </motion.div>
             ) : (block.selected) ? <></> : <></>}
 
             {props.name && (
-                <motion.div  transition={transition} layout className={`ReactTimeline__Block-label ${block.selected ? 'ReactTimeline__Block-label--selected' : ''}`} style={{ left: `${spaces.timeToPx(block.timespan.start) + width}px`, top: `${block.y - viewport.top}px`, }}>
+                // <motion.div  transition={transition} layout 
+                <div className={`ReactTimeline__Block-label ${block.selected ? 'ReactTimeline__Block-label--selected' : ''}`} style={{ left: `${spaces.timeToPx(block.timespan.start) + width}px`, top: `${block.y - viewport.top}px`, }}>
                     {props.name}
-                </motion.div>
+                    </div>
+                // </motion.div>
             )}
         </>
 

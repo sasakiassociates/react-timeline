@@ -4,7 +4,7 @@
  * This visualizer renders the blocks as shown in the editor
  * but drawn to the scope of the navigator.
  */
-
+import React from 'react';
 import { observer } from 'mobx-react';
 
 import config from '../../config';
