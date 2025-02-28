@@ -11,6 +11,7 @@ import Navigator from '../Navigator/Navigator';
 import TimelineStore from '../../stores/TimelineStore';
 import { Timespan, noop } from '../../types';
 import { TimelineContext, useTimeline } from '../../context';
+import time from '../../time';
 
 
 export type TimelineProps = {
@@ -28,6 +29,13 @@ export default observer(function Timeline(props: TimelineProps) {
 
     const context = useTimeline(); // we have been doing this wrong this entire time??!!
     //  useMemo<TimelineStore>(() => new TimelineStore(), []);
+    
+
+   
+    useEffect(() => {
+        // @ts-expect-error: stores does not exist on window
+        window.timeline = context;
+    }, [context]);
 
     useEffect(() => () => context.ui.clearEvents(), [context.ui]);
     useEffect(() => startYear !== undefined && context.spaces.setStartYear(startYear), [context.spaces, startYear]);
@@ -41,12 +49,6 @@ export default observer(function Timeline(props: TimelineProps) {
                     context.blocks.sortByGroup();
                     context.blocks.setAsSorted();
                 }
-                // context.blocks.all.forEach((block)=>{ 
-                //     block.setGroupName(undefined)
-                // })   
-                // context.blocks.all.forEach((block)=>{ //@ts-ignore
-                //     block[groupBy['fieldName']] = block.proxy.project[groupBy['fieldName']]
-                // })
             }
             
 }, [context.blocks, groupBy['fieldName']]);
@@ -55,12 +57,6 @@ export default observer(function Timeline(props: TimelineProps) {
     useEffect(() => context.ui.setCalendarClick(onCalendarClick), [context.ui, onCalendarClick]);
     useEffect(() => {
         if (customSpacing !== undefined) context.spaces.setCustomSpaces(customSpacing)}, [context.spaces, customSpacing]);
-    
-
-    useEffect(() => {
-        // @ts-expect-error: stores does not exist on window
-        window.timeline = context;
-    }, [context]);
 
     return (
         <TimelineContext.Provider value={context}>

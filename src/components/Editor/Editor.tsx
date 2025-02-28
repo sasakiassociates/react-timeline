@@ -5,7 +5,16 @@ import config from '../../config';
 import { useTimeline } from '../../context';
 import Action, { Actions } from '../../models/Action';
 import SelectBox from '../SelectBox/SelectBox';
-
+import {
+    animate,
+    AnimatePresence,
+    motion,
+    useAnimate,
+    useMotionTemplate,
+    useMotionValue,
+    useMotionValueEvent,
+    useTransform,
+  } from 'framer-motion'
 
 export type EditorProps = {
     children: ReactNode;
@@ -16,7 +25,7 @@ export default observer(function Editor({ children }: EditorProps) {
     const { editor, height, width } = ui;
 
     const [mouseDownTime,setMouseDownTime] = useState<number>(0);
-
+    const [scope, animate] = useAnimate<HTMLDivElement>()
     /**
      * Lifecycle
      */
@@ -126,7 +135,12 @@ export default observer(function Editor({ children }: EditorProps) {
 
         }
     }, [spaces.grid, grid, width, height]);
-
+    
+    const transition = {
+        duration: 0.8,
+        delay: 0.0,
+        ease: [0, 0.71, 0.2, 1.01],
+      }
 
     return (
         <div 
@@ -150,8 +164,9 @@ export default observer(function Editor({ children }: EditorProps) {
                 onMouseDown={onMouseDown}
                 onMouseUp={onMouseUp}
             />
-
-            <div className="ReactTimeline__Editor--blocks">
+           <AnimatePresence>
+                <motion.div className="ReactTimeline__Editor--blocks" ref={scope}>
+         
 
             {
                     (blocks.groupBy) && (blocks.groupNames.length > 0) && <>
@@ -159,7 +174,7 @@ export default observer(function Editor({ children }: EditorProps) {
                             <>
                              {name !== 'nan' && 
                              <>
-                             <span className='ReactTimeline__Editor--blocks--GroupLabel' style={{
+                             <motion.span transition={transition} layout className='ReactTimeline__Editor--blocks--GroupLabel' style={{
                                     'left': ( blocks.extentByGroupName[name]) ? blocks.extentByGroupName[name]['style']['left'] : 0,
                                     'top': (blocks.extentByGroupName[name]) ? blocks.extentByGroupName[name]['style']['top']: 0,
                                     'position':'absolute',
@@ -168,9 +183,10 @@ export default observer(function Editor({ children }: EditorProps) {
                                     'paddingLeft': '1px',
                                 }}>
                                     {name}
-                                </span>
+                                </motion.span>
                             
-                                <span
+                                <motion.span
+                                    transition={transition} layout
                                     className='ReactTimeline__Editor--blocks--GroupBorder'
                                     style={{// @ts-ignore
                                         width:  ( blocks.extentByGroupName[name]) ? blocks.extentByGroupName[name]['style']['width'] : 0,
@@ -182,7 +198,7 @@ export default observer(function Editor({ children }: EditorProps) {
                                         borderRadius: "6px",
                                         'position':'absolute'
                                     }}
-                                ></span>
+                                ></motion.span>
                              </>
                                 
                                 
@@ -196,24 +212,44 @@ export default observer(function Editor({ children }: EditorProps) {
                 {(spaces.customSpaces) && <>
                     
                     {spaces.customSpaceGrid.label.map((label,i) => (
-                        <div
-                            className='ReactTimeline__Editor--blocks--customSpacing'
-                            style={{
-                                'left': `${spaces.customSpaceGrid.rectsTopLeft[i]}px`,
-                                'top': `${viewport.top}`,
-                                'width': `${spaces.customSpaceGrid.rectsWidth[i]}px`,
-                                'height': `100%`,
-                                'position': 'absolute',
-                                'background': `${spaces.customSpaceGrid.color[i]}`
-                            }}
                         
-                        ></div>
+                            <motion.div
+                            key={`b-${label}-${i}`}
+                                className='ReactTimeline__Editor--blocks--customSpacing'
+                                style={{
+                                    // 'left': `${spaces.customSpaceGrid.rectsTopLeft[i]}px`,
+                                    // 'top': `${viewport.top}`,
+                                    // 'width': `${spaces.customSpaceGrid.rectsWidth[i]}px`,
+                                    // 'height': `100%`,
+                                    'position': 'absolute',
+                                    'background': `${spaces.customSpaceGrid.color[i]}`
+                                }}
+                                // initial={{ 
+                                //     opacity: 0, 
+                                //     left: 0,
+                                //     top: 0,
+                                //     width: 0,
+                                //     height: 0, 
+                                // }}
+                                animate={{ 
+                                    opacity: 1, 
+                                    left: `${spaces.customSpaceGrid.rectsTopLeft[i]}px`,
+                                    top: `${viewport.top}`,
+                                    width: `${spaces.customSpaceGrid.rectsWidth[i]}px`,
+                                    height: `100%`
+                                }}
+                                layout
+                                transition={transition}
+                            
+                            ></motion.div>
+  
                     ))}
                     
                 </>}
                 {children}
-            </div>
-
+              
+            </motion.div>
+  </AnimatePresence>
             <SelectBox />
         </div>
     );

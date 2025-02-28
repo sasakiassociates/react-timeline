@@ -11,6 +11,7 @@ import config from '../config';
 import { Viewport, noop } from '../types';
 import TimelineStore from './TimelineStore';
 import { act } from 'react';
+import BlockProxy from '../models/BlockProxy';
 
 
 export default class ViewportStore {
@@ -53,6 +54,13 @@ export default class ViewportStore {
             right: x + (this.width / 2),
             top: y !== undefined ? y - (this.height / 2) : this.value.top,
         });
+    }
+
+    centerBlock(block?: BlockProxy) {
+        if (!block) return;
+        const _x = block.timespan.start + ((block.timespan.end - block.timespan.start ) / 2);
+        const _y = block.y + this.height / 2;
+        this.center(_x, _y);
     }
 
     @computed
