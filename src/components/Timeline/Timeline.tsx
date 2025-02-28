@@ -10,7 +10,7 @@ import Editor from '../Editor/Editor';
 import Navigator from '../Navigator/Navigator';
 import TimelineStore from '../../stores/TimelineStore';
 import { Timespan, noop } from '../../types';
-import { TimelineContext } from '../../context';
+import { TimelineContext, useTimeline } from '../../context';
 import time from '../../time';
 
 
@@ -21,14 +21,13 @@ export type TimelineProps = {
     onCalendarClick?: (value: number) => any;
     customSpacing?: Object[];
     groupBy?: Object[];
-    // timelineStore?: TimelineStore;
+    timelineStore?: TimelineStore;
 };
 
 export default observer(function Timeline(props: TimelineProps) {
     const { children, onCreateBlock = noop, onCalendarClick = noop, startYear, customSpacing, groupBy, timelineStore } = props;
 
-    const context = 
-    // timelineStore ||
+    const context = timelineStore ||
     //  useTimeline();
      // we have been doing this wrong this entire time??!!
      useMemo<TimelineStore>(() => new TimelineStore(), []);
