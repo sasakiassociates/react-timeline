@@ -26,13 +26,15 @@ export type TimelineProps = {
 export default observer(function Timeline(props: TimelineProps) {
     const { children, onCreateBlock = noop, onCalendarClick = noop, startYear, customSpacing, groupBy, onResortClick } = props;
 
-    const context = useTimeline();
+    const context = useTimeline(); // we have been doing this wrong this entire time??!!
     //  useMemo<TimelineStore>(() => new TimelineStore(), []);
 
     useEffect(() => () => context.ui.clearEvents(), [context.ui]);
     useEffect(() => startYear !== undefined && context.spaces.setStartYear(startYear), [context.spaces, startYear]);
     useEffect(() => {
+        console.log("use timline effect?", groupBy['fieldName'])
         context.blocks.setGroupBy(undefined)
+        context.blocks.setAsSorted(true);
         if (groupBy) {
                 context.blocks.setGroupBy(groupBy['fieldName'])
                 if (context.blocks.isOutOfSort) { 
@@ -41,15 +43,15 @@ export default observer(function Timeline(props: TimelineProps) {
                 }
                 // context.blocks.all.forEach((block)=>{ 
                 //     block.setGroupName(undefined)
-                // })
+                // })   
                 // context.blocks.all.forEach((block)=>{ //@ts-ignore
                 //     block[groupBy['fieldName']] = block.proxy.project[groupBy['fieldName']]
                 // })
             }
             
-}, [context.blocks, groupBy]);
+}, [context.blocks, groupBy['fieldName']]);
     useEffect(() => context.blocks.setCreateBlock(onCreateBlock), [context.blocks, onCreateBlock]);
-    useEffect(() => context.blocks.setOnResortClick(onResortClick), [context.blocks, onResortClick]);
+    // useEffect(() => context.blocks.setOnResortClick(onResortClick), [context.blocks, onResortClick]);
     useEffect(() => context.ui.setCalendarClick(onCalendarClick), [context.ui, onCalendarClick]);
     useEffect(() => {
         if (customSpacing !== undefined) context.spaces.setCustomSpaces(customSpacing)}, [context.spaces, customSpacing]);

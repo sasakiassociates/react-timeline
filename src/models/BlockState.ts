@@ -81,6 +81,14 @@ export default class BlockState {
         this.proxy.setAttrProps(attrProps);
     }
 
+    @observable
+    yState: number = 0;
+
+    @action
+    setYState(yState:number) {
+        this.yState = yState;
+    }
+
     @computed
     get y() {
         return this.proxy.y;
