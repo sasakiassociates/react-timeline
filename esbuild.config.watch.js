@@ -13,7 +13,7 @@ let ctx = await esbuild.context({
     format: 'esm',
     // packages: 'external',
     sourcemap: 'external',
-    external:  ['react', 'react-dom'],
+    external:  ['react', 'react-dom', 'mobx', 'mobx-react'],
     plugins: [
         nodeExternalsPlugin(),
         sassPlugin({

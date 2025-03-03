@@ -16,7 +16,7 @@ await esbuild.build({
     outfile:'dist/index.js',
     format: 'esm',
     // packages: 'external',
-    external:  ['react', 'react-dom'],
+    external:  ['react', 'react-dom', 'mobx', 'mobx-react'],
     sourcemap: 'external',
     plugins: [
         nodeExternalsPlugin(),
