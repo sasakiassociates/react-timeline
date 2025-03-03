@@ -5,6 +5,7 @@ import autoprefixer from 'autoprefixer'
 // const postcssPresetEnv = require('postcss-preset-env')
 import postcssPresetEnv from 'postcss-preset-env'
 import copyAssets from 'postcss-copy-assets';
+import { nodeExternalsPlugin } from 'esbuild-node-externals';
 
 import { sassPlugin, postcssModules } from 'esbuild-sass-plugin'
 import * as esbuild from 'esbuild'
@@ -14,9 +15,11 @@ await esbuild.build({
     write: true,
     outfile:'dist/index.js',
     format: 'esm',
-    packages: 'external',
+    // packages: 'external',
+    external:  ['react', 'react-dom'],
     sourcemap: 'external',
     plugins: [
+        nodeExternalsPlugin(),
         sassPlugin({
             type:"style",
             cssImports: true,

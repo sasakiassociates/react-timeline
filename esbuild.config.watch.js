@@ -3,7 +3,7 @@ import {sassPlugin} from "esbuild-sass-plugin";
 import postcss from "postcss";
 import autoprefixer from "autoprefixer";
 import postcssPresetEnv from "postcss-preset-env";
-
+import { nodeExternalsPlugin } from 'esbuild-node-externals';
 
 let ctx = await esbuild.context({
     entryPoints: ['./src/index.ts'],
@@ -11,9 +11,11 @@ let ctx = await esbuild.context({
     write: true,
     outfile:'dist/index.js',
     format: 'esm',
-    packages: 'external',
+    // packages: 'external',
     sourcemap: 'external',
+    external:  ['react', 'react-dom'],
     plugins: [
+        nodeExternalsPlugin(),
         sassPlugin({
                 type:"style",
                 cssImports: true,

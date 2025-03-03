@@ -14,6 +14,7 @@ import { Timespan, Viewport } from './types';
 
 import time from './time';
 import { useTimeline } from './context';
+import TimelineStore from './stores/TimelineStore';
 
 
 export {
@@ -30,5 +31,6 @@ export {
 
     time,
     useTimeline,
+    TimelineStore
 
 };

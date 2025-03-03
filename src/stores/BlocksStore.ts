@@ -184,11 +184,10 @@ export default class BlockStore {
 
     @computed
     get blockYIndecies() {
-
+        if (this.blockYs.length <= 1) return; 
         if (this.groupBy) {
 
             let grppRes = 0;
-
             const grpd = this.all.reduce((reslt, blck) => {
                 if (Object.keys(reslt).includes(blck.attrProps[this.groupBy])) {
                     reslt[blck.attrProps[this.groupBy]].push(blck)
@@ -206,7 +205,7 @@ export default class BlockStore {
                 const b_first_block = Math.min(...grpd[b].map((blc) => blc.timespan.start))
                 return (a_first_block > b_first_block) ? 1 : -1
             }).sort()
-
+            
             const overGroups = overSortedGroups.reduce((res, groupKey, i, allGroups) => {
                 const groupBlocksSortByY = grpd[groupKey]
                 const sortedGroupBlocksSortByY = groupBlocksSortByY.sort((a, b) => {

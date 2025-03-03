@@ -21,16 +21,17 @@ export type TimelineProps = {
     onCalendarClick?: (value: number) => any;
     customSpacing?: Object[];
     groupBy?: Object[];
-    timelineStore?: TimelineStore;
+    // timelineStore?: TimelineStore;
 };
 
 export default observer(function Timeline(props: TimelineProps) {
-    const { children, onCreateBlock = noop, onCalendarClick = noop, startYear, customSpacing, groupBy, timelineStore } = props;
+    const { children, onCreateBlock = noop, onCalendarClick = noop, startYear, customSpacing, groupBy } = props;
 
-    const context = timelineStore ||
-    //  useTimeline();
+    const context = 
+    // timelineStore ||
+     useTimeline();
      // we have been doing this wrong this entire time??!!
-     useMemo<TimelineStore>(() => new TimelineStore(), []);
+    //  useMemo<TimelineStore>(() => new TimelineStore(), []);
 
     useEffect(() => {
         // @ts-expect-error: stores does not exist on window
