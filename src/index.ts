@@ -26,8 +26,8 @@ export {
     SegmentProxy,
     Timeline,
 
-    Timespan,
-    Viewport,
+    type Timespan,
+    type Viewport,
 
     time,
     useTimeline,
