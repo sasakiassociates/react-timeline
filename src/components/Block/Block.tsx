@@ -10,16 +10,9 @@ import { useTimeline, BlockContext } from '../../context';
 import BlockState from '../../models/BlockState';
 import BlockProxy from '../../models/BlockProxy';
 import Action, { Actions } from '../../models/Action';
-// import {
-//     animate,
-//     AnimatePresence,
-//     motion,
-//     useAnimate,
-//     useMotionTemplate,
-//     useMotionValue,
-//     useMotionValueEvent,
-//     useTransform,
-//   } from 'framer-motion'
+import {
+    motion,
+  } from 'framer-motion'
 import {
     PiGitCommitBold,
     PiLeafBold,
@@ -33,6 +26,7 @@ export type BlockProps = {
     name?: string;
     proxy?: BlockProxy;
 };
+
 
 export default observer(function Block(props: BlockProps) {
     const timeline = useTimeline();
@@ -122,7 +116,6 @@ export default observer(function Block(props: BlockProps) {
     const showResizeHandle = blocks.canShowResizeHandle(width);
 
     const style = {
-        width: `${width}px`,
         height: `${config.blockHeight}px`,
         left: `${spaces.timeToPx(block.timespan.start)}px`,
         top: `${block.y - viewport.top}px`,
@@ -137,22 +130,17 @@ export default observer(function Block(props: BlockProps) {
     };
 
 
-
     if (props.color) {
         style.background = props.color;
     }
-    const transition = {
-        duration: 0.8,
-        delay: 0.0,
-        ease: [0, 0.71, 0.2, 1.01],
-      }
 
     return (
         <>
-            {/* <motion.div  layout transition={transition} */}
-            <div
+            <motion.div  layout transition={config.transition}
+                key={`${block.id}-block`} 
                 className={`ReactTimeline__Block ${props.className} ${block.selected ? 'ReactTimeline__Block--selected' : ''}`}
-                style={style}
+                initial={{...style, widths: 0}}
+                animate={{...style, width: `${width}px`,}}
                 draggable="false"
                 onMouseUp={onMouseUp}
                 onMouseEnter={(e) => {
@@ -165,10 +153,7 @@ export default observer(function Block(props: BlockProps) {
                     e.stopPropagation();
                     setBlockHovered(false)
                 }}
-               
-                
             >
-
                 {(block.selected) ? (
                     <>
                         <div
@@ -202,27 +187,36 @@ export default observer(function Block(props: BlockProps) {
                     <div className='ReactTimeline__Block-overflow'>
                     </div>
 
-                    
                     {props.children}
                 </BlockContext.Provider>
-                </div>
-            {/* </motion.div> */}
+            </motion.div>
 
             {(blockHovered && (!block.selected)) ? (
-                // <motion.div transition={transition} layout 
-                <div key={`${block.id}-icon`} style={styleHover}>
+                <motion.div transition={config.transition} layout 
+                    key={`${block.id}-icon`} 
+                    initial={styleHover}
+                    animate={styleHover}
+                    >
                     <div className={`ReactTimeline__Block-left-icon`} />
                     <div className='ReactTimeline__Block-right-icon' />
-                </div>
                 // </motion.div>
             ) : (block.selected) ? <></> : <></>}
 
             {props.name && (
-                // <motion.div  transition={transition} layout 
-                <div className={`ReactTimeline__Block-label ${block.selected ? 'ReactTimeline__Block-label--selected' : ''}`} style={{ left: `${spaces.timeToPx(block.timespan.start) + width}px`, top: `${block.y - viewport.top}px`, }}>
+                <motion.div  transition={config.transition} layout 
+                    key={`${block.id}-name`} 
+                    className={`ReactTimeline__Block-label ${block.selected ? 'ReactTimeline__Block-label--selected' : ''}`} 
+                    initial={{ 
+                        left: `${spaces.timeToPx(block.timespan.start) + width}px`,
+                        top: `${block.y - viewport.top - config.blockHeight / 5}px`, 
+                    }}
+                    animate={{ 
+                        left: `${spaces.timeToPx(block.timespan.start) + width}px`,
+                        top: `${block.y - viewport.top - config.blockHeight / 5}px`, 
+                    }}     
+                >
                     {props.name}
-                    </div>
-                // </motion.div>
+                </motion.div>
             )}
         </>
 

@@ -45,4 +45,10 @@ export default {
     },
     timelineLock: false,//or object {left:0, right:time.YEAR * 10}
     showNavigator: true,
+
+    transition: {
+        duration: 0.4,
+        delay: 0.0,
+        ease: [0, 0.71, 0.2, 1.01],
+    }
 };
