@@ -73,6 +73,23 @@ export default class BlockState {
     }
 
     @computed
+    get attrProps() {
+        return this.proxy.attrProps;
+    }
+
+    setAttrProps(attrProps: any) {
+        this.proxy.setAttrProps(attrProps);
+    }
+
+    @observable
+    yState: number = 0;
+
+    @action
+    setYState(yState:number) {
+        this.yState = yState;
+    }
+
+    @computed
     get y() {
         return this.proxy.y;
     }
@@ -150,6 +167,12 @@ export default class BlockState {
     setProjects_on_requiresProject(projects_on_requiresProject) {
         this.proxy.setProjects_on_requiresProject(projects_on_requiresProject)
     }
+
+    @computed
+    get projects_on_requiresProject() {
+        return this.proxy.projects_on_requiresProject;
+    }
+
 
     @observable
     groupName: string 

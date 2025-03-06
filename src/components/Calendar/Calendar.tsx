@@ -42,7 +42,6 @@ export default observer(function Calendar() {
 
                     </>
                     
-
                 );
             })}
 
@@ -52,12 +51,16 @@ export default observer(function Calendar() {
                     <div
                         key={`${j}-custom-spacing-div`}
                         className="ReactTimeline__Calendar-customSpacing"
-                        style={{ position:'absolute', left: `${spaces.customSpaceGrid.rectsTopLeft[j] }px`, height: `25px`, background: spaces.customSpaceGrid.color[j], width:`${spaces.customSpaceGrid.rectsWidth[j] }px`}}
+                        style={{ 
+                            position:'absolute', 
+                            left: `${spaces.customSpaceGrid.rectsTopLeft[j] }px`, 
+                            height: `25px`, background: spaces.customSpaceGrid.color[j], 
+                            width:`${spaces.customSpaceGrid.rectsWidth[j] }px`}}
                     >
                         <span 
                             className="ReactTimeline__Calendar-customSpacing-label"
                             key={`${j}-custom-spacing-span`}
-                            style={{ position:'relative'}}// 15 is to count of the length of the label itself
+                            style={{ position:'relative'}}
                    
                         >
                             {label}

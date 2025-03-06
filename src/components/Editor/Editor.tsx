@@ -5,7 +5,11 @@ import config from '../../config';
 import { useTimeline } from '../../context';
 import Action, { Actions } from '../../models/Action';
 import SelectBox from '../SelectBox/SelectBox';
-
+import {
+    AnimatePresence,
+    motion,
+    useAnimate,
+  } from 'framer-motion'
 
 export type EditorProps = {
     children: ReactNode;
@@ -16,7 +20,7 @@ export default observer(function Editor({ children }: EditorProps) {
     const { editor, height, width } = ui;
 
     const [mouseDownTime,setMouseDownTime] = useState<number>(0);
-
+    const [scope, animate] = useAnimate<HTMLDivElement>()
     /**
      * Lifecycle
      */
@@ -97,6 +101,7 @@ export default observer(function Editor({ children }: EditorProps) {
 
     const [grid, setGrid] = useState<HTMLCanvasElement|null>(null);
 
+    
     useEffect(() => {
         if (grid) {
             const ctx = grid.getContext('2d');
@@ -125,23 +130,13 @@ export default observer(function Editor({ children }: EditorProps) {
             });
 
         }
-    }, [spaces.grid, grid, width, height]);
-
+    }, [spaces.grid, grid, width, height, ui.element]);
 
     return (
         <div 
             className="ReactTimeline__Editor"
             ref={el => el && !editor && ui.setEditor(el)}
             onDoubleClick={onDoubleClick}
-            onMouseEnter={(e)=>{
-                // we didnt' want to get the re sort triggered as resizing a block since it means the block would then jump to another y and is confusing,
-                blocks.preventSorting()
-            }}
-            onMouseLeave={(e)=>{
-                // for now on mouse leave of the editor it reactivates it
-                blocks.preventSorting(false)
-                blocks.sortByGroup()
-            }}
         >
             <canvas
                 width={`${width}px`}
@@ -150,28 +145,56 @@ export default observer(function Editor({ children }: EditorProps) {
                 onMouseDown={onMouseDown}
                 onMouseUp={onMouseUp}
             />
-
-            <div className="ReactTimeline__Editor--blocks">
-
+           <AnimatePresence>
+                <motion.div className="ReactTimeline__Editor--blocks" ref={scope}>
             {
                     (blocks.groupBy) && (blocks.groupNames.length > 0) && <>
-                        {blocks.groupNames.map((name)=>(
+                        {blocks.groupNames.map((name, i)=>(
                             <>
                              {name !== 'nan' && 
-                                <span className='ReactTimeline__Editor--blocks--GroupLabel' style={{
-                                    'left': ( blocks.extentByGroupName[name]) ? blocks.extentByGroupName[name]['style']['left'] : 0,
-                                    'top': (blocks.extentByGroupName[name]) ? blocks.extentByGroupName[name]['style']['top']: 0,
-                                    'position':'absolute',
-                                    'padding': '5px',
-                                    'marginLeft': '5px',
-                                    'paddingLeft': '1px',
-                                }}>
+                             <>
+                             <motion.span transition={config.transition} layout 
+                                    key={`g-lb-${name}-${i}`}
+                                    className='ReactTimeline__Editor--blocks--GroupLabel' 
+                                    style={{
+                                        'opacity': 1, 
+                                        'left': ( blocks.extentByGroupName[name]) ? blocks.extentByGroupName[name]['style']['left'] : 0,
+                                        'top': (blocks.extentByGroupName[name]) ? blocks.extentByGroupName[name]['style']['top']: 0,
+                                        'position':'absolute',
+                                        'padding': '0',
+                                        'marginLeft': '5px',
+                                        'paddingLeft': '1px',
+                                        'transform': 'translateY(-50%)'
+                                    }}
+                                    initial={{
+                                        'opacity': 0.5, 
+                                        'left': ( blocks.extentByGroupName[name]) ? blocks.extentByGroupName[name]['style']['left'] : 0,
+                                        'top': (blocks.extentByGroupName[name]) ? blocks.extentByGroupName[name]['style']['top']: 0,
+                                        'position':'absolute',
+                                        'padding': '0',
+                                        'marginLeft': '5px',
+                                        'paddingLeft': '1px',
+                                        'transform': 'translateY(-50%)'
+                                    }}
+                                    animate={{
+                                        'opacity': 1, 
+                                        'left': ( blocks.extentByGroupName[name]) ? blocks.extentByGroupName[name]['style']['left'] : 0,
+                                        'top': (blocks.extentByGroupName[name]) ? blocks.extentByGroupName[name]['style']['top']: 0,
+                                        'position':'absolute',
+                                        'padding': '0',
+                                        'marginLeft': '5px',
+                                        'paddingLeft': '1px',
+                                        'transform': 'translateY(-50%)'
+                                    }}
+                                    >
                                     {name}
-                                </span>
-                            }
-                                <span
+                                </motion.span>
+                            
+                                <motion.span transition={config.transition} layout
+                                    key={`g-brdr-${name}-${i}`}
                                     className='ReactTimeline__Editor--blocks--GroupBorder'
-                                    style={{// @ts-ignore
+                                    style={{
+                                        opacity: 1,
                                         width:  ( blocks.extentByGroupName[name]) ? blocks.extentByGroupName[name]['style']['width'] : 0,
                                         height: ( blocks.extentByGroupName[name]) ? blocks.extentByGroupName[name]['style']['height'] : 0,
                                         left: ( blocks.extentByGroupName[name]) ? blocks.extentByGroupName[name]['style']['left'] : 0,
@@ -181,7 +204,27 @@ export default observer(function Editor({ children }: EditorProps) {
                                         borderRadius: "6px",
                                         'position':'absolute'
                                     }}
-                                ></span>
+                                    initial={{
+                                        opacity: 0,
+                                        width:  ( blocks.extentByGroupName[name]) ? blocks.extentByGroupName[name]['style']['width'] : 0,
+                                        height: ( blocks.extentByGroupName[name]) ? blocks.extentByGroupName[name]['style']['height'] : 0,
+                                        left: ( blocks.extentByGroupName[name]) ? blocks.extentByGroupName[name]['style']['left'] : 0,
+                                        top: ( blocks.extentByGroupName[name]) ? blocks.extentByGroupName[name]['style']['top'] : 0,
+                                    }}
+                                    animate={{
+                                        opacity: 1,
+                                        width:  ( blocks.extentByGroupName[name]) ? blocks.extentByGroupName[name]['style']['width'] : 0,
+                                        height: ( blocks.extentByGroupName[name]) ? blocks.extentByGroupName[name]['style']['height'] : 0,
+                                        left: ( blocks.extentByGroupName[name]) ? blocks.extentByGroupName[name]['style']['left'] : 0,
+                                        top: ( blocks.extentByGroupName[name]) ? blocks.extentByGroupName[name]['style']['top'] : 0,
+                                        // background: "yellow",
+                                        border: "1px dashed blue",
+                                        borderRadius: "6px",
+                                        'position':'absolute'
+                                    }}
+                            ></motion.span> 
+                             </>
+                                }
                             </>
                         ))}
                     </>
@@ -189,26 +232,42 @@ export default observer(function Editor({ children }: EditorProps) {
 
                 {/* custom grid */}
                 {(spaces.customSpaces) && <>
-                    
                     {spaces.customSpaceGrid.label.map((label,i) => (
-                        <div
-                            className='ReactTimeline__Editor--blocks--customSpacing'
-                            style={{
-                                'left': `${spaces.customSpaceGrid.rectsTopLeft[i]}px`,
-                                'top': `${viewport.top}`,
-                                'width': `${spaces.customSpaceGrid.rectsWidth[i]}px`,
-                                'height': `100%`,
-                                'position': 'absolute',
-                                'background': `${spaces.customSpaceGrid.color[i]}`
-                            }}
-                        
-                        ></div>
+                            <motion.div
+                            key={`b-${label}-${i}`}
+                                className='ReactTimeline__Editor--blocks--customSpacing'
+                                style={{
+                                    opacity: 1, 
+                                    left: `${spaces.customSpaceGrid.rectsTopLeft[i]}px`,
+                                    top: `${viewport.top}`,
+                                    width: `${spaces.customSpaceGrid.rectsWidth[i]}px`,
+                                    height: `100%`,
+                                    'background': `${spaces.customSpaceGrid.color[i]}`
+                                }}
+                                initial={{ 
+                                    opacity: 0, 
+                                    'left': `${spaces.customSpaceGrid.rectsTopLeft[i]}px`,
+                                    'top': `${viewport.top}`,
+                                    'width': `${spaces.customSpaceGrid.rectsWidth[i]}px`,
+                                    'position': 'absolute',
+                                }}
+                                animate={{ 
+                                    opacity: 1, 
+                                    left: `${spaces.customSpaceGrid.rectsTopLeft[i]}px`,
+                                    top: `${viewport.top}`,
+                                    width: `${spaces.customSpaceGrid.rectsWidth[i]}px`,
+                                    height: `100%`,
+                                }}
+                                layout
+                                transition={config.transition}
+                            
+                            ></motion.div>
                     ))}
                     
                 </>}
                 {children}
-            </div>
-
+            </motion.div>
+  </AnimatePresence>
             <SelectBox />
         </div>
     );

@@ -52,6 +52,24 @@ export default class BlockProxy {
         });
     }
 
+
+
+    // AttrProps Proxy
+
+    @observable
+    _attrProps: any = undefined;
+
+    @computed
+    get attrProps() {
+        return this._attrProps;
+    }
+
+    setAttrProps(attrProps: any) {
+        runInAction(() => {
+            this._attrProps = attrProps;
+        });
+    }
+
     // Y Proxy
 
     @observable
