@@ -15,6 +15,10 @@ import { Timespan, Viewport } from './types';
 import time from './time';
 import { useTimeline } from './context';
 import TimelineStore from './stores/TimelineStore';
+import BlocksStore from './stores/BlocksStore';
+import SpacesStore from './stores/SpacesStore';
+import UIStore from './stores/UIStore';
+import ViewportStore from './stores/ViewportStore';
 
 
 export {
@@ -31,6 +35,10 @@ export {
 
     time,
     useTimeline,
-    TimelineStore
+    TimelineStore,
+    BlocksStore,
+    SpacesStore,
+    UIStore,
+    ViewportStore
 
 };

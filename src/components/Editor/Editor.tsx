@@ -130,7 +130,7 @@ export default observer(function Editor({ children }: EditorProps) {
             });
 
         }
-    }, [spaces.grid, grid, width, height]);
+    }, [spaces.grid, grid, width, height, ui.element]);
 
     return (
         <div 
@@ -156,10 +156,25 @@ export default observer(function Editor({ children }: EditorProps) {
                              <motion.span transition={config.transition} layout 
                                     key={`g-lb-${name}-${i}`}
                                     className='ReactTimeline__Editor--blocks--GroupLabel' 
+                                    style={{
+                                        'opacity': 1, 
+                                        'left': ( blocks.extentByGroupName[name]) ? blocks.extentByGroupName[name]['style']['left'] : 0,
+                                        'top': (blocks.extentByGroupName[name]) ? blocks.extentByGroupName[name]['style']['top']: 0,
+                                        'position':'absolute',
+                                        'padding': '0',
+                                        'marginLeft': '5px',
+                                        'paddingLeft': '1px',
+                                        'transform': 'translateY(-50%)'
+                                    }}
                                     initial={{
                                         'opacity': 0.5, 
                                         'left': ( blocks.extentByGroupName[name]) ? blocks.extentByGroupName[name]['style']['left'] : 0,
                                         'top': (blocks.extentByGroupName[name]) ? blocks.extentByGroupName[name]['style']['top']: 0,
+                                        'position':'absolute',
+                                        'padding': '0',
+                                        'marginLeft': '5px',
+                                        'paddingLeft': '1px',
+                                        'transform': 'translateY(-50%)'
                                     }}
                                     animate={{
                                         'opacity': 1, 
@@ -178,6 +193,17 @@ export default observer(function Editor({ children }: EditorProps) {
                                 <motion.span transition={config.transition} layout
                                     key={`g-brdr-${name}-${i}`}
                                     className='ReactTimeline__Editor--blocks--GroupBorder'
+                                    style={{
+                                        opacity: 1,
+                                        width:  ( blocks.extentByGroupName[name]) ? blocks.extentByGroupName[name]['style']['width'] : 0,
+                                        height: ( blocks.extentByGroupName[name]) ? blocks.extentByGroupName[name]['style']['height'] : 0,
+                                        left: ( blocks.extentByGroupName[name]) ? blocks.extentByGroupName[name]['style']['left'] : 0,
+                                        top: ( blocks.extentByGroupName[name]) ? blocks.extentByGroupName[name]['style']['top'] : 0,
+                                        // background: "yellow",
+                                        border: "1px dashed blue",
+                                        borderRadius: "6px",
+                                        'position':'absolute'
+                                    }}
                                     initial={{
                                         opacity: 0,
                                         width:  ( blocks.extentByGroupName[name]) ? blocks.extentByGroupName[name]['style']['width'] : 0,
@@ -211,6 +237,11 @@ export default observer(function Editor({ children }: EditorProps) {
                             key={`b-${label}-${i}`}
                                 className='ReactTimeline__Editor--blocks--customSpacing'
                                 style={{
+                                    opacity: 1, 
+                                    left: `${spaces.customSpaceGrid.rectsTopLeft[i]}px`,
+                                    top: `${viewport.top}`,
+                                    width: `${spaces.customSpaceGrid.rectsWidth[i]}px`,
+                                    height: `100%`,
                                     'background': `${spaces.customSpaceGrid.color[i]}`
                                 }}
                                 initial={{ 

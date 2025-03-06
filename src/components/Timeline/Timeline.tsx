@@ -3,7 +3,7 @@
  */
 
 import { observer } from 'mobx-react';
-import React, { useEffect, useMemo, ReactNode  } from 'react';
+import React, { useEffect, useMemo, ReactNode, useRef  } from 'react';
 
 import Calendar from '../Calendar/Calendar';
 import Editor from '../Editor/Editor';
@@ -20,15 +20,23 @@ export type TimelineProps = {
     onCalendarClick?: (value: number) => any;
     customSpacing?: Object[];
     groupBy?: Object[];
+    timeline?: TimelineStore;
 };
 
 export default observer(function Timeline(props: TimelineProps) {
-    const { children, onCreateBlock = noop, onCalendarClick = noop, startYear, customSpacing, groupBy } = props;
+    const { children, onCreateBlock = noop, onCalendarClick = noop, startYear, customSpacing, groupBy, timeline } = props;
 
-    const context = 
-     useTimeline();
+    const context =  
+    // timeline 
+    // || 
+    // useMemo<TimelineStore>(()=> new TimelineStore(),[])
+    // useTimeline()
      // we have been doing this wrong this entire time??!!
-    //  useMemo<TimelineStore>(() => new TimelineStore(), []);
+     useMemo<TimelineStore>(() => {
+        return timeline || useTimeline()
+     }, [timeline]);
+
+    const groupByFieldName = useRef<string>();
 
     useEffect(() => {
         // @ts-expect-error: stores does not exist on window
@@ -37,22 +45,45 @@ export default observer(function Timeline(props: TimelineProps) {
 
     useEffect(() => () => context.ui.clearEvents(), [context.ui]);
     useEffect(() => startYear !== undefined && context.spaces.setStartYear(startYear), [context.spaces, startYear]);
+
+    useEffect(() => context.blocks.setCreateBlock(onCreateBlock), [context.blocks, onCreateBlock]);
+    useEffect(() => context.ui.setCalendarClick(onCalendarClick), [context.ui, onCalendarClick]);
+    useEffect(() => {
+        if (customSpacing !== undefined) context.spaces.setCustomSpaces(customSpacing)}, [context.spaces, customSpacing]);
+   
+   
     useEffect(() => {
         context.blocks.setGroupBy(undefined)
-        context.blocks.setAsSorted(true);
+        // context.blocks.setAsSorted(true);
+    }, [context.blocks]);
+
+    useEffect(()=>{
         if (groupBy) {
-                context.blocks.setGroupBy(groupBy['fieldName'])
+            if (Object.keys(groupBy).includes("fieldName")) {
+                if (groupBy["fieldName"]) { 
+                    groupByFieldName.current = groupBy["fieldName"] 
+                } else {
+                    groupByFieldName.current = undefined;
+                }
+            }
+        }
+    },[groupBy])
+
+    useEffect(() => {
+        if (groupBy) {
+                context.blocks.setGroupBy(groupByFieldName.current)
                 if (context.blocks.isOutOfSort) { 
                     context.blocks.sortByGroup();
                     context.blocks.setAsSorted();
                 }
             }
-    }, [context.blocks, groupBy['fieldName']]);
-    
-    useEffect(() => context.blocks.setCreateBlock(onCreateBlock), [context.blocks, onCreateBlock]);
-    useEffect(() => context.ui.setCalendarClick(onCalendarClick), [context.ui, onCalendarClick]);
+    }, [context.blocks, groupBy, groupByFieldName]);
+
+
     useEffect(() => {
-        if (customSpacing !== undefined) context.spaces.setCustomSpaces(customSpacing)}, [context.spaces, customSpacing]);
+        context.blocks.sortByGroup();
+    }, [groupByFieldName.current]);
+   
     return (
         <TimelineContext.Provider value={context}>
             <div 

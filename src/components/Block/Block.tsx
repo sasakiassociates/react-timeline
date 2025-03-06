@@ -39,10 +39,10 @@ export default observer(function Block(props: BlockProps) {
     useEffect(() => {
         blocks.add(block);
         return () => blocks.remove(block);
-    }, []);
+    }, [timeline]);
 
     useEffect(() => block.setColor(props.color), [props.color]);
-    useEffect(() => block.setProxy(props.proxy), [props.proxy]);
+    useEffect(() => block.setProxy(props.proxy), [props.proxy, timeline]);
 
     const selectBlock = useCallback((e: MouseEvent) => {
         if (!block.selected) {
@@ -53,7 +53,7 @@ export default observer(function Block(props: BlockProps) {
                 blocks.select(block);
             }
         }
-    }, [block, blocks]);
+    }, [block, blocks,timeline.blocks.selected]);
 
 
     /**
@@ -136,9 +136,10 @@ export default observer(function Block(props: BlockProps) {
 
     return (
         <>
-            <motion.div  layout transition={config.transition}
+            <motion.div  layout transition={{...config.transition, duration: 0}}
                 key={`${block.id}-block`} 
                 className={`ReactTimeline__Block ${props.className} ${block.selected ? 'ReactTimeline__Block--selected' : ''}`}
+                style={{...style, width: `${width}px`,}}
                 initial={{...style, widths: 0}}
                 animate={{...style, width: `${width}px`,}}
                 draggable="false"
@@ -213,7 +214,8 @@ export default observer(function Block(props: BlockProps) {
                     animate={{ 
                         left: `${spaces.timeToPx(block.timespan.start) + width}px`,
                         top: `${block.y - viewport.top - config.blockHeight / 5}px`, 
-                    }}     
+                    }} 
+                        
                 >
                     {props.name}
                 </motion.div>

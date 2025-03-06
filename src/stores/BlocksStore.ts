@@ -162,7 +162,7 @@ export default class BlockStore {
     @computed
     get groupedAll(): { [key: string]: BlockState[] } {
         if (!this.groupBy) return { "nan": this.all }
-        const groupd = this.sortDefaultTime().reduce((reslt, blck) => {
+        const groupd = this.all.sort((a: BlockState, b: BlockState) => this.sortBlocks(a, b)).reduce((reslt, blck) => {
             if (Object.keys(reslt).includes(blck.attrProps[this.groupBy])) {
                 reslt[blck.attrProps[this.groupBy]].push(blck)
             } else {
