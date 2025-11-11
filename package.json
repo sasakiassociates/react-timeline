@@ -1,6 +1,6 @@
 {
   "name": "@strategies/react-timeline",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "A timeline component for React",
   "author": "Eric Youngberg <eyoungberg@sasaki.com>",
   "repository": "https://github.com/sasakiassociates/react-timeline",
@@ -36,6 +36,7 @@
     "@rollup/plugin-commonjs": "^22.0.2",
     "@rollup/plugin-node-resolve": "^13.3.0",
     "@rollup/plugin-typescript": "^8.5.0",
+    "@strategies/dashi-core": "^1.1.0",
     "@types/react": "^18.3.10",
     "@types/react-dom": "^18.3.0",
     "autoprefixer": "^10.4.20",

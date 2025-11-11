@@ -309,7 +309,7 @@ export default class BlockStore {
             const b_first_block = Math.min(...groupd[b].map((blc) => blc.timespan.start))
             return (a_first_block > b_first_block) ? 1 : -1
 
-        }).sort().forEach((grp, g_ig) => {
+        }).forEach((grp, g_ig) => {
             const ggrp_len = sortedGroup[grp].length
             sortedGroup[grp].sort((a, b) => this.sortBlocks(a, b)).forEach((block, i__) => {
                 block.setY((_gi * (timelineBlockHeight + timelineRowPadding)) + ((i__) * (timelineBlockHeight + timelineRowPadding)) + ((g_ig) * timelineBlockGroupPadding));

@@ -30,6 +30,9 @@ importers:
       '@rollup/plugin-typescript':
         specifier: ^8.5.0
         version: 8.5.0(rollup@2.79.2)(tslib@2.8.1)(typescript@5.8.2)
+      '@strategies/dashi-core':
+        specifier: ^1.1.0
+        version: link:../dashi/shared/dashi-core
       '@types/react':
         specifier: ^18.3.10
         version: 18.3.18
