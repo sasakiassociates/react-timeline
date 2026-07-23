@@ -1,6 +1,6 @@
 {
   "name": "@strategies/react-timeline",
-  "version": "2.1.2",
+  "version": "2.2.0",
   "description": "A timeline component for React",
   "author": "Eric Youngberg <eyoungberg@sasaki.com>",
   "repository": "https://github.com/sasakiassociates/react-timeline",
