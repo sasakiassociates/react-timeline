@@ -4,7 +4,7 @@
  * Contains state for all Block components.
  */
 
-import { action, computed, observable } from 'mobx';
+import { action, computed, makeObservable, observable } from 'mobx';
 
 import config from '../config';
 import { Timespan, noop } from '../types';
@@ -19,6 +19,7 @@ export default class BlockStore {
 
     constructor(root: TimelineStore) {
         this.root = root;
+        makeObservable(this);
     }
 
     onResortClick: any = noop;
@@ -59,8 +60,11 @@ export default class BlockStore {
         let { left, right, bottom, top } = this.root.viewport;
 
         this.all.forEach(block => {
-            if (block.timespan.start < left) left = block.timespan.start;
-            if (block.timespan.end > right) right = block.timespan.end;
+            const proxy = block.proxy as any;
+            const start = proxy.getStartTime ? proxy.getStartTime() : block.timespan.start;
+            const end = proxy.getEndTime ? proxy.getEndTime() : block.timespan.end;
+            if (start < left) left = start;
+            if (end > right) right = end;
             if (block.y > bottom) bottom = block.y;
             if (block.y < top) top = block.y;
         });
@@ -84,17 +88,22 @@ export default class BlockStore {
     get extentByGroupName() {
         const results = {}
         Object.keys(this.groupedAll).forEach((key) => {
-            const _blocks = this.groupedAll[key] //@ts-ignore maybe bring out the name out of the proxy similar to how it is done for color or selected ...
+            const _blocks = this.groupedAll[key] //@ts-ignore
             const maxBlockNameLength = Math.max(..._blocks.map((block) => block.proxy.project.name.length))
-            const minLeft = Math.min(..._blocks.map((block) => block.timespan.start))
-            const maxRight = Math.max(..._blocks.map((block) => block.timespan.end))
+            // Use direct access methods to avoid expensive timespan getter
+            const minLeft = Math.min(..._blocks.map((block) => {
+                const p = block.proxy as any; return p.getStartTime ? p.getStartTime() : block.timespan.start;
+            }))
+            const maxRight = Math.max(..._blocks.map((block) => {
+                const p = block.proxy as any; return p.getEndTime ? p.getEndTime() : block.timespan.end;
+            }))
             const minY = Math.min(..._blocks.map((block) => block.y))
             const maxY = Math.max(..._blocks.map((block) => block.y))
             const gStyle = {
                 width: `${this.root.spaces.timeToPx(maxRight) - this.root.spaces.timeToPx(minLeft) + (maxBlockNameLength * 6.2)}px`, // 6.2 here is an estimate of charecter width, which depends on typeface etc. 
                 height: `${(_blocks.length + 1) * (config.blockHeight + config.rowPadding) + 5}px`,
                 left: `${this.root.spaces.timeToPx(minLeft) - 5}px`,
-                top: `${minY - this.root.viewport.top - 20}px`,
+                top: minY - 20,
                 background: undefined,
             };
             results[key] =
@@ -120,6 +129,7 @@ export default class BlockStore {
         return this.all.filter(block => block.visible);
     }
 
+    @action
     select(block?: BlockState) {
         this.selected.forEach(block => block.setSelected(false));
 
@@ -151,26 +161,36 @@ export default class BlockStore {
 
     @computed
     get sortDefault(): BlockState[] {
-        return this.all.sort((a: BlockState, b: BlockState) => this.sortByName(a, b))
+        return this.all.slice().sort((a: BlockState, b: BlockState) => this.sortByName(a, b))
     }
 
     sortDefaultTime(): BlockState[] {
-        return this.all.sort((a: BlockState, b: BlockState) => this.sortBlocks(a, b))
+        return this.all.slice().sort((a: BlockState, b: BlockState) => this.sortBlocks(a, b))
     }
 
 
     @computed
     get groupedAll(): { [key: string]: BlockState[] } {
         if (!this.groupBy) return { "nan": this.all }
-        const groupd = this.all.sort((a: BlockState, b: BlockState) => this.sortBlocks(a, b)).reduce((reslt, blck) => {
-            if (Object.keys(reslt).includes(blck.attrProps[this.groupBy])) {
-                reslt[blck.attrProps[this.groupBy]].push(blck)
+        // Copy before sorting — .sort() mutates in place, and this.all is
+        // @observable. Sorting it in-place inside a @computed is a MobX
+        // anti-pattern that triggers cascading observer notifications.
+        //
+        // NOTE: setGroupName() side effects removed from this computed.
+        // Calling @action inside @computed is a MobX anti-pattern that
+        // causes cascading re-computations. Group names are set in
+        // sortByGroup() action instead.
+        const groupd = this.all.slice().sort((a: BlockState, b: BlockState) => this.sortBlocks(a, b)).reduce((reslt, blck) => {
+            // Use direct access to avoid expensive attrProps getter
+            const proxy = blck.proxy as any;
+            const groupName = proxy.getAttrValue ? proxy.getAttrValue(this.groupBy!) : blck.attrProps[this.groupBy!];
+            if (Object.keys(reslt).includes(groupName)) {
+                reslt[groupName].push(blck)
             } else {
-                blck.setGroupName(blck.attrProps[this.groupBy])
-                reslt[blck.attrProps[this.groupBy]] = [blck]
+                reslt[groupName] = [blck]
             }
             return reslt
-        }, {})
+        }, {} as { [key: string]: BlockState[] })
         return groupd
     }
 
@@ -188,27 +208,39 @@ export default class BlockStore {
         if (this.groupBy) {
 
             let grppRes = 0;
+            // NOTE: setGroupName() side effect removed — calling @action inside
+            // @computed is a MobX anti-pattern that causes cascading recomputations.
             const grpd = this.all.reduce((reslt, blck) => {
-                if (Object.keys(reslt).includes(blck.attrProps[this.groupBy])) {
-                    reslt[blck.attrProps[this.groupBy]].push(blck)
+                // Use direct access to avoid expensive attrProps getter
+                const proxy = blck.proxy as any;
+                const groupName = proxy.getAttrValue ? proxy.getAttrValue(this.groupBy!) : blck.attrProps[this.groupBy!];
+                if (Object.keys(reslt).includes(groupName)) {
+                    reslt[groupName].push(blck)
                 } else {
-                    blck.setGroupName(blck.attrProps[this.groupBy])
-                    reslt[blck.attrProps[this.groupBy]] = [blck]
+                    reslt[groupName] = [blck]
                 }
                 return reslt
-            }, {})
+            }, {} as { [key: string]: BlockState[] })
+
+            // Precompute each group's min start time once (O(N) total) instead
+            // of calling Math.min(...map()) inside a sort comparator (which
+            // would be O(G×N×log G)). Also removed the wasted .sort().sort()
+            // chain — the second .sort() (alphabetical) overwrote the first
+            // sort entirely, making the first sort's work completely discarded.
+            const groupMinStarts: { [key: string]: number } = {};
+            for (const key of Object.keys(grpd)) {
+                groupMinStarts[key] = Math.min(...grpd[key].map((blc) => blc.timespan.start));
+            }
 
             const overSortedGroups = Object.keys(grpd).sort((a: string, b: string) => {
-                // this is to make sure groups that have starting time earlier show up higher in the time line (requested by uncle TayTay)
-                // if decided against it just make it a pure sort() here
-                const a_first_block = Math.min(...grpd[a].map((blc) => blc.timespan.start))
-                const b_first_block = Math.min(...grpd[b].map((blc) => blc.timespan.start))
-                return (a_first_block > b_first_block) ? 1 : -1
-            }).sort()
+                // Sort by earliest start time so groups that start earlier
+                // show up higher in the timeline (requested by uncle TayTay).
+                return (groupMinStarts[a] > groupMinStarts[b]) ? 1 : -1
+            })
             
             const overGroups = overSortedGroups.reduce((res, groupKey, i, allGroups) => {
                 const groupBlocksSortByY = grpd[groupKey]
-                const sortedGroupBlocksSortByY = groupBlocksSortByY.sort((a, b) => {
+                const sortedGroupBlocksSortByY = groupBlocksSortByY.slice().sort((a, b) => {
                     return a.y === b.y ? 0 : a.y < b.y ? -1 : 1;
                 })
                 const withinBlocksRes = sortedGroupBlocksSortByY.reduce((resU, curntB, curentIndx, allBlocks) => {
@@ -235,9 +267,7 @@ export default class BlockStore {
         }
 
         else {
-            const sortedByDefault = this.all
-                // .sort((a, b) => {  //@ts-ignore
-                //     return a.name === b.name ? 0 : a.name > b.name ? -1 : 1;})
+            const sortedByDefault = [...this.all]
                 .sort((a, b) => {
                     return a.timespan.start === b.timespan.start ? 0 : a.timespan.start < b.timespan.start ? -1 : 1;
                 })
@@ -273,51 +303,62 @@ export default class BlockStore {
         return (this.blockYIndecies === 0) ? false : true;
     }
 
+    @action
     sortByGroup() {
         const timelineBlockHeight = config.blockHeight; // px
         const timelineRowPadding = config.rowPadding; // px
         const timelineBlockGroupPadding = config.blockHeight * 4; // px
-        let groupd: any;
-        if (!this.groupBy) 
-            { groupd = { "nan": this.all } }
-        else if (this.groupBy) {
-            groupd = this.sortDefaultTime().sort(this.sortByName).reduce((reslt, blck) => {
-                if (Object.keys(reslt).includes(blck.attrProps[this.groupBy])) {
-                    reslt[blck.attrProps[this.groupBy]].push(blck)
-                } else {
-                    blck.setGroupName(blck.attrProps[this.groupBy])
-                    reslt[blck.attrProps[this.groupBy]] = [blck]
-                }
-                return reslt
-            }, {})
+
+        // CRITICAL PERF: Precompute all block data using direct access methods
+        // on DashiBlockProxy that bypass the expensive attrProps and timespan
+        // getters. Those getters create new objects on every access (iterating
+        // all 30+ project attributes for attrProps, creating {start,end} for
+        // timespan). Sort comparators would call them O(N log N) times.
+        // By precomputing once with direct access, we reduce to exactly N calls.
+        const blockData = this.all.map(blck => {
+            const proxy = blck.proxy as any;
+            return {
+                block: blck,
+                // Use direct access if available (DashiBlockProxy), fall back to attrProps
+                groupName: this.groupBy ? (proxy.getAttrValue ? proxy.getAttrValue(this.groupBy) : blck.attrProps[this.groupBy]) as string : 'nan',
+                // Use direct access if available, fall back to timespan
+                start: proxy.getStartTime ? proxy.getStartTime() : blck.timespan.start,
+            };
+        });
+
+        // Sort once by start time (used for within-group ordering)
+        blockData.sort((a, b) => a.start === b.start ? 0 : a.start < b.start ? -1 : 1);
+
+        // Group blocks by groupName
+        const grpd: { [key: string]: typeof blockData } = {};
+        for (const bd of blockData) {
+            if (!grpd[bd.groupName]) {
+                grpd[bd.groupName] = [];
+                bd.block.setGroupName(bd.groupName);
+            }
+            grpd[bd.groupName].push(bd);
         }
 
-        let _gi = 0
+        // Precompute each group's min start time
+        const groupMinStarts: { [key: string]: number } = {};
+        for (const key of Object.keys(grpd)) {
+            groupMinStarts[key] = Math.min(...grpd[key].map(bd => bd.start));
+        }
 
-        const grpd = groupd;
-        const sortedGroup = Object.keys(grpd)
-            .sort()
-            .reduce(function (result, key) {
-                result[key] = grpd[key];
-                return result;
-            }, {});
-
-        Object.keys(sortedGroup).sort((a: string, b: string) => {
-            // this is to make sure groups that have starting time earlier show up higher in the time line (requested by uncle TayTay)
-            // if decided against it just make it a pure sort() here
-            const a_first_block = Math.min(...groupd[a].map((blc) => blc.timespan.start))
-            const b_first_block = Math.min(...groupd[b].map((blc) => blc.timespan.start))
-            return (a_first_block > b_first_block) ? 1 : -1
-
+        // Sort groups by earliest start time, then assign Y positions
+        let _gi = 0;
+        Object.keys(grpd).sort((a: string, b: string) => {
+            return (groupMinStarts[a] > groupMinStarts[b]) ? 1 : -1;
         }).forEach((grp, g_ig) => {
-            const ggrp_len = sortedGroup[grp].length
-            sortedGroup[grp].sort((a, b) => this.sortBlocks(a, b)).forEach((block, i__) => {
-                block.setY((_gi * (timelineBlockHeight + timelineRowPadding)) + ((i__) * (timelineBlockHeight + timelineRowPadding)) + ((g_ig) * timelineBlockGroupPadding));
-            })
-            _gi = _gi + ggrp_len
-        })
+            const groupBlocks = grpd[grp];
+            groupBlocks.forEach((bd, i__) => {
+                bd.block.setY((_gi * (timelineBlockHeight + timelineRowPadding)) + ((i__) * (timelineBlockHeight + timelineRowPadding)) + ((g_ig) * timelineBlockGroupPadding));
+            });
+            _gi = _gi + groupBlocks.length;
+        });
     }
 
+    @action
     triggerDefaultSort() {
         const timelineBlockHeight = config.blockHeight; // px
         const timelineRowPadding = config.rowPadding; // px

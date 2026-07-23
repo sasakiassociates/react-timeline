@@ -16,7 +16,11 @@ export type EditorProps = {
 };
 
 export default observer(function Editor({ children }: EditorProps) {
-    const { blocks, spaces, ui, viewport } = useTimeline();
+    const timeline = useTimeline();
+    const { blocks, spaces, ui, viewport } = timeline;
+    const shouldAnimate = timeline.animate;
+    const SpanTag = shouldAnimate ? motion.span : ('span' as any);
+    const DivTag = shouldAnimate ? motion.div : ('div' as any);
     const { editor, height, width } = ui;
 
     const [mouseDownTime,setMouseDownTime] = useState<number>(0);
@@ -145,21 +149,19 @@ export default observer(function Editor({ children }: EditorProps) {
                 onMouseDown={onMouseDown}
                 onMouseUp={onMouseUp}
             />
-           <AnimatePresence>
-                <motion.div className="ReactTimeline__Editor--blocks" ref={scope}>
+           <DivTag className="ReactTimeline__Editor--blocks" ref={scope}>
             {
                     (blocks.groupBy) && (blocks.groupNames.length > 0) && <>
                         {blocks.groupNames.map((name, i)=>(
                             <>
                              {name !== 'nan' && 
                              <>
-                             <motion.span transition={config.transition} layout 
-                                    key={`g-lb-${name}-${i}`}
+                             <SpanTag {...(shouldAnimate ? { transition: config.transition, layout: true } : {})} key={`g-lb-${name}-${i}`}
                                     className='ReactTimeline__Editor--blocks--GroupLabel' 
                                     style={{
                                         'opacity': 1, 
                                         'left': ( blocks.extentByGroupName[name]) ? blocks.extentByGroupName[name]['style']['left'] : 0,
-                                        'top': (blocks.extentByGroupName[name]) ? blocks.extentByGroupName[name]['style']['top']: 0,
+                                        'top': (blocks.extentByGroupName[name]) ? (blocks.extentByGroupName[name] ? (blocks.extentByGroupName[name]['style']['top'] - viewport.top) : 0): 0,
                                         'position':'absolute',
                                         'padding': '0',
                                         'marginLeft': '5px',
@@ -169,7 +171,7 @@ export default observer(function Editor({ children }: EditorProps) {
                                     initial={{
                                         'opacity': 0.5, 
                                         'left': ( blocks.extentByGroupName[name]) ? blocks.extentByGroupName[name]['style']['left'] : 0,
-                                        'top': (blocks.extentByGroupName[name]) ? blocks.extentByGroupName[name]['style']['top']: 0,
+                                        'top': (blocks.extentByGroupName[name]) ? (blocks.extentByGroupName[name] ? (blocks.extentByGroupName[name]['style']['top'] - viewport.top) : 0): 0,
                                         'position':'absolute',
                                         'padding': '0',
                                         'marginLeft': '5px',
@@ -179,7 +181,7 @@ export default observer(function Editor({ children }: EditorProps) {
                                     animate={{
                                         'opacity': 1, 
                                         'left': ( blocks.extentByGroupName[name]) ? blocks.extentByGroupName[name]['style']['left'] : 0,
-                                        'top': (blocks.extentByGroupName[name]) ? blocks.extentByGroupName[name]['style']['top']: 0,
+                                        'top': (blocks.extentByGroupName[name]) ? (blocks.extentByGroupName[name] ? (blocks.extentByGroupName[name]['style']['top'] - viewport.top) : 0): 0,
                                         'position':'absolute',
                                         'padding': '0',
                                         'marginLeft': '5px',
@@ -188,17 +190,16 @@ export default observer(function Editor({ children }: EditorProps) {
                                     }}
                                     >
                                     {name}
-                                </motion.span>
+                                </SpanTag>
                             
-                                <motion.span transition={config.transition} layout
-                                    key={`g-brdr-${name}-${i}`}
+                                <SpanTag {...(shouldAnimate ? { transition: config.transition, layout: true } : {})} key={`g-brdr-${name}-${i}`}
                                     className='ReactTimeline__Editor--blocks--GroupBorder'
                                     style={{
                                         opacity: 1,
                                         width:  ( blocks.extentByGroupName[name]) ? blocks.extentByGroupName[name]['style']['width'] : 0,
                                         height: ( blocks.extentByGroupName[name]) ? blocks.extentByGroupName[name]['style']['height'] : 0,
                                         left: ( blocks.extentByGroupName[name]) ? blocks.extentByGroupName[name]['style']['left'] : 0,
-                                        top: ( blocks.extentByGroupName[name]) ? blocks.extentByGroupName[name]['style']['top'] : 0,
+                                        top: ( blocks.extentByGroupName[name]) ? (blocks.extentByGroupName[name] ? (blocks.extentByGroupName[name]['style']['top'] - viewport.top) : 0) : 0,
                                         // background: "yellow",
                                         border: "1px dashed blue",
                                         borderRadius: "6px",
@@ -209,20 +210,20 @@ export default observer(function Editor({ children }: EditorProps) {
                                         width:  ( blocks.extentByGroupName[name]) ? blocks.extentByGroupName[name]['style']['width'] : 0,
                                         height: ( blocks.extentByGroupName[name]) ? blocks.extentByGroupName[name]['style']['height'] : 0,
                                         left: ( blocks.extentByGroupName[name]) ? blocks.extentByGroupName[name]['style']['left'] : 0,
-                                        top: ( blocks.extentByGroupName[name]) ? blocks.extentByGroupName[name]['style']['top'] : 0,
+                                        top: ( blocks.extentByGroupName[name]) ? (blocks.extentByGroupName[name] ? (blocks.extentByGroupName[name]['style']['top'] - viewport.top) : 0) : 0,
                                     }}
                                     animate={{
                                         opacity: 1,
                                         width:  ( blocks.extentByGroupName[name]) ? blocks.extentByGroupName[name]['style']['width'] : 0,
                                         height: ( blocks.extentByGroupName[name]) ? blocks.extentByGroupName[name]['style']['height'] : 0,
                                         left: ( blocks.extentByGroupName[name]) ? blocks.extentByGroupName[name]['style']['left'] : 0,
-                                        top: ( blocks.extentByGroupName[name]) ? blocks.extentByGroupName[name]['style']['top'] : 0,
+                                        top: ( blocks.extentByGroupName[name]) ? (blocks.extentByGroupName[name] ? (blocks.extentByGroupName[name]['style']['top'] - viewport.top) : 0) : 0,
                                         // background: "yellow",
                                         border: "1px dashed blue",
                                         borderRadius: "6px",
                                         'position':'absolute'
                                     }}
-                            ></motion.span> 
+                            ></SpanTag> 
                              </>
                                 }
                             </>
@@ -233,8 +234,7 @@ export default observer(function Editor({ children }: EditorProps) {
                 {/* custom grid */}
                 {(spaces.customSpaces) && <>
                     {spaces.customSpaceGrid.label.map((label,i) => (
-                            <motion.div
-                            key={`b-${label}-${i}`}
+                            <DivTag {...(shouldAnimate ? { layout: true, transition: config.transition } : {})} key={`b-${label}-${i}`}
                                 className='ReactTimeline__Editor--blocks--customSpacing'
                                 style={{
                                     opacity: 1, 
@@ -258,16 +258,15 @@ export default observer(function Editor({ children }: EditorProps) {
                                     width: `${spaces.customSpaceGrid.rectsWidth[i]}px`,
                                     height: `100%`,
                                 }}
-                                layout
-                                transition={config.transition}
+                                layout={shouldAnimate}
+                                transition={shouldAnimate ? config.transition : { duration: 0 }}
                             
-                            ></motion.div>
+                            ></DivTag>
                     ))}
                     
                 </>}
                 {children}
-            </motion.div>
-  </AnimatePresence>
+            </DivTag>
             <SelectBox />
         </div>
     );

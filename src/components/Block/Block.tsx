@@ -3,7 +3,7 @@
  */
 
 import { observer } from 'mobx-react';
-import { useCallback, useEffect, useMemo, MouseEvent, ReactNode, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, MouseEvent, ReactNode, useState } from 'react';
 
 import config from '../../config';
 import { useTimeline, BlockContext } from '../../context';
@@ -31,6 +31,7 @@ export type BlockProps = {
 export default observer(function Block(props: BlockProps) {
     const timeline = useTimeline();
     const { blocks, spaces, ui, viewport } = timeline;
+    const animate = timeline.animate;
     const block = useMemo<BlockState>(() => new BlockState(timeline), [timeline]);
     const [blockHovered, setBlockHovered] = useState<boolean>(false)
 
@@ -134,14 +135,27 @@ export default observer(function Block(props: BlockProps) {
         style.background = props.color;
     }
 
+    // When animate={false}, use plain div instead of motion.div to completely
+    // eliminate framer-motion overhead (VisualElement creation, projection
+    // tree tracking, AnimatePresence bookkeeping, animate prop diffing).
+    const BlockTag = animate ? motion.div : ('div' as any);
+    const blockMotionProps = animate ? {
+        layout: true,
+        transition: { ...config.transition, duration: 0 },
+        initial: { ...style, widths: 0 },
+        animate: { ...style, width: `${width}px` },
+    } : {};
+
+    const labelLeft = `${spaces.timeToPx(block.timespan.start) + width}px`;
+    const labelTop = `${block.y - viewport.top - config.blockHeight / 5}px`;
+
     return (
         <>
-            <motion.div  layout transition={{...config.transition, duration: 0}}
-                key={`${block.id}-block`} 
+            <BlockTag
+                {...blockMotionProps}
+                key={`${block.id}-block`}
                 className={`ReactTimeline__Block ${props.className} ${block.selected ? 'ReactTimeline__Block--selected' : ''}`}
                 style={{...style, width: `${width}px`,}}
-                initial={{...style, widths: 0}}
-                animate={{...style, width: `${width}px`,}}
                 draggable="false"
                 onMouseUp={onMouseUp}
                 onMouseEnter={(e) => {
@@ -168,7 +182,7 @@ export default observer(function Block(props: BlockProps) {
 
                 {((block.projects_on_requiredByProject.length > 0) || (block.projects_on_requiresProject.length > 0)) && <span
                         className='ReactTimeline__Block-dependency'
-                        style={{left: '10px', top: '0'}} // TODO this is very manual I know ...
+                        style={{left: '10px', top: '0'}}
                     >
                             <PiGitCommitBold />
                         </span>}
@@ -190,35 +204,33 @@ export default observer(function Block(props: BlockProps) {
 
                     {props.children}
                 </BlockContext.Provider>
-            </motion.div>
+            </BlockTag>
 
             {(blockHovered && (!block.selected)) ? (
-                <motion.div transition={config.transition} layout 
-                    key={`${block.id}-icon`} 
-                    initial={styleHover}
-                    animate={styleHover}
-                    >
+                <BlockTag
+                    {...(animate ? { transition: config.transition, layout: true, initial: styleHover, animate: styleHover } : { style: styleHover })}
+                    key={`${block.id}-icon`}
+                >
                     <div className={`ReactTimeline__Block-left-icon`} />
                     <div className='ReactTimeline__Block-right-icon' />
-                // </motion.div>
+                </BlockTag>
             ) : (block.selected) ? <></> : <></>}
 
             {props.name && (
-                <motion.div  transition={config.transition} layout 
-                    key={`${block.id}-name`} 
-                    className={`ReactTimeline__Block-label ${block.selected ? 'ReactTimeline__Block-label--selected' : ''}`} 
-                    initial={{ 
-                        left: `${spaces.timeToPx(block.timespan.start) + width}px`,
-                        top: `${block.y - viewport.top - config.blockHeight / 5}px`, 
-                    }}
-                    animate={{ 
-                        left: `${spaces.timeToPx(block.timespan.start) + width}px`,
-                        top: `${block.y - viewport.top - config.blockHeight / 5}px`, 
-                    }} 
-                        
+                <BlockTag
+                    {...(animate ? {
+                        transition: config.transition,
+                        layout: true,
+                        initial: { left: labelLeft, top: labelTop },
+                        animate: { left: labelLeft, top: labelTop },
+                    } : {
+                        style: { left: labelLeft, top: labelTop },
+                    })}
+                    key={`${block.id}-name`}
+                    className={`ReactTimeline__Block-label ${block.selected ? 'ReactTimeline__Block-label--selected' : ''}`}
                 >
                     {props.name}
-                </motion.div>
+                </BlockTag>
             )}
         </>
 
