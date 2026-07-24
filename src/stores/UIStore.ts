@@ -261,13 +261,24 @@ export default class UIStore {
 
     @action 
     setElement(element: HTMLDivElement|null = null) {
+        // Disconnect any existing ResizeObserver before touching the element
+        if (this._resizeObserver) {
+            this._resizeObserver.disconnect();
+            this._resizeObserver = null;
+        }
+
         if (element !== null) {
             const update = () => {
-                this.setContainer(this.element.getBoundingClientRect());
+                // Null guard: the element may have been cleared by cleanup
+                // before an async ResizeObserver callback fires
+                if (this.element) {
+                    this.setContainer(this.element.getBoundingClientRect());
+                }
             };
 
             this.element = element;
-            (new ResizeObserver(() => update()).observe(this.element));
+            this._resizeObserver = new ResizeObserver(() => update());
+            this._resizeObserver.observe(this.element);
 
             if (!this._hasSetEvents) {
                 this._hasSetEvents = true;
@@ -277,6 +288,9 @@ export default class UIStore {
             }
 
             update();
+        } else {
+            // setElement(null) is called on unmount — clear the element reference
+            this.element = null;
         }
     }
 
@@ -284,8 +298,8 @@ export default class UIStore {
     editor?: HTMLDivElement;
     
     @action
-    setEditor(editor: HTMLDivElement) {
-        this.editor = editor; 
+    setEditor(editor: HTMLDivElement|null) {
+        this.editor = editor ?? undefined; 
     }
 
     @observable 
@@ -375,7 +389,13 @@ export default class UIStore {
     clearEvents() {
         this._events.forEach(({ name, listener, target }) => {
             target.removeEventListener(name, listener);
-        }) ;
+        });
+
+        // Also disconnect the ResizeObserver when events are cleared (called on unmount)
+        if (this._resizeObserver) {
+            this._resizeObserver.disconnect();
+            this._resizeObserver = null;
+        }
     }
 
     onCalendarClick: any = noop;
@@ -405,5 +425,7 @@ export default class UIStore {
     }
 
     private _hasSetEvents = false;
+
+    private _resizeObserver: ResizeObserver|null = null;
 
 };

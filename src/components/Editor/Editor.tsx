@@ -139,7 +139,7 @@ export default observer(function Editor({ children }: EditorProps) {
     return (
         <div 
             className="ReactTimeline__Editor"
-            ref={el => el && !editor && ui.setEditor(el)}
+            ref={el => ui.setEditor(el)}
             onDoubleClick={onDoubleClick}
         >
             <canvas

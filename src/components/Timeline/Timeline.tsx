@@ -4,7 +4,7 @@
 
 import { observer } from 'mobx-react';
 import React, { useEffect, useMemo, ReactNode, useRef  } from 'react';
-import { runInAction } from 'mobx';
+import { runInAction, reaction } from 'mobx';
 
 import Calendar from '../Calendar/Calendar';
 import Editor from '../Editor/Editor';
@@ -91,6 +91,31 @@ export default observer(function Timeline(props: TimelineProps) {
             context.blocks.setAsSorted();
         });
     }, [context.blocks, groupBy]);
+
+    // Auto re-sort when blocks become out of sync (e.g., after a scenario
+    // loads new blocks with default Y=0 while the Timeline stays mounted).
+    // The groupBy effect above only fires on mount or when groupBy changes —
+    // it does NOT fire when new blocks are added to an existing mounted
+    // Timeline. This reaction watches the `outOfSyncd` computed (which detects
+    // mis-ordered block Y positions) and triggers sortByGroup() when needed.
+    // The 300ms delay debounces rapid block additions/removals during scenario
+    // loading so sortByGroup() fires once after all blocks settle, not per
+    // individual block add.
+    useEffect(() => {
+        const disposer = reaction(
+            () => context.blocks.all.length > 1 && context.blocks.outOfSyncd,
+            (needsSort) => {
+                if (needsSort) {
+                    runInAction(() => {
+                        context.blocks.sortByGroup();
+                        context.blocks.setAsSorted();
+                    });
+                }
+            },
+            { delay: 300 }
+        );
+        return () => disposer();
+    }, [context.blocks]);
    
     return (
         <TimelineContext.Provider value={context}>
@@ -99,7 +124,7 @@ export default observer(function Timeline(props: TimelineProps) {
                     ReactTimeline__Timeline
                     ${context.ui.cursor}
                 `}
-                ref={e => !context.ui.element && context.ui.setElement(e)}
+                ref={e => context.ui.setElement(e)}
             >
                 <Calendar />
                 <Editor>
